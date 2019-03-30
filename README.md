@@ -1,2 +1,2 @@
 # baseman
-Simple file copy program to organize modular code for web applications
+A simple file copy program to organize modular code for web applications
