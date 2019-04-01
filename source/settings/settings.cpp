@@ -204,6 +204,12 @@ bool Settings::loadfile(FILE *f)
             insert(defName,name,value);
         }
     }
+
+    free(defName);
+    free(name);
+    free(value);
+    free(a);
+
     updateDefBlockNames();
     return true;
 }
