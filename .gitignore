@@ -33,3 +33,7 @@
 
 # Sonstige
 run.sh
+
+#Code::Blocks
+*.layout
+*.depend
