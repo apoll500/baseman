@@ -40,9 +40,6 @@
 #ifndef MOD_settings_H
 #define MOD_settings_H
 
-//The maximum length of lines used in the ini-file.
-#define INI_LINE_MAXLN 256
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <map>

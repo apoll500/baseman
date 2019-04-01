@@ -215,18 +215,18 @@ bool Settings::iswhite(char ch)
 unsigned int Settings::readline(FILE *f,char **a,unsigned int *ln,unsigned int *mem_ln)
 {
     *ln=0;
-    *a[*ln]=fgetc(f);
-    while(*a[*ln] && *a[*ln]!='\n' && *a[*ln]!='\r' && *a[*ln]!=EOF)
+    (*a)[*ln]=fgetc(f);
+    while((*a)[*ln] && (*a)[*ln]!='\n' && (*a)[*ln]!='\r' && (*a)[*ln]!=EOF)
     {
         (*ln)++;
         if(*ln>=*mem_ln)
         {
             (*mem_ln)*=2;
-            *a=(char *)realloc(*a,(*mem_ln+1)*sizeof(char));
+            (*a)=(char *)realloc(*a,(*mem_ln+1)*sizeof(char));
         }
-        *a[*ln]=fgetc(f);
+        (*a)[*ln]=fgetc(f);
     }
-    *a[*ln]=0;
+    (*a)[*ln]=0;
     return *ln;
 }
 int Settings::parse_value(char *value,unsigned int value_ln)
