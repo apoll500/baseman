@@ -66,7 +66,8 @@ public:
     bool loadfile(FILE *f);
 private:
     bool iswhite(char ch);
-    int readline(FILE *f,char *a,int maxln);
+    unsigned int readline(FILE *f,char **a,unsigned int *ln,unsigned int *mem_ln);
+    int parse_value(char *value,unsigned int value_ln);
 public:
     virtual int getDefBlockCount();
     virtual std::string getNextDefBlockName();

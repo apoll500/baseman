@@ -90,46 +90,82 @@ bool Settings::loadfile(const char *inifilename,bool docreate)
 }
 bool Settings::loadfile(FILE *f)
 {
-    int i,q;
-    char name[64];
-    char value[1024];
-    char defName[64];
-    defName[0]=0;
-    int defName_pos=0;
-    char a[INI_LINE_MAXLN+1];
+    unsigned int i;
 
-    while(readline(f,a,INI_LINE_MAXLN))
+    unsigned int name_ln=0;
+    unsigned int name_maxln=256;
+    char *name=(char *)malloc((name_maxln+1)*sizeof(char));
+
+    unsigned int value_ln=0;
+    unsigned int value_maxln=1024;
+    char *value=(char *)malloc((value_maxln+1)*sizeof(char));
+
+    unsigned int defName_ln=0;
+    unsigned int defName_maxln=128;
+    char *defName=(char *)malloc((defName_maxln+1)*sizeof(char));
+    defName[0]=0;
+
+    unsigned int a_ln=0;
+    unsigned int a_maxln=1024;
+    char *a=(char *)malloc((a_maxln+1)*sizeof(char));
+
+    while(readline(f,&a,&a_ln,&a_maxln))
     {
         i=0;
+
+        //skip blancs
         while(iswhite(a[i]))i++;
 
-        if(i<INI_LINE_MAXLN-4 && a[i]=='D' && a[i+1]=='E' && a[i+2]=='F' && (a[i+3]==' ' || a[i+3]=='\n' || a[i+3]=='\r' || a[i+3]=='\t' || a[i+3]==':'))
+        //scan DEF
+        if(i<a_ln-4 && a[i]=='D' && a[i+1]=='E' && a[i+2]=='F' && (a[i+3]==' ' || a[i+3]=='\t' || a[i+3]==':'))
         {
-            i=i+4;
-            while(iswhite(a[i]))i++;
-            while(a[i]!=':' && a[i]!=0 && defName_pos<63)defName[defName_pos++]=a[i++];
-            defName[defName_pos]=0;
-            //defBlock_names.push_back(defName);
+            i=i+3;
+
+            //copy DEF-Name
+            if(a[i]==':')
+            {
+                defName[0]=0;
+            }
+            else
+            {
+                i++;
+                while(iswhite(a[i]))i++;
+                while(a[i]!=':' && a[i]!=0)
+                {
+                    if(defName_ln>=defName_maxln)
+                    {
+                        defName_maxln*=2;
+                        defName=(char *)realloc(defName,(defName_maxln+1)*sizeof(char));
+                    }
+                    defName[defName_ln++]=a[i++];
+                }
+            }
+
+            defName[defName_ln]=0;
         }
         else if(a[i]=='[')
         {
-            defName[0]=0;
-            defName_pos=0;
-
             i++;
-            while(a[i]!=']' && a[i]!=0 && defName_pos<63)defName[defName_pos++]=a[i++];
-            defName[defName_pos]=0;
-            //defBlock_names.push_back(defName);
+            while(a[i]!=']' && a[i]!=0)
+            {
+                if(defName_ln>=defName_maxln)
+                {
+                    defName_maxln*=2;
+                    defName=(char *)realloc(defName,(defName_maxln+1)*sizeof(char));
+                }
+                defName[defName_ln++]=a[i++];
+            }
+            defName[defName_ln]=0;
         }
         else if(a[i]=='}')
         {
             defName[0]=0;
-            defName_pos=0;
+            defName_ln=0;
         }
-        else if(i<INI_LINE_MAXLN-3 && a[i]=='E' && a[i+1]=='N' && a[i+2]=='D')
+        else if(i<a_ln-3 && a[i]=='E' && a[i+1]=='N' && a[i+2]=='D')
         {
             defName[0]=0;
-            defName_pos=0;
+            defName_ln=0;
         }
         else if(a[i]=='$' || a[i]=='-')
         {
@@ -137,112 +173,35 @@ bool Settings::loadfile(FILE *f)
 
             if(a[i]=='>')i++;
 
-            q=0;
-            name[0]=0;
-            while(a[i]!=0 && a[i]!='=' && q<63)
+            name_ln=0;
+            while(a[i]!=0 && a[i]!='=')
             {
-                name[q++]=a[i++];
+                if(name_ln>=name_maxln)
+                {
+                    name_maxln*=2;
+                    name=(char *)realloc(name,(name_maxln+1)*sizeof(char));
+                }
+                name[name_ln++]=a[i++];
             }
-            name[q]=0;
+            name[name_ln]=0;
 
             if(a[i]=='=')i++;
 
-            q=0;
-            while(a[i]!=0 && a[i]!='\n' && q<1023)
+            value_ln=0;
+            while(a[i]!=0 && a[i]!='\n')
             {
-                value[q]=a[i++];
-                q=q+1;
+                if(value_ln>=value_maxln)
+                {
+                    value_maxln*=2;
+                    value=(char *)realloc(value,(value_maxln+1)*sizeof(char));
+                }
+                value[value_ln++]=a[i++];
             }
-            value[q]=0;
+            value[value_ln]=0;
 
-            std::string val;
-            
-            if(q>=2 && value[0]=='\"')
-            {
-                int xm=0;
-                for(int k=1; k<q; k++)
-                {
-                    if(xm==0 && value[k]=='\\')
-                    {
-                        xm=1;
-                    }
-                    else if(xm==0 && value[k]=='\"')
-                    {
-                        value[k]=0;
-                        k=q;
-                    }
-                    else
-                    {
-                        xm=0;
-                    }
-                }
-                val=&value[1];
-            }
-            else if(q>=1 && value[0]!='\"')
-            {
-                int xm=0;
-                for(int k=0; k<q; k++)
-                {
-                    if(xm==0 && value[k]=='\\')
-                    {
-                        xm=1;
-                    }
-                    else if(xm==0 && value[k]==';')
-                    {
-                        value[k]=0;
-                        k=q;
-                    }
-                    else
-                    {
-                        xm=0;
-                    }
-                }
-                val=&value[1];
-            }
-            else val=value;
+            parse_value(value,value_ln);
 
-            int p=0;
-            for(unsigned int k=0; k<strlen(val.c_str()); k++)
-            {
-                if(val[k]!='\\')
-                {
-                    val[p++]=val[k];
-                }
-                else
-                {
-                    if(val[k+1]=='\'' || val[k+1]=='\"')
-                    {
-                        //skip
-                    }
-                    else if(val[k+1]=='\\')
-                    {
-                        val[p++]='\\';
-                        k++;
-                    }
-                    else if(val[k+1]=='n')
-                    {
-                        val[p++]='\n';
-                        k++;
-                    }
-                    else if(val[k+1]=='r')
-                    {
-                        val[p++]='\r';
-                        k++;
-                    }
-                    else if(val[k+1]=='t')
-                    {
-                        val[p++]='\t';
-                        k++;
-                    }
-                    else
-                    {
-                        //skip
-                    }
-                }
-            }
-            val[p]=0;
-
-            insert(defName,name,val);
+            insert(defName,name,value);
         }
     }
     updateDefBlockNames();
@@ -253,36 +212,77 @@ bool Settings::iswhite(char ch)
     if(ch==' ' || ch=='\t' || ch=='\n' || ch=='\r')return true;
     return false;
 }
-int Settings::readline(FILE *f,char *a,int maxln)
+unsigned int Settings::readline(FILE *f,char **a,unsigned int *ln,unsigned int *mem_ln)
 {
-    /*
-    int i=1;
-    a[0]=fgetc(f);
-    while(!feof(f) && i<maxln && a[i-1]!='\n' && a[i-1]!='\r')
+    *ln=0;
+    *a[*ln]=fgetc(f);
+    while(*a[*ln] && *a[*ln]!='\n' && *a[*ln]!='\r' && *a[*ln]!=EOF)
     {
-        a[i++]=fgetc(f);
-    }
-    if(a[0]=='\n' || a[0]=='\r')a[0]='#',i=2;
-    a[i-1]=0;
-    return i-1;
-    */
-    int i=0;
-    while(i==0)
-    {
-        i=0;
-        a[0]=0;
-        if(feof(f))return 0;
-        a[i]=fgetc(f);
-        while(i<maxln-1 && a[i]!='\n' && a[i]!='\r')
+        (*ln)++;
+        if(*ln>=*mem_ln)
         {
-            if(feof(f))goto m;
-            a[++i]=fgetc(f);
+            (*mem_ln)*=2;
+            *a=(char *)realloc(*a,(*mem_ln+1)*sizeof(char));
         }
+        *a[*ln]=fgetc(f);
     }
-m:
-    if(a[i]!='\n' || a[i]!='\r')a[i]=0;
-    else a[++i]=0;
-    return i;
+    *a[*ln]=0;
+    return *ln;
+}
+int Settings::parse_value(char *value,unsigned int value_ln)
+{
+    if(value[0]=='\"' && value[1])
+    {
+        int esc=0;
+        int pos=0;
+        for(unsigned int k=1; k<value_ln; k++)
+        {
+            if(esc==0 && value[k]=='\\')
+            {
+                esc=1;
+            }
+            else if(esc==0 && value[k]=='\"')
+            {
+                break;
+            }
+            else if(esc==1)
+            {
+                esc=0;
+                if(value[k]!='\'' && value[k]!='\"')
+                {
+                    value[pos++]=value[k];
+                }
+                else if(value[k]!='n')
+                {
+                    value[pos++]='\n';
+                }
+                else if(value[k]!='r')
+                {
+                    value[pos++]='\r';
+                }
+                else if(value[k]!='t')
+                {
+                    value[pos++]='\t';
+                }
+                else if(value[k]!='0')
+                {
+                    value[pos++]='\0';
+                }
+                else
+                {
+                    value[pos++]='\\';
+                    value[pos++]=value[k];
+                }
+            }
+            else
+            {
+                value[pos++]=value[k];
+            }
+        }
+        value[pos]=0;
+        return pos;
+    }
+    return -1;
 }
 int Settings::getDefBlockCount()
 {
