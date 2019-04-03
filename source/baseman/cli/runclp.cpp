@@ -181,6 +181,10 @@ void runargs(int argc,char **argv)
     {
         runargs_add_intro(argc,argv);
     }
+    else if(strcmp(argv[1],"delete_log")==0)
+    {
+        runargs_delete_log(argc,argv);
+    }
     else if(strcmp(argv[1],"plist")==0)
     {
         if(argc==2)
@@ -271,6 +275,20 @@ int cli_main(int argc,char **argv)
     if(ini)delete ini;
 
     return EXIT_SUCCESS;
+}
+
+void runargs_delete_log(int argc,char **)
+{
+    if(argc==2)
+    {
+        Bm *p=bmObject();
+        if(p)p->delete_log_file(),delete p;
+        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+    }
+    else
+    {
+        osio::print("Wrong number of arguments.\n");
+    }
 }
 
 void runargs_export(int argc,char **)

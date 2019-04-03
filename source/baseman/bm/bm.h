@@ -128,6 +128,16 @@ public:
     {
         do_package_export=b;
     }
+    virtual std::string get_export_file_path()
+    {
+        std::string p=(std::string)""+progdir+"export/"+virtual_path()+"log.csv";
+        return p;
+    }
+    virtual void delete_log_file()
+    {
+        std::string log_filename=get_export_file_path();
+        file::remove(log_filename.c_str());
+    }
     virtual void set_values(CsvRecord *r)=0;
     virtual void info()=0;
     void load();

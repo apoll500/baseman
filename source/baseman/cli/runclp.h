@@ -67,6 +67,7 @@ void runargs(int argc,char **argv);
 void imode(void);
 int cli_main(int argc,char **argv);
 
+void runargs_delete_log(int argc,char **);
 void runargs_clear(int argc,char **argv);
 void runargs_goup(int argc,char **argv);
 void runargs_list(int argc,char **argv);
