@@ -145,7 +145,7 @@ std::string Bm::tabpath(std::string tab)
     }
     else
     {
-        return (std::string)""+progdir+tab;
+        return tab;
     }
 }
 std::string Bm::abspath()

@@ -46,7 +46,6 @@
 #include "bm.h"
 
 extern MultiSettings *ini;
-extern char *progdir;
 
 class Base:public Bm
 {
