@@ -244,16 +244,9 @@ public:
     *                                                                *
     *****************************************************************/
     template<class T> void copy_item(std::string source_path,std::string target_path,BmCondCopyControl<T> *cc);
-    //template<class T> void runexport(const T *target_path_overwrite);
-    //template<class T> void runsnapshot(const T *target_path_overwrite);
-    //template<class T> void runupdate(const T *target_path_overwrite);
-    //template<class T> void runmerge(const T *target_path_overwrite);
-    //template<class T> void runimport(const T *target_path_overwrite);
-    //template<class T> void runcleanup(const T *target_path_overwrite);
     template<class T> void run(const T *target_path_overwrite,int flags,int *actions);
     template<class T> void run_snap(const T *target_path_overwrite,int flags,int *actions);
     template<class T> void run_diff(const T *target_path_overwrite,int flags,int *actions);
-    //template<class T> void rundiff(const T *target_path_overwrite);
     template<class T> void runsimulation(const T *target_path_overwrite);
     template<class T> void runsimulation_source(const T *target_path_overwrite);
     template<class T> void runsimulation_target(const T *target_path_overwrite);
@@ -269,12 +262,6 @@ public:
 *  CondCopyControllers                                               *
 *                                                                    *
 *********************************************************************/
-//#include "controllers/CopySimulator.h"
-//#include "controllers/CopySimulator_ListSource.h"
-//#include "controllers/CopySimulator_ListTarget.h"
-//#include "controllers/CopyControler.h"
-//#include "controllers/SnapshotControler.h"
-//#include "controllers/DiffControler.h"
 #include "../controllers/MergeControler.h"
 
 /*****************************************************************

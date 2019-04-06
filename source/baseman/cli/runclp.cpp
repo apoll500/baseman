@@ -1220,8 +1220,8 @@ void runargs_add_intro(int argc,char **argv)
 {
     if(argc==3)
     {
-        system("baseman simu target > target_list.txt");
-        std::string command=(std::string)"add_intro target_list.txt intro_"+argv[2]+".txt "+ini->get("project")+" "+argv[2];
+        system("baseman simu target > .baseman/target_list.txt");
+        std::string command=(std::string)"add_intro .baseman/target_list.txt intro_"+argv[2]+".txt "+ini->get("project")+" "+argv[2];
         system(command.c_str());
     }
     else
