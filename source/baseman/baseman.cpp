@@ -48,12 +48,10 @@ MultiSettings *ini;
 
 std::string get_baselist_path()
 {
-    //std::string p=(std::string)""+progdir+".baseman/baselist.csv"
     return ".baseman/baselist.csv";
 }
 std::string get_statusini_path()
 {
-    //std::string p=(std::string)""+progdir+".baseman/status.ini"
     return ".baseman/status.ini";
 }
 

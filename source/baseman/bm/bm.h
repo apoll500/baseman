@@ -60,7 +60,6 @@ void select_version(const char *version);
 #include "macros/macros.h"
 
 extern MultiSettings *ini;
-extern char *progdir;
 
 char *mstr(std::string s);
 
@@ -130,12 +129,12 @@ public:
     }
     virtual std::string get_export_log_file_path()
     {
-        std::string p=(std::string)""+progdir+".baseman/export/"+virtual_path()+"log.csv";
+        std::string p=(std::string)".baseman/export/"+virtual_path()+"log.csv";
         return p;
     }
     virtual std::string get_snapshot_log_file_path()
     {
-        std::string p=(std::string)""+progdir+".baseman/snapshot/"+virtual_path()+"log.csv";
+        std::string p=(std::string)".baseman/snapshot/"+virtual_path()+"log.csv";
         return p;
     }
     virtual void delete_log_file()

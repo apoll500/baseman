@@ -213,12 +213,6 @@ class dir
 public:
     /*****************************************************************
     *                                                                *
-    *  getProgramDirectory()                                         *
-    *                                                                *
-    *****************************************************************/
-    template<class T> static T *getProgramDirectory(const T *param);
-    /*****************************************************************
-    *                                                                *
     *  createdir()                                                   *
     *                                                                *
     *****************************************************************/
@@ -290,34 +284,6 @@ public:
 #include "path/path.h"
 #include "strman/strman.h"
 
-/*****************************************************************
-*                                                                *
-*  getProgramDirectory()                                         *
-*                                                                *
-*****************************************************************/
-template<class T> T *dir::getProgramDirectory(const T *param)
-{
-    T *path=path::pnopath(param);
-    //In case, if a relative path is given. (prepend current working directory)
-    if(!(path::pathtype(path) & PATH_ABS))
-    {
-        //finding out current directory:
-        //  POSIX:   getcwd()
-        //  ISO:     _getcwd() and _wgetcwd() ... (Not included in C-Runtime Library?)
-        //  WINDOWS: GetCurrentDirectory()
-        T *cwd=osdir::oscwd((T *)0,0);//Argument 0 lets the Funktion allocate the required memory.
-        if(cwd!=0)
-        {
-            T a[CONSTSTR_MAXSEPS];
-            cwd=(T *)realloc(cwd,(str::len(cwd)+str::len(path)+2)*sizeof(T));
-            str::cat(cwd,conststr::dirsep1(a));
-            str::cat(cwd,path);
-            free(path);
-            path=cwd;
-        }
-    }
-    return path;
-}
 /*****************************************************************
 *                                                                *
 *  createdir()                                                   *
