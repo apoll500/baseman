@@ -66,7 +66,7 @@ void Base::ini0(std::string base)
 
     plevelitem=0;
     parent=0;
-    tabname=tabpath("baselist.csv");
+    tabname=tabpath(".baseman/baselist.csv");
     flag=ini->get("group");
     if(flag=="")flag="1";
     key_name="name";

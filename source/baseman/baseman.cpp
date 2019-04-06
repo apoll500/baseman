@@ -46,6 +46,17 @@
 
 MultiSettings *ini;
 
+std::string get_baselist_path()
+{
+    //std::string p=(std::string)""+progdir+".baseman/baselist.csv"
+    return ".baseman/baselist.csv";
+}
+std::string get_statusini_path()
+{
+    //std::string p=(std::string)""+progdir+".baseman/status.ini"
+    return ".baseman/status.ini";
+}
+
 Bm *bmObject(void)
 {
     Bm *p;
@@ -117,7 +128,7 @@ void create_base(const char *base,const char *path,const char *group)
 
     char *tstr;
 
-    tstr=mstr((std::string)""+progdir+"baselist.csv");
+    tstr=mstr(get_baselist_path());
     data.load(tstr,"name,path,target,flag,description");
     free(tstr);
 
@@ -140,7 +151,7 @@ void create_base(const char *base,const char *path,const char *group)
     if(!data.setField(row,"path",path))osio::print("!-");
     if(!data.setField(row,"flag",group))osio::print("!-");
 
-    tstr=mstr((std::string)""+progdir+"baselist.csv");
+    tstr=mstr(get_baselist_path());
     data.save(tstr);
     free(tstr);
 }
@@ -161,7 +172,7 @@ void list_group(const char *group)
 {
     CsvData data;
 
-    char *tstr=mstr((std::string)""+progdir+"baselist.csv");
+    char *tstr=mstr(get_baselist_path());
     data.load(tstr,"name,path,target,flag,description");
     free(tstr);
 
@@ -192,7 +203,7 @@ void reset(void)
     ini->set("base","");
     ini->set("project","");
     ini->set("version","");
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     osio::print("Location is now at level <group>.\n");
 }
 void select_group(const char *group)
@@ -201,7 +212,7 @@ void select_group(const char *group)
     ini->set("base","");
     ini->set("project","");
     ini->set("version","");
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     osio::print("Group %s selected.\n",group);
     osio::print("Location is now at level <group>.\n");
 }
@@ -210,7 +221,7 @@ void select_base(const char *base)
     ini->set("base",base);
     ini->set("project","");
     ini->set("version","");
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     osio::print("Base %s selected.\n",base);
     osio::print("Location is now at level <base>.\n");
 }
@@ -220,7 +231,7 @@ void select_project(const char *project)
     if(p!="")ini->set("project",p+"/"+project);
     else ini->set("project",project);
     ini->set("version","");
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     osio::print("Project %s selected.\n",project);
     osio::print("Location is now at level <project>.\n");
 }
@@ -229,14 +240,14 @@ void select_version(const char *version)
     std::string p=ini->get("version");
     if(p!="")ini->set("version",p+"/"+version);
     else ini->set("version",version);
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     osio::print("Version %s selected.\n",version);
     osio::print("Location is now at level <version>.\n");
 }
 void unselect_base(void)
 {
     ini->set("base","");
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     osio::print("Location is now at level <group>.\n");
 }
 void unselect_project(void)
@@ -252,7 +263,7 @@ void unselect_project(void)
     p[i]=0;
     ini->set("project",p);
     print_level();
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     free(p);
 }
 void unselect_version(void)
@@ -268,7 +279,7 @@ void unselect_version(void)
     p[i]=0;
     ini->set("version",p);
     print_level();
-    ini->save("status.ini");
+    ini->save(".baseman/status.ini");
     free(p);
 }
 void print_level(void)
@@ -299,7 +310,7 @@ void create_baselist(void)
 {
     reset();
 
-    char *tstr=mstr((std::string)""+progdir+"baselist.csv");
+    char *tstr=mstr(get_baselist_path());
     FILE *f=file::openfile(tstr,"wb");
     free(tstr);
 

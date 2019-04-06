@@ -752,7 +752,8 @@ void Bm::clear_files()
 }
 void Bm::clear_log()
 {
-    clear(((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str(),"file,target,date,length");
+    std::string log_filename=get_export_log_file_path();
+    clear(log_filename.c_str(),"file,target,date,length");
 }
 /*****************************************************************
 *                                                                *

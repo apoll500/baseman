@@ -128,14 +128,19 @@ public:
     {
         do_package_export=b;
     }
-    virtual std::string get_export_file_path()
+    virtual std::string get_export_log_file_path()
     {
-        std::string p=(std::string)""+progdir+"export/"+virtual_path()+"log.csv";
+        std::string p=(std::string)""+progdir+".baseman/export/"+virtual_path()+"log.csv";
+        return p;
+    }
+    virtual std::string get_snapshot_log_file_path()
+    {
+        std::string p=(std::string)""+progdir+".baseman/snapshot/"+virtual_path()+"log.csv";
         return p;
     }
     virtual void delete_log_file()
     {
-        std::string log_filename=get_export_file_path();
+        std::string log_filename=get_export_log_file_path();
         file::remove(log_filename.c_str());
     }
     virtual void set_values(CsvRecord *r)=0;
@@ -308,24 +313,21 @@ template<class T> void Bm::copy_item(std::string source_path,std::string target_
 }
 template<class T> void Bm::run(const T *target_path_overwrite,int flags,int *actions)
 {
-    MergeControler<T> cc(((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str(),
-                         actions,flags);
-
+    std::string log_filename=get_export_log_file_path();
+    MergeControler<T> cc(log_filename.c_str(),actions,flags);
     runexport(target_path_overwrite,flags,actions,&cc);
 }
 template<class T> void Bm::run_snap(const T *target_path_overwrite,int flags,int *actions)
 {
-    MergeControler<T> cc(((std::string)""+progdir+"snapshot/"+virtual_path()+"log.csv").c_str(),
-                         actions,flags);
-
+    std::string snap_filename=get_snapshot_log_file_path();
+    MergeControler<T> cc(snap_filename.c_str(),actions,flags);
     runexport(target_path_overwrite,flags,actions,&cc);
 }
 template<class T> void Bm::run_diff(const T *target_path_overwrite,int flags,int *actions)
 {
-    MergeControler<T> cc(((std::string)""+progdir+"snapshot/"+virtual_path()+"log.csv").c_str(),
-                         ((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str(),
-                         actions,flags);
-
+    std::string snap_filename=get_snapshot_log_file_path();
+    std::string log_filename=get_export_log_file_path();
+    MergeControler<T> cc(snap_filename.c_str(),log_filename.c_str(),actions,flags);
     runexport(target_path_overwrite,flags,actions,&cc);
 }
 template<class T> void Bm::runexport(const T *target_path_overwrite,int flags,int *actions,MergeControler<T> *cc)
