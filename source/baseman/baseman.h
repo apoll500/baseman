@@ -46,6 +46,9 @@
 
 #include <string>
 
+#define BASEMAN_INIPATH ".baseman/status.ini"
+#define BASEMAN_BASELISTPATH ".baseman/baselist.csv"
+
 void print_location(void);
 
 void create_base0(const char *base,const char *path);
@@ -66,9 +69,6 @@ void print_level(void);
 
 void create_baselist(void);
 void open_baselist(void);
-
-std::string get_baselist_path();
-std::string get_statusini_path();
 
 #include "csv/csv.h"
 #include "settings/settings.h"

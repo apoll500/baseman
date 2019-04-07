@@ -261,7 +261,7 @@ int cli_main(int argc,char **argv)
     //ini=AbsMultiSettingsInterface::createMultiSettings();
     ini=new MultiSettings();
 
-    ini->loadfile(".baseman/status.ini");
+    ini->loadfile(BASEMAN_INIPATH);
 
     if(argc==1)
     {
@@ -1159,32 +1159,32 @@ void runargs_set(int argc,char **argv)
         if(strcmp(argv[2],"webspace")==0)
         {
             ini->set("webspace",pstr.c_str());
-            ini->save(".baseman/status.ini");
+            ini->save(BASEMAN_INIPATH);
         }
         else if(strcmp(argv[2],"browser")==0)
         {
             ini->set("browser",pstr.c_str());
-            ini->save(".baseman/status.ini");
+            ini->save(BASEMAN_INIPATH);
         }
         else if(strcmp(argv[2],"fileman")==0)
         {
             ini->set("fileman",pstr.c_str());
-            ini->save(".baseman/status.ini");
+            ini->save(BASEMAN_INIPATH);
         }
         else if(strcmp(argv[2],"editor")==0)
         {
             ini->set("editor",pstr.c_str());
-            ini->save(".baseman/status.ini");
+            ini->save(BASEMAN_INIPATH);
         }
         else if(strcmp(argv[2],"sblock")==0)
         {
             ini->setSelectedDefBlockName(pstr.c_str());
-            ini->save(".baseman/status.ini");
+            ini->save(BASEMAN_INIPATH);
         }
         else if(strcmp(argv[2],"ignore")==0)
         {
             ini->set("ignore",pstr.c_str());
-            ini->save(".baseman/status.ini");
+            ini->save(BASEMAN_INIPATH);
         }
         else
         {
@@ -1204,7 +1204,7 @@ void runargs_setiniblock(int argc,char **argv)
     if(argc==3)
     {
         ini->setSelectedDefBlockName(argv[2]);
-        ini->save(".baseman/status.ini");
+        ini->save(BASEMAN_INIPATH);
     }
     else if(argc==2)
     {

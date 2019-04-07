@@ -333,7 +333,7 @@ Bm *Bm::createBm(std::string basename,std::string projname,std::string versname,
                 //in case of missing project
                 //run downloader/installer
                 std::string command="bmsetup install "+basename+"/"+projname+"/"+versname;
-                printf("> %s\n",command.c_str());
+                //printf("> %s\n",command.c_str());
                 system(command.c_str());
 
                 //retry
