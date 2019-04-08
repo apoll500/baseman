@@ -254,14 +254,15 @@ int cli_main(int argc,char **argv)
 {
     setbuf(stdout,NULL);
 
-    //progdir=dir::getProgramDirectory(argv[0]);
-
     //ini=new settingsM(((std::string)""+progdir+".baseman/status.ini").c_str());
 
     //ini=AbsMultiSettingsInterface::createMultiSettings();
     ini=new MultiSettings();
 
-    ini->loadfile(BASEMAN_INIPATH);
+    if(!ini->loadfile(BASEMAN_INIPATH))
+    {
+        osio::print("[BASEMAN:] File setup.ini not found!\n");
+    }
 
     if(argc==1)
     {

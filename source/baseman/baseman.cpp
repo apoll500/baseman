@@ -147,8 +147,8 @@ void list_selected_group(void)
     std::string group_s=ini->get("group");
     const char *group=group_s.c_str();
 
-    if(group[0]==0)group="1";
-    list_group(group);
+    if(group[0]==0)list_group("1");
+    else list_group(group);
 }
 void list_group(const char *group)
 {

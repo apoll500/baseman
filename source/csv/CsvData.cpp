@@ -141,6 +141,8 @@ void CsvData::useHeader(bool h)
 int CsvData::getHeaderId(const char *col)
 {
     if(!header)return -1;
+    if(!data_size)return -1;
+    if(!data || !data[0])return -1;
     return data[0]->match(col);
 }
 char *CsvData::getHeader(int column_id)
