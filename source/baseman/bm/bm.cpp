@@ -94,7 +94,6 @@ void Bm::load()
 CsvData *Bm::load_data(const char *filename)
 {
     CsvData *data=new CsvData();
-    //AbsCsvData *data=AbsCsvDataInterface::createCsvData();
     if(data->load(filename))
     {
         osio::print("Missing file: %s\n",filename);
@@ -108,7 +107,6 @@ CsvData *Bm::load_data(const char *filename)
 CsvData *Bm::load_data_quiet(const char *filename)
 {
     CsvData *data=new CsvData();
-    //AbsCsvData *data=AbsCsvDataInterface::createCsvData();
     if(data->load(filename))
     {
         delete data;
@@ -772,6 +770,7 @@ void Bm::print_path()
 void Bm::create(const char *tab,const char *key,const char *name,const char *path)
 {
     CsvData data;
+    
     data.load(tab);
 
     data.useHeader(true);

@@ -300,7 +300,6 @@ template<class T> void MergeControler<T>::ini_MergeControler(const T *logfile_in
 {
     //INPUT
     log=new CsvData();
-    //log=AbsCsvDataInterface::createCsvData();
 
     if(log->load(logfile_in))
     {
@@ -611,7 +610,6 @@ template<class T> void MergeControler<T>::filecopied(const T *targetpath,const T
     osio::print(" OK\n");
     if(recs.count(targetpath)!=1)
     {
-        //AbsCsvSettings *s=AbsCsvSettingsInterface::createCsvSettings(',','\n','\"');
         CsvSettings *s=new CsvSettings(',','\n','\"');
         CsvField fld(s);
         fld.print(f,sourcepath);
@@ -878,7 +876,7 @@ template<class T> bool MergeControler<T>::test_match(const T *path,int depth,std
     char **pp=strman::explode("/",p);
     char **vv=strman::explode("/",v);
     char **aa=strman::explode("/",path);
-    for(int i=0; i<strman::explode_count(pp); i++)
+    for(int i=0;i<strman::explode_count(pp);i++)
     {
         if(strman::isprefix("mod_",pp[i]))
         {

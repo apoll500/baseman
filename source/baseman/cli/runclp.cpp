@@ -254,9 +254,6 @@ int cli_main(int argc,char **argv)
 {
     setbuf(stdout,NULL);
 
-    //ini=new settingsM(((std::string)""+progdir+".baseman/status.ini").c_str());
-
-    //ini=AbsMultiSettingsInterface::createMultiSettings();
     ini=new MultiSettings();
 
     if(!ini->loadfile(BASEMAN_INIPATH))
