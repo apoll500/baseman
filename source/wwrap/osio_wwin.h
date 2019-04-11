@@ -47,7 +47,7 @@
 //#include "strconv/functions/all.hfunc"
 //#include "strconv/functions/all.h"
 //#include "strconv/functions/all.hwrap0"
-#include "strconv/module.h"
+#include "strconv/v01/module.h"
 #else
 #include "strconv/strconv.h"
 #endif
@@ -58,7 +58,7 @@
 #ifdef COMPILE_PROKEE_MODULE
 #ifndef COMPILE_PROKEE_MODULE_NO_STRCONV
 #define PROKEE_USE_WRAPPER
-#include "strconv/module.h"
+#include "strconv/v01/module.h"
 #else
 #include "strconv/strconv.h"
 #endif
