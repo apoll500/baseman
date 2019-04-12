@@ -113,7 +113,7 @@ void Version::ini0(char **versions,std::string basename,std::string projectname)
     load();
 }
 
-void Version::set_values(CsvRecord *r)
+void Version::set_values(AbsCsvRecord *r)
 {
     target="";
 

@@ -1,0 +1,20 @@
+#ifndef PLIB_FUNCTION_settings_iface_all_fw
+#define PLIB_FUNCTION_settings_iface_all_fw
+
+#ifdef PROKEE_USE_INTERFACE
+
+//Interfaces
+class AbsSettings;
+
+class AbsMultiSettings;
+
+
+//Factories
+class AbsSettingsInterface;
+
+class AbsMultiSettingsInterface;
+
+
+#endif
+
+#endif

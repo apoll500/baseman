@@ -42,10 +42,14 @@
 
 #include <string>
 
+//#include "csv/CsvData.h"
+//#include "settings/settings.h"
+//#include "path/path.h"
+
 #include "../baseman.h"
 #include "bm.h"
 
-extern MultiSettings *ini;
+extern AbsMultiSettings *ini;
 
 class Version:public Bm
 {
@@ -59,7 +63,7 @@ public:
     ~Version();
     void ini0(char **versions);
     void ini0(char **versions,std::string basename,std::string projectname);
-    void set_values(CsvRecord *r);
+    void set_values(AbsCsvRecord *r);
     void info();
 };
 

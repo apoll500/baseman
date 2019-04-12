@@ -1,12 +1,16 @@
 #ifndef PLIB_CLASS_file_all_hh
 #define PLIB_CLASS_file_all_hh
 
-//Interfaces
-template< class T > class CondCopyControl;
+#ifdef PROKEE_USE_INTERFACE
 
-
-//Factories
-class CondCopyControlInterface;
+//Foreward declartions of classes
+#ifdef COMPILE_PROKEE_MODULE
+#include "file/v01/wrapper/import/all.fw"
+#include "file/v01/interface/import/all.fw"
+//#include "file/file.fw"
+#else
+#include "file/file.fw"
+#endif
 
 
 #include <stdio.h>
@@ -15,19 +19,16 @@ class CondCopyControlInterface;
 
 template< class T > class CondCopyControl
 {
-private:
-    //PRIVATE MEMBERS---------------------------------------------------
-    
-protected:
-    //PROTECTED MEMBERS-------------------------------------------------
-    
 public:
-    //PUBLIC MEMBERS----------------------------------------------------
-    
     //DESTRUCTOR--------------------------------------------------------
     virtual ~CondCopyControl(){}
-    //METHODS-----------------------------------------------------------
+    //SUPERCLASS METHODS------------------------------------------------
     
+    //SUPERCLASS GETTER METHODS-----------------------------------------
+    
+    //SUPERCLASS SETTER METHODS-----------------------------------------
+    
+    //METHODS-----------------------------------------------------------
     
     virtual bool doCopyFile(const T * targetpath,const T * sourcepath)=0;
     
@@ -51,5 +52,32 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
+template< class T > class CondCopyControl2:virtual public CondCopyControl< T >
+{
+private:
+    //PRIVATE MEMBERS---------------------------------------------------
+    
+protected:
+    //PROTECTED MEMBERS-------------------------------------------------
+    
+public:
+    //PUBLIC MEMBERS----------------------------------------------------
+    
+    //DESTRUCTOR--------------------------------------------------------
+    virtual ~CondCopyControl2(){}
+    //METHODS-----------------------------------------------------------
+    
+    //SUPERCLASS GETTER METHODS-----------------------------------------
+    
+    //SUPERCLASS SETTER METHODS-----------------------------------------
+    
+    //GETTER METHODS----------------------------------------------------
+    
+    //SETTER METHODS----------------------------------------------------
+    
+};
 
+
+
+#endif
 #endif

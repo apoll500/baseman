@@ -37,6 +37,7 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+// strconv.cpp
 #include "strconv.h"
 
 char *strconv::to_str(char **str_out,unsigned int *str_out_ln,const char *str_in)
@@ -79,6 +80,26 @@ char *strconv::to_str(char **str_out,unsigned int *str_out_ln,const wchar_t *str
         str_out_i=0;
     }
 
+    //WideCharToMultiByte
+    //    int WideCharToMultiByte(
+    //      _In_      UINT    CodePage,
+    //      _In_      DWORD   dwFlags,
+    //      _In_      LPCWSTR lpWideCharStr,
+    //      _In_      int     cchWideChar,
+    //      _Out_opt_ LPSTR   lpMultiByteStr,
+    //      _In_      int     cbMultiByte,
+    //      _In_opt_  LPCSTR  lpDefaultChar,
+    //      _Out_opt_ LPBOOL  lpUsedDefaultChar
+    //    );
+    //  1: code-page: CP_UTF8
+    //  2: flags: WC_ERR_INVALID_CHARS (moeglich fuer CP_UTF8 ab Vista)
+    //  3: input_string: wchar_t
+    //  4: length (-1 for null-terminated strings, this should also output a null-terminated string)
+    //  5: out_buffer: char
+    //  6: output buffer size (0 for requesting the required size (this is in BYTES))
+    //  7: pointer to default character (NULL for System default value)
+    //  8: indicates if default character is used, can be set to NULL. (MUST be set to NULL for CP_UTF8)
+
     int length_in_bytes=WideCharToMultiByte(CP_UTF8,0,str_in,-1,str_out_i,0,NULL,NULL);
     if(length_in_bytes==0)
     {
@@ -120,6 +141,16 @@ wchar_t *strconv::to_wcs(wchar_t **str_out,unsigned int *str_out_ln,const char *
     {
         str_out_i=0;
     }
+
+    //MultiByteToWideChar
+    //    int MultiByteToWideChar(
+    //      _In_      UINT   CodePage,
+    //      _In_      DWORD  dwFlags,
+    //      _In_      LPCSTR lpMultiByteStr,
+    //      _In_      int    cbMultiByte,
+    //      _Out_opt_ LPWSTR lpWideCharStr,
+    //      _In_      int    cchWideChar
+    //    );
 
     int length_in_characters=MultiByteToWideChar(CP_UTF8,0,str_in,-1,str_out_i,0);
     if(length_in_characters==0)

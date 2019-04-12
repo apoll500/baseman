@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+//baseman/code/v01/files/source/baseman/baseman.h
+
 #ifndef MOD_baseman_H
 #define MOD_baseman_H
 
@@ -48,6 +50,13 @@
 
 #define BASEMAN_INIPATH ".baseman/status.ini"
 #define BASEMAN_BASELISTPATH ".baseman/baselist.csv"
+
+#include "baseman/import/prokee.h"
+
+//#include "csv/CsvData.h"
+//#include "settings/settings.h"
+//#include "path/path.h"
+//#include "file/file.h"
 
 void print_location(void);
 
@@ -70,19 +79,33 @@ void print_level(void);
 void create_baselist(void);
 void open_baselist(void);
 
-#include "csv/csv.h"
-#include "settings/settings.h"
+class baseman
+{
+public:
+    static int main(int argc,char **argv);
+    static void set_printer(int(*print)(const char *));
+};
+
+#include "baseman/import/modules.h"
+
+//#include "bm/bm.h"
+//#include "bm/base.h"
+//#include "bm/project.h"
+//#include "bm/version.h"
 
 class Bm;
 
 Bm *bmObject(void);
 
-class MultiSettings;
+class AbsMultiSettings;
 
-extern MultiSettings *ini;
+extern AbsMultiSettings *ini;
 
+#ifndef COMPILE_PROKEE_MODULE
+#include "settings/settings.h"
 #include "csv/CsvData.h"
 #include "csv/CsvRecord.h"
 #include "csv/CsvField.h"
+#endif
 
 #endif

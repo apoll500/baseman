@@ -39,6 +39,10 @@
 *******************************************************************************/
 #include "FileReader.hpp"
 
+//------------------------------------------------------------------------------
+// FileReader
+//------------------------------------------------------------------------------
+
 FileReader::FileReader(FILE *file):ReaderImpl()
 {
     f=file;
@@ -60,6 +64,7 @@ FileReader::FileReader(const char *a):ReaderImpl()
     {
         file_opened_here=true;
     }
+    //printf("reader: status=%d-%d -- %d\n",lastError,lastErrorDetail,getLastError());
 }
 
 #ifdef OS_WIN
@@ -102,4 +107,128 @@ int FileReader::getNextChar()
     }
     currentChar=fgetc(f);
     return 1;
+}
+
+//------------------------------------------------------------------------------
+// WcsFileReader
+//------------------------------------------------------------------------------
+
+WcsFileReader::WcsFileReader(FILE *file):ReaderImpl()
+{
+    f=file;
+    file_opened_here=false;
+}
+
+WcsFileReader::WcsFileReader(const char *a):ReaderImpl()
+{
+    f=fopen(a,"rb");
+    if(!f)
+    {
+        lastError=READER_ERROR_OPEN_FILE;
+        lastErrorDetail=errno;
+        file_opened_here=false;
+    }
+    else
+    {
+        file_opened_here=true;
+    }
+}
+
+#ifdef OS_WIN
+WcsFileReader::WcsFileReader(const wchar_t *a):ReaderImpl()
+{
+    f=_wfopen(a,L"rb");
+    if(!f)
+    {
+        lastError=READER_ERROR_OPEN_FILE;
+        lastErrorDetail=errno;
+        file_opened_here=false;
+    }
+    else
+    {
+        file_opened_here=true;
+    }
+}
+#else
+WcsFileReader::WcsFileReader(const wchar_t *):ReaderImpl()
+{
+    //wchar_t version for linux not jet implemented.
+    lastError=READER_ERROR_OPEN_FILE;
+    lastErrorDetail=0;
+    file_opened_here=false;
+    fprintf(stderr,"\n[ERROR] reader: Error while opening file.\nFilename given as (wchar_t *) string. This function is not avalable for OS_LIN!\n");
+}
+#endif
+
+WcsFileReader::~WcsFileReader()
+{
+    if(file_opened_here)fclose(f);
+}
+
+int WcsFileReader::getNextChar()
+{
+    if(!f || feof(f))
+    {
+        return 0;
+    }
+    currentChar=fgetwc(f);
+    return 1;
+}
+//------------------------------------------------------------------------------
+// Char16FileReader
+//------------------------------------------------------------------------------
+int Char16FileReader::getNextChar()
+{
+    if(!f || feof(f))
+    {
+        return 0;
+    }
+    if(!fread(&currentChar,sizeof(char16_t),1,f))return 0;
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+// Char32FileReader
+//------------------------------------------------------------------------------
+int Char32FileReader::getNextChar()
+{
+    if(!f || feof(f))
+    {
+        return 0;
+    }
+    if(!fread(&currentChar,sizeof(char32_t),1,f))return 0;
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+// UniFileReader
+//------------------------------------------------------------------------------
+UniFileReader::UniFileReader(FILE *file,int csize):FileReader(file)
+{
+    char_size=csize;
+}
+UniFileReader::UniFileReader(const char *a,int csize):FileReader(a)
+{
+    char_size=csize;
+}
+UniFileReader::UniFileReader(const wchar_t *a,int csize):FileReader(a)
+{
+    char_size=csize;
+}
+int UniFileReader::getNextChar()
+{
+    if(!f || feof(f))
+    {
+        return 0;
+    }
+    if(!fread(&currentChar,char_size,1,f))return 0;
+    return 1;
+}
+int UniFileReader::getCharSize()
+{
+    return char_size;
+}
+void UniFileReader::setCharSize(int csize)
+{
+    char_size=csize;
 }

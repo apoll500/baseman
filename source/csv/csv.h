@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+//csv/code/v01/files/source/csv/csv.h
+
 #ifndef MOD_csv_H
 #define MOD_csv_H
 
@@ -44,17 +46,26 @@
 #include <stdlib.h>
 #include <limits.h>
 
-class CsvData;
-class CsvRecord;
-class CsvField;
-class CsvSettings;
+#include "csv/import/prokee.h"
+//#include "csv.fw"
+
+/*
+class csv
+{
+};
+*/
+
+#include "csv.hh"
 
 #include "CsvRecord.h"
 #include "CsvData.h"
 #include "CsvField.h"
 #include "CsvSettings.h"
 
-#include "reader/FileReader.hpp"
+#include "csv/import/modules.h"
+
+#include "csv.hh2"
+
 
 int cmpi(const void *a,const void *b);
 int iln(int *row);

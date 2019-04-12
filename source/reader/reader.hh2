@@ -1,0 +1,98 @@
+#ifndef PLIB_CLASS_reader_all_interface_factory
+#define PLIB_CLASS_reader_all_interface_factory
+
+#ifdef PROKEE_USE_INTERFACE
+
+
+class ReaderInterface
+{
+public:
+    static Reader *createStrReader(const char *a,int ln)
+    {
+        return (Reader *)new StrReader(a,ln);
+    }
+    static Reader *createChar16Reader(const char16_t *a,int ln)
+    {
+        return (Reader *)new Char16Reader(a,ln);
+    }
+    static Reader *createChar32Reader(const char32_t *a,int ln)
+    {
+        return (Reader *)new Char32Reader(a,ln);
+    }
+    static Reader *createWcsReader(const wchar_t *a,int ln)
+    {
+        return (Reader *)new WcsReader(a,ln);
+    }
+    static Reader *createFileReader(FILE *f)
+    {
+        return (Reader *)new FileReader(f);
+    }
+    static Reader *createFileReader(const char *filename)
+    {
+        return (Reader *)new FileReader(filename);
+    }
+    static Reader *createFileReader(const wchar_t *filename)
+    {
+        return (Reader *)new FileReader(filename);
+    }
+    static Reader *createWcsFileReader(FILE *f)
+    {
+        return (Reader *)new WcsFileReader(f);
+    }
+    static Reader *createWcsFileReader(const char *filename)
+    {
+        return (Reader *)new WcsFileReader(filename);
+    }
+    static Reader *createWcsFileReader(const wchar_t *filename)
+    {
+        return (Reader *)new WcsFileReader(filename);
+    }
+    static Reader *createChar16FileReader(FILE *f)
+    {
+        return (Reader *)new Char16FileReader(f);
+    }
+    static Reader *createChar16FileReader(const char *filename)
+    {
+        return (Reader *)new Char16FileReader(filename);
+    }
+    static Reader *createChar16FileReader(const wchar_t *filename)
+    {
+        return (Reader *)new Char16FileReader(filename);
+    }
+    static Reader *createChar32FileReader(FILE *f)
+    {
+        return (Reader *)new Char32FileReader(f);
+    }
+    static Reader *createChar32FileReader(const char *filename)
+    {
+        return (Reader *)new Char32FileReader(filename);
+    }
+    static Reader *createChar32FileReader(const wchar_t *filename)
+    {
+        return (Reader *)new Char32FileReader(filename);
+    }
+};
+
+
+
+class AbsUniFileReaderInterface
+{
+public:
+    static AbsUniFileReader *createUniFileReader(FILE *f,int csize)
+    {
+        return (AbsUniFileReader *)new UniFileReader(f,csize);
+    }
+    static AbsUniFileReader *createUniFileReader(const char *filename,int csize)
+    {
+        return (AbsUniFileReader *)new UniFileReader(filename,csize);
+    }
+    static AbsUniFileReader *createUniFileReader(const wchar_t *filename,int csize)
+    {
+        return (AbsUniFileReader *)new UniFileReader(filename,csize);
+    }
+};
+
+
+
+#endif
+#endif

@@ -1,0 +1,14 @@
+#ifndef PLIB_FUNCTION_label_iface_all_fw
+#define PLIB_FUNCTION_label_iface_all_fw
+
+#ifdef PROKEE_USE_INTERFACE
+
+//Interfaces
+
+
+//Factories
+
+
+#endif
+
+#endif

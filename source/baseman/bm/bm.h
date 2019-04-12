@@ -41,6 +41,7 @@
 #define BASEMAN_BM_H
 
 #include <string>
+//#include <time.h>
 
 #define RUN_DIRWALK 1
 #define RUN_EXPORT 2
@@ -56,10 +57,15 @@
 void select_project(const char *project);
 void select_version(const char *version);
 
+//#include "csv/CsvData.h"
+//#include "settings/settings.h"
+//#include "path/path.h"
+//#include "file/file.h"
+
 #include "../baseman.h"
 #include "macros/macros.h"
 
-extern MultiSettings *ini;
+extern AbsMultiSettings *ini;
 
 char *mstr(std::string s);
 
@@ -142,12 +148,12 @@ public:
         std::string log_filename=get_export_log_file_path();
         file::remove(log_filename.c_str());
     }
-    virtual void set_values(CsvRecord *r)=0;
+    virtual void set_values(AbsCsvRecord *r)=0;
     virtual void info()=0;
     void load();
-    CsvData *load_data(const char *filename);
-    CsvData *load_data_quiet(const char *filename);
-    CsvRecord *get_record(CsvData *data,const char *sfld,const char *name,const char *flag);
+    AbsCsvData *load_data(const char *filename);
+    AbsCsvData *load_data_quiet(const char *filename);
+    AbsCsvRecord *get_record(AbsCsvData *data,const char *sfld,const char *name,const char *flag);
     /*****************************************************************
     *                                                                *
     *  path()                                                        *
@@ -244,9 +250,16 @@ public:
     *                                                                *
     *****************************************************************/
     template<class T> void copy_item(std::string source_path,std::string target_path,BmCondCopyControl<T> *cc);
+    //template<class T> void runexport(const T *target_path_overwrite);
+    //template<class T> void runsnapshot(const T *target_path_overwrite);
+    //template<class T> void runupdate(const T *target_path_overwrite);
+    //template<class T> void runmerge(const T *target_path_overwrite);
+    //template<class T> void runimport(const T *target_path_overwrite);
+    //template<class T> void runcleanup(const T *target_path_overwrite);
     template<class T> void run(const T *target_path_overwrite,int flags,int *actions);
     template<class T> void run_snap(const T *target_path_overwrite,int flags,int *actions);
     template<class T> void run_diff(const T *target_path_overwrite,int flags,int *actions);
+    //template<class T> void rundiff(const T *target_path_overwrite);
     template<class T> void runsimulation(const T *target_path_overwrite);
     template<class T> void runsimulation_source(const T *target_path_overwrite);
     template<class T> void runsimulation_target(const T *target_path_overwrite);
@@ -262,6 +275,12 @@ public:
 *  CondCopyControllers                                               *
 *                                                                    *
 *********************************************************************/
+//#include "controllers/CopySimulator.h"
+//#include "controllers/CopySimulator_ListSource.h"
+//#include "controllers/CopySimulator_ListTarget.h"
+//#include "controllers/CopyControler.h"
+//#include "controllers/SnapshotControler.h"
+//#include "controllers/DiffControler.h"
 #include "../controllers/MergeControler.h"
 
 /*****************************************************************
@@ -297,17 +316,106 @@ template<class T> void Bm::copy_item(std::string source_path,std::string target_
         file::copyfile(target_path.c_str(),source_path.c_str(),cc);
     }
 }
+/*
+template<class T> void Bm::runexport(const T *target_path_overwrite)
+{
+    CopyControler<char> cc(((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str());
+    runexport(target_path_overwrite,&cc);
+}
+template<class T> void Bm::runsnapshot(const T *target_path_overwrite)
+{
+    SnapshotControler<char> cc(((std::string)""+progdir+"snapshot/"+virtual_path()+"log.csv").c_str());
+    runexport(target_path_overwrite,&cc);
+}
+*/
+/*
+template<class T> void Bm::runupdate(const T *target_path_overwrite)
+{
+    UpdateControler<char> cc(((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str());
+    runexport(target_path_overwrite,&cc);
+}
+template<class T> void Bm::runmerge(const T *target_path_overwrite)
+{
+    MergeAndImportControler<char> cc(((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str());
+    dir::walktree(targetpath("").c_str(),&cc);
+    runexport(target_path_overwrite,&cc);
+}
+template<class T> void Bm::runimport(const T *target_path_overwrite)
+{
+    MergeAndImportControler<char> cc(((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str());
+    dir::walktree(targetpath("").c_str(),&cc);
+    cc.importfiles(fullpath.c_str(),targetpath("").c_str());
+}
+template<class T> void Bm::runcleanup(const T *target_path_overwrite)
+{
+    CleanupControler<char> cc(((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str());
+    runexport(target_path_overwrite,&cc);
+}
+*/
 template<class T> void Bm::run(const T *target_path_overwrite,int flags,int *actions)
 {
     std::string log_filename=get_export_log_file_path();
     MergeControler<T> cc(log_filename.c_str(),actions,flags);
     runexport(target_path_overwrite,flags,actions,&cc);
+    /*
+    if(flags & RUN_DIRWALK || flags & RUN_IMPORT || flags & RUN_PRINTNEW || actions[12]!=ACTION_DONOTHING)
+        dir::walktree(targetpath("").c_str(),&cc);
+
+    if(flags & RUN_EXPORT)
+        runexport(target_path_overwrite,&cc);
+
+    if(flags & RUN_IMPORT)
+        cc.importfiles(fullpath.c_str(),targetpath("").c_str());
+    */
+    /*
+    if(     actions[1]!=ACTION_DONOTHING ||
+            actions[2]!=ACTION_DONOTHING ||
+            actions[3]!=ACTION_DONOTHING ||
+            actions[4]!=ACTION_DONOTHING ||
+            actions[5]!=ACTION_DONOTHING ||
+            actions[6]!=ACTION_DONOTHING ||
+            actions[7]!=ACTION_DONOTHING ||
+            actions[8]!=ACTION_DONOTHING ||
+            actions[9]!=ACTION_DONOTHING ||
+            actions[11]!=ACTION_DONOTHING
+            )
+        runexport(target_path_overwrite,&cc);
+
+    else if(actions[10]!=ACTION_DONOTHING ||
+            actions[12]==ACTION_DONOTHING
+            )
+        cc.importfiles(fullpath.c_str(),targetpath("").c_str());
+
+    if(     actions[12]!=ACTION_DONOTHING
+            )
+        cc.importfiles(fullpath.c_str(),targetpath("").c_str());
+    */
+    //New files: (RUN_IMPORT | RUN_PRINTNEW) ----> RUN_DIRWALK, benötigt kein RUN_EXPORT
+    //              RUN_IMPORT falls actions[12]!=ACTION_DONOTHING
+    //Export: RUN_EXPORT (für export, merge, ...)
+    //DelObs: RUN_CLEAN | RUN_PRINTOBS
+    //EmptyDirs: RUN_MKEMPTYDIRS | (RUN_DELDIRS nur relevant für RUN_CLEAN)
+    //ConsLog: RUN_CONSLOG
+    //--RUN_IMPORT
+    //--RUN_EXPORT
+    //--RUN_DIRWALK
+    //++RUN_PRINTNEW
 }
 template<class T> void Bm::run_snap(const T *target_path_overwrite,int flags,int *actions)
 {
     std::string snap_filename=get_snapshot_log_file_path();
     MergeControler<T> cc(snap_filename.c_str(),actions,flags);
     runexport(target_path_overwrite,flags,actions,&cc);
+    /*
+    if(flags & RUN_DIRWALK || flags & RUN_IMPORT || flags & RUN_PRINTNEW || actions[12]!=ACTION_DONOTHING)
+        dir::walktree(targetpath("").c_str(),&cc);
+
+    if(flags & RUN_EXPORT)
+        runexport(target_path_overwrite,&cc);
+
+    if(flags & RUN_IMPORT)
+        cc.importfiles(fullpath.c_str(),targetpath("").c_str());
+    */
 }
 template<class T> void Bm::run_diff(const T *target_path_overwrite,int flags,int *actions)
 {
@@ -315,7 +423,44 @@ template<class T> void Bm::run_diff(const T *target_path_overwrite,int flags,int
     std::string log_filename=get_export_log_file_path();
     MergeControler<T> cc(snap_filename.c_str(),log_filename.c_str(),actions,flags);
     runexport(target_path_overwrite,flags,actions,&cc);
+    /*
+    if(flags & RUN_DIRWALK || flags & RUN_IMPORT || flags & RUN_PRINTNEW || actions[12]!=ACTION_DONOTHING)
+        dir::walktree(targetpath("").c_str(),&cc);
+
+    if(flags & RUN_EXPORT)
+        runexport(target_path_overwrite,&cc);
+
+    if(flags & RUN_IMPORT)
+        cc.importfiles(fullpath.c_str(),targetpath("").c_str());
+    */
 }
+/*
+template<class T> void Bm::rundiff(const T *target_path_overwrite)
+{
+    DiffControler<char> cc(
+                           ((std::string)""+progdir+"snapshot/"+virtual_path()+"log.csv").c_str(),
+                           ((std::string)""+progdir+"export/"+virtual_path()+"log.csv").c_str()
+                           );
+    runexport(target_path_overwrite,&cc);
+}
+*/
+/*
+template<class T> void Bm::runsimulation(const T *target_path_overwrite)
+{
+    CopySimulator<char> cc;
+    runexport(target_path_overwrite,&cc);
+}
+template<class T> void Bm::runsimulation_source(const T *target_path_overwrite)
+{
+    CopySimulator_ListSource<char> cc;
+    runexport(target_path_overwrite,&cc);
+}
+template<class T> void Bm::runsimulation_target(const T *target_path_overwrite)
+{
+    CopySimulator_ListTarget<char> cc;
+    runexport(target_path_overwrite,&cc);
+}
+*/
 template<class T> void Bm::runexport(const T *target_path_overwrite,int flags,int *actions,MergeControler<T> *cc)
 {
     std::string ign=ini->get("ignore")+";";
@@ -331,7 +476,7 @@ template<class T> void Bm::runexport(const T *target_path_overwrite,int flags,in
         i++;
     }
 
-    for(i=0; i<13; i++)
+    for(i=0;i<13;i++)
     {
         if(actions[i]==ACTION_PACKAGE)
         {
@@ -352,6 +497,12 @@ template<class T> void Bm::runexport(const T *target_path_overwrite,int flags,in
         {
             all_projects_info a;
             a=get_all_projects();
+            /*
+            for(unsigned int i=0;i<a.project.size();i++)
+            {
+                printf("%d) %s --> %s --> %s\n",i,a.project[i].base.c_str(),a.project[i].project.c_str(),a.project[i].version.c_str());
+            }
+            */
             cc->importfiles_extmode(targetpath("").c_str(),10,a);
         }
         else
@@ -386,7 +537,7 @@ template<class T> void Bm::runexport(std::string target_path_overwrite,BmCondCop
 }
 template<class T> void Bm::runexport(const char *tab,std::string target_path_overwrite,BmCondCopyControl<T> *cc)
 {
-    CsvData *data=load_data(tab);
+    AbsCsvData *data=load_data(tab);
     if(!data)
     {
         osio::print("Could'nt open file %s.\n",tab);
@@ -411,7 +562,7 @@ template<class T> void Bm::runexport(const char *tab,std::string target_path_ove
     int hid_targ=data->getHeaderId("target");
     int hid_desc=data->getHeaderId("description");
 
-    CsvRecord **rec=data->getAllRecords("flag","1");
+    AbsCsvRecord **rec=data->getAllRecords("flag","1");
     int i=0;
     while(rec[i]!=0)
     {

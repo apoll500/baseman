@@ -46,6 +46,12 @@
 
 #include "baseman/baseman.h"
 
+//#include "file/file.h"
+//#include "path/path.h"
+
+//#include "csv/CsvData.h"
+//#include "settings/settings.h"
+
 #include "../controllers/MergeControler.h"
 
 #include "licenses/license_GPL3.h"

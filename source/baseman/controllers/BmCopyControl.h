@@ -42,7 +42,9 @@
 
 class Bm;
 
+#ifndef COMPILE_PROKEE_MODULE
 #include "file/file.h"
+#endif
 
 #include "../baseman.h"
 
@@ -51,6 +53,9 @@ class Bm;
 #include <vector>
 #include <string>
 
+/** CondCopyControl implementation required for class Bm.
+
+*/
 template<class T> class BmCondCopyControl:public CondCopyControl<T>
 {
 protected:

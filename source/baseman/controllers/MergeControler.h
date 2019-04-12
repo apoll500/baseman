@@ -83,8 +83,8 @@ template<class T> class MergeControler:public BmCondCopyControl<T>,public TreeWa
 {
 protected:
     FILE *f;
-    CsvData *log;
-    std::map<std::string,CsvRecord *> recs;
+    AbsCsvData *log;
+    std::map<std::string,AbsCsvRecord *> recs;
     std::map<std::string,int> status;
     std::map<std::string,std::string> firstsource;
     std::vector<std::string> newfiles;
@@ -139,89 +139,89 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
 {
     switch(casemeth[fall])
     {
-    case ACTION_DONOTHING:
-        return false;
-    case ACTION_EXPORT:
-        osio::print("---> %s",targetpath);
-        return true;
-    case ACTION_IMPORT:
-        osio::print("<--- %s",targetpath);
-        return swapcopy(targetpath,sourcepath);
-    case ACTION_EXPORT_BACKUP:
-        osio::print("---> %s",targetpath);
-        backupcopy(sourcepath,targetpath);
-        return true;
-    case ACTION_IMPORT_BACKUP:
-        osio::print("<--- %s",targetpath);
-        backupcopy(sourcepath,sourcepath);
-        return swapcopy(targetpath,sourcepath);
-    case ACTION_CONFLICT_NEW:
-    case ACTION_CONFLICT_CHANGED:
-        osio::print("-><- %s\n",targetpath);
-        osio::print("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nCONFLICT (SOURCE AND TARGET CHANGED):\nSOURCE: %s\nTARGET: %s\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n",sourcepath,targetpath);
-        osio::print("comparing...");
-        if(file::compare(targetpath,sourcepath))
-        {
-            osio::print("...true.\n");
-            osio::print("updating logfile...");
-            filecopied(targetpath,sourcepath,osfile::get_size(sourcepath));
-            std::vector<std::string>::iterator i;
-            for(i=newfiles.begin(); i!=newfiles.end(); i++)
+        case ACTION_DONOTHING:
+            return false;
+        case ACTION_EXPORT:
+            osio::print("---> %s",targetpath);
+            return true;
+        case ACTION_IMPORT:
+            osio::print("<--- %s",targetpath);
+            return swapcopy(targetpath,sourcepath);
+        case ACTION_EXPORT_BACKUP:
+            osio::print("---> %s",targetpath);
+            backupcopy(sourcepath,targetpath);
+            return true;
+        case ACTION_IMPORT_BACKUP:
+            osio::print("<--- %s",targetpath);
+            backupcopy(sourcepath,sourcepath);
+            return swapcopy(targetpath,sourcepath);
+        case ACTION_CONFLICT_NEW:
+        case ACTION_CONFLICT_CHANGED:
+            osio::print("-><- %s\n",targetpath);
+            osio::print("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nCONFLICT (SOURCE AND TARGET CHANGED):\nSOURCE: %s\nTARGET: %s\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n",sourcepath,targetpath);
+            osio::print("comparing...");
+            if(file::compare(targetpath,sourcepath))
             {
-                if(str::cmp((*i).c_str(),targetpath)==0)
+                osio::print("...true.\n");
+                osio::print("updating logfile...");
+                filecopied(targetpath,sourcepath,osfile::get_size(sourcepath));
+                std::vector<std::string>::iterator i;
+                for(i=newfiles.begin();i!=newfiles.end();i++)
                 {
-                    newfiles.erase(i);
-                    break;
+                    if(str::cmp((*i).c_str(),targetpath)==0)
+                    {
+                        newfiles.erase(i);
+                        break;
+                    }
                 }
+                osio::print("...OK\n");
             }
-            osio::print("...OK\n");
-        }
-        else
-        {
-            osio::print("...false.\n");
-        }
-        return false;
-    case ACTION_INFO_DEL:
-        return false;
-    case ACTION_INFO_NEW:
-        return false;
-    case ACTION_DELETE:
-        osio::print("---- %s\n",targetpath);
-        remove_file(targetpath);
-        return false;
-    case ACTION_DELETE_BACKUP:
-        osio::print("---- %s\n",targetpath);
-        backupcopy(sourcepath,targetpath);
-        remove_file(targetpath);
-        return false;
-    case ACTION_SOURCE_DELETE:
-        osio::print("---- %s\n",sourcepath);
-        remove_file(sourcepath);
-        return false;
-    case ACTION_SOURCE_DELETE_BACKUP:
-        osio::print("---- %s\n",sourcepath);
-        backupcopy(sourcepath,sourcepath);
-        remove_file(sourcepath);
-        return false;
-    case ACTION_PRINT_TARGET:
-        osio::print("%s\n",targetpath);
-        return false;
-    case ACTION_PRINT_SOURCE:
-        osio::print("%s\n",sourcepath);
-        return false;
-    case ACTION_PRINT_INFO:
-        osio::print("----------\ncopy file\n");
-        osio::print("from: %s\n",sourcepath);
-        osio::print("to:   %s\n",targetpath);
-        return false;
-    case ACTION_PACKAGE:
-        std::string ws=ini->get("webspace");
-        osio::print(">>>> %s\n",sourcepath);
+            else
+            {
+                osio::print("...false.\n");
+            }
+            return false;
+        case ACTION_INFO_DEL:
+            return false;
+        case ACTION_INFO_NEW:
+            return false;
+        case ACTION_DELETE:
+            osio::print("---- %s\n",targetpath);
+            remove_file(targetpath);
+            return false;
+        case ACTION_DELETE_BACKUP:
+            osio::print("---- %s\n",targetpath);
+            backupcopy(sourcepath,targetpath);
+            remove_file(targetpath);
+            return false;
+        case ACTION_SOURCE_DELETE:
+            osio::print("---- %s\n",sourcepath);
+            remove_file(sourcepath);
+            return false;
+        case ACTION_SOURCE_DELETE_BACKUP:
+            osio::print("---- %s\n",sourcepath);
+            backupcopy(sourcepath,sourcepath);
+            remove_file(sourcepath);
+            return false;
+        case ACTION_PRINT_TARGET:
+            osio::print("%s\n",targetpath);
+            return false;
+        case ACTION_PRINT_SOURCE:
+            osio::print("%s\n",sourcepath);
+            return false;
+        case ACTION_PRINT_INFO:
+            osio::print("----------\ncopy file\n");
+            osio::print("from: %s\n",sourcepath);
+            osio::print("to:   %s\n",targetpath);
+            return false;
+        case ACTION_PACKAGE:
+            std::string ws=ini->get("webspace");
+            osio::print(">>>> %s\n",sourcepath);
 #ifdef OS_LIN
-        osio::print("++++ %s\n",(ws+"package"+sourcepath).c_str());
-        file::copyfile((ws+"package"+sourcepath).c_str(),sourcepath);
+            osio::print("++++ %s\n",(ws+"package"+sourcepath).c_str());
+            file::copyfile((ws+"package"+sourcepath).c_str(),sourcepath);
 #endif
-        return false;
+            return false;
     }
     return false;
 }
@@ -299,7 +299,7 @@ template<class T> void MergeControler<T>::ini_MergeControler(const T *logfile)
 template<class T> void MergeControler<T>::ini_MergeControler(const T *logfile_in,const T *logfile_out)
 {
     //INPUT
-    log=new CsvData();
+    log=AbsCsvDataInterface::createCsvData();
 
     if(log->load(logfile_in))
     {
@@ -310,7 +310,7 @@ template<class T> void MergeControler<T>::ini_MergeControler(const T *logfile_in
     {
         log->useHeader(true);
 
-        CsvRecord **r=log->getAllRecords();
+        AbsCsvRecord **r=log->getAllRecords();
         int i=0;
         while(r[i])
         {
@@ -361,7 +361,7 @@ template<class T> void MergeControler<T>::add_ign(std::string ign)
 
 template<class T> bool MergeControler<T>::test_ign(const T *filename)
 {
-    for(std::vector<std::string>::iterator i=ignors.begin(); i!=ignors.end(); i++)
+    for(std::vector<std::string>::iterator i=ignors.begin();i!=ignors.end();i++)
     {
         if(strman::substrmatch((*i).c_str(),filename))
         {
@@ -386,9 +386,9 @@ template<class T> void MergeControler<T>::closeLog()
 
     if(additional_printNewTargetFiles)print_newfiles();
 
-    for(std::map<std::string,CsvRecord *>::iterator i=recs.begin(); i!=recs.end(); i++)
+    for(std::map<std::string,AbsCsvRecord *>::iterator i=recs.begin();i!=recs.end();i++)
     {
-        CsvRecord *r=(*i).second;
+        AbsCsvRecord *r=(*i).second;
         targetpath=r->getField(1);
         sourcepath=r->getField(0);
 
@@ -496,7 +496,7 @@ template<class T> bool MergeControler<T>::doCopyFile(const T *targetpath,const T
 
     if(logged)
     {
-        CsvRecord *r=recs[targetpath];
+        AbsCsvRecord *r=recs[targetpath];
         t_utime=r->getField(2);
         t_usize=r->getField(3);
         str::cpy(usc,t_usize);
@@ -610,7 +610,7 @@ template<class T> void MergeControler<T>::filecopied(const T *targetpath,const T
     osio::print(" OK\n");
     if(recs.count(targetpath)!=1)
     {
-        CsvSettings *s=new CsvSettings(',','\n','\"');
+        AbsCsvSettings *s=AbsCsvSettingsInterface::createCsvSettings(',','\n','\"');
         CsvField fld(s);
         fld.print(f,sourcepath);
         fprintf(f,"%c",',');
@@ -625,7 +625,7 @@ template<class T> void MergeControler<T>::filecopied(const T *targetpath,const T
     }
     else
     {
-        CsvRecord *r=recs[targetpath];
+        AbsCsvRecord *r=recs[targetpath];
 
         T a[64];
         osio::sprint(a,"%ld",osfile::get_time_write(targetpath));
@@ -780,7 +780,7 @@ template<class T> void MergeControler<T>::print_newfiles()
     if(newfiles.size()>0)
     {
         osio::print("There are new files:\n");
-        for(std::vector<std::string>::iterator i=newfiles.begin(); i!=newfiles.end(); i++)
+        for(std::vector<std::string>::iterator i=newfiles.begin();i!=newfiles.end();i++)
         {
             std::cout << "++++ " << (*i) << std::endl;
         }
@@ -790,7 +790,7 @@ template<class T> void MergeControler<T>::print_newfiles()
 
 template<class T> void MergeControler<T>::importfiles(const T *project_path,const T *target_path)
 {
-    for(std::vector<std::string>::iterator i=newfiles.begin(); i!=newfiles.end(); i++)
+    for(std::vector<std::string>::iterator i=newfiles.begin();i!=newfiles.end();i++)
     {
         if(strman::isprefix(target_path,(*i).c_str()))
         {
@@ -813,17 +813,17 @@ template<class T> void MergeControler<T>::importfiles(const T *project_path,cons
 template<class T> int MergeControler<T>::importfiles_extmode(const T *target_path,int depth,all_projects_info a)
 {
     int skipcount=-1;
-    for(int c_depth=0; c_depth<depth; c_depth++)
+    for(int c_depth=0;c_depth<depth;c_depth++)
     {
         skipcount=0;
-        for(std::vector<std::string>::iterator i=newfiles.begin(); i!=newfiles.end(); i++)
+        for(std::vector<std::string>::iterator i=newfiles.begin();i!=newfiles.end();i++)
         {
             if(strman::isprefix(target_path,(*i).c_str()))
             {
                 std::string project_path;
                 //find matching project
                 bool project_found=false;
-                for(unsigned int k=0; k<a.project.size(); k++)
+                for(unsigned int k=0;k<a.project.size();k++)
                 {
                     std::string basename=a.project[k].base;
                     std::string projname=a.project[k].project;
@@ -886,18 +886,18 @@ template<class T> bool MergeControler<T>::test_match(const T *path,int depth,std
     }
     //Test for toplevel project name
     char *pname=pp[strman::explode_count(pp)-1];
-    for(int i=strman::explode_count(aa)-1; i>=std::max(0,strman::explode_count(aa)-1-depth); i--)
+    for(int i=strman::explode_count(aa)-1;i>=std::max(0,strman::explode_count(aa)-1-depth);i--)
     {
         char **aaa=strman::explode("_.",aa[i]);
-        for(int k=0; k<strman::explode_count(aaa); k++)
+        for(int k=0;k<strman::explode_count(aaa);k++)
         {
             if(pname[0]!=0 && str::cmp(pname,aaa[k])==0
-                    && str::cmp(pname,"api")!=0)//ignore project 'api' ...... --TODO--
+                && str::cmp(pname,"api")!=0)//ignore project 'api' ...... --TODO--
             {
                 printf("++++ [%s --> %s --> %s]\n",b,p,v);
                 rval=true;
                 k=strman::explode_count(aaa);
-                i=-1;
+                i=-1;//strman::explode_count(aa);
             }
         }
         free(aaa);

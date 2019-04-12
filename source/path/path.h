@@ -58,7 +58,14 @@ template<class T> class CondCopyControl;
 
 template<class T> class DIRECTORY;
 template<class T> class TreeWalkCallback;
+#include "path/import/prokee.h"
 
+
+/*********************************************************************
+*                                                                    *
+*  Path-Functions                                                    *
+*                                                                    *
+*********************************************************************/
 class path
 {
 public:
@@ -67,6 +74,8 @@ public:
     *  pathtype()                                                    *
     *                                                                *
     *****************************************************************/
+    //Ermittelt ob der String path eine absolute oder relative Pfadangabe enthält
+    //und ob der Pfad auf eine Datei oder ein Verzeichnis zeigt.
     template<class T> static int pathtype(const T *path,int system);
     template<class T> static int pathtype(const T *path,const T dirsep);
     template<class T> static int pathtype(const T *path,const T dirsep,const T labelsep);
@@ -78,6 +87,7 @@ public:
     *  onopath()                                                     *
     *                                                                *
     *****************************************************************/
+    //Gibt einen Zeiger auf den Namen des Objektes innerhalb des Pfades zurück.
     template<class T> static const T *onopath(const T *path,const T dirsep);
     template<class T> static const T *onopath(const T *path,const T *dirsep);
     template<class T> static const T *onopath(const T *path);
@@ -86,6 +96,7 @@ public:
     *  fnopath()                                                     *
     *                                                                *
     *****************************************************************/
+    //Gibt einen Zeiger auf den Dateinamen innerhalb des Pfades zurück.
     template<class T> static const T *fnopath(const T *path,const T dirsep);
     template<class T> static const T *fnopath(const T *path,const T *dirsep);
     template<class T> static const T *fnopath(const T *path);
@@ -116,6 +127,14 @@ public:
     template<class T> static const T *sxopath(const T *path);
     /*****************************************************************
     *                                                                *
+    *  makeabspath()                                                 *
+    *                                                                *
+    *****************************************************************/
+    template<class T> static T *makeabspath(const T *path);
+    template<class T> static T *makeabspath(const T *path,const T *cd);
+    template<class T> static T *makeabspath(const T *path,const T *cd,const T *dirsep);
+    /*****************************************************************
+    *                                                                *
     *  testpath()                                                    *
     *                                                                *
     *****************************************************************/
@@ -135,46 +154,47 @@ public:
     *                                                                *
     *****************************************************************/
     template<class T> static bool pathcmp(const T *a,const T *b);
+    /*****************************************************************
+    *                                                                *
+    *  compresspath()                                                *
+    *                                                                *
+    *****************************************************************/
+    template<class T> static T *compresspath(T *path);
+    template<class T> static T *compresspath(T *path,const T *dirsep);
 };
 
-#include "file/file.h"
-#include "dir/dir.h"
-#include "strman/strman.h"
+#include "path/import/modules.h"
 
 /*****************************************************************
 *                                                                *
 *  pathtype()                                                    *
 *                                                                *
 *****************************************************************/
+//Ermittelt ob der String path eine absolute oder relative Pfadangabe enthält
+//und ob der Pfad auf eine Datei oder ein Verzeichnis zeigt.
 template<class T> int path::pathtype(const T *path,int system)
 {
     T a[CONSTSTR_MAXSEPS],b[CONSTSTR_MAXSEPS],c[CONSTSTR_MAXSEPS];
     switch(system)
     {
-    case PATH_SYSTEM_LINUX:
-        return pathtype(path,conststr::dirsep1(a),conststr::labelsep(b),conststr::rootsym(c));
-    case PATH_SYSTEM_WINDOWS:
-        return pathtype(path,conststr::dirsep2(a),conststr::labelsep(b),conststr::rootsym(c));
-    default:
-        return pathtype(path,conststr::dirsep(a),conststr::labelsep(b),conststr::rootsym(c));
+        case PATH_SYSTEM_LINUX:
+            return pathtype(path,conststr::dirsep1(a),conststr::labelsep(b),conststr::rootsym(c));
+        case PATH_SYSTEM_WINDOWS:
+            return pathtype(path,conststr::dirsep2(a),conststr::labelsep(b),conststr::rootsym(c));
+        default:
+            return pathtype(path,conststr::dirsep(a),conststr::labelsep(b),conststr::rootsym(c));
     }
 }
 template<class T> int path::pathtype(const T *path,const T dirsep)
 {
-    T a[2];
-    a[0]=dirsep;
-    a[1]=0;
+    T a[2];a[0]=dirsep;a[1]=0;
     T b[CONSTSTR_MAXSEPS];
     return pathtype(path,a,conststr::labelsep(b),a);
 }
 template<class T> int path::pathtype(const T *path,const T dirsep,const T labelsep)
 {
-    T a[2];
-    a[0]=dirsep;
-    a[1]=0;
-    T b[2];
-    b[0]=labelsep;
-    b[1]=0;
+    T a[2];a[0]=dirsep;a[1]=0;
+    T b[2];b[0]=labelsep;b[1]=0;
     return pathtype(path,a,b,a);
 }
 template<class T> int path::pathtype(const T *path,const T *dirsep,const T *labelsep)
@@ -195,7 +215,7 @@ template<class T> int path::pathtype(const T *path,const T *dirsep,const T *labe
 
     if(!isabs)
     {
-        for(i=0; i<n; i++)
+        for(i=0;i<n;i++)
         {
             if(strman::matchsymbol(path,i,dirsep))break;
             if(strman::matchsymbol(path,i,labelsep))
@@ -223,17 +243,16 @@ template<class T> int path::pathtype(const T *path)
 *  onopath()                                                     *
 *                                                                *
 *****************************************************************/
+//Gibt einen Zeiger auf den Namen des Objektes innerhalb des Pfades zurück.
 template<class T> const T *path::onopath(const T *path,const T dirsep)
 {
-    T a[2];
-    a[0]=dirsep;
-    a[1]=0;
+    T a[2];a[0]=dirsep;a[1]=0;
     return onopath(path,a);
 }
 template<class T> const T *path::onopath(const T *path,const T *dirsep)
 {
     int i,n=str::len(path);
-    for(i=n-2; i>0; i--)
+    for(i=n-2;i>0;i--)
     {
         if(strman::matchsymbol(path,i,dirsep))return &path[i+1];
     }
@@ -249,17 +268,16 @@ template<class T> const T *path::onopath(const T *path)
 *  fnopath()                                                     *
 *                                                                *
 *****************************************************************/
+//Gibt einen Zeiger auf den Dateinamen innerhalb des Pfades zurück.
 template<class T> const T *path::fnopath(const T *path,const T dirsep)
 {
-    T a[2];
-    a[0]=dirsep;
-    a[1]=0;
+    T a[2];a[0]=dirsep;a[1]=0;
     return fnopath(path,a);
 }
 template<class T> const T *path::fnopath(const T *path,const T *dirsep)
 {
     int i,n=str::len(path);
-    for(i=n-1; i>0; i--)
+    for(i=n-1;i>0;i--)
     {
         if(strman::matchsymbol(path,i,dirsep))return &path[i+1];
     }
@@ -277,9 +295,7 @@ template<class T> const T *path::fnopath(const T *path)
 *****************************************************************/
 template<class T> T *path::dnopath(const T *path,const T dirsep)
 {
-    T a[2];
-    a[0]=dirsep;
-    a[1]=0;
+    T a[2];a[0]=dirsep;a[1]=0;
     return dnopath(path,a);
 }
 template<class T> T *path::dnopath(const T *path,const T *dirsep)
@@ -293,10 +309,9 @@ template<class T> T *path::dnopath(const T *path,const T *dirsep)
     //Testen, ob es sich um einen Pfad auf eine Datei handelt
     int pt=pathtype(path);
     if(pt==0 || pt==1)
-    {
-        //pfad auf Datei
+    {//pfad auf Datei
         //Letztes auftreten eines Dirseperators ermitteln
-        for(i=n-1; i>0; i--)
+        for(i=n-1;i>0;i--)
         {
             h=0;
             while(dirsep[h])
@@ -310,15 +325,14 @@ template<class T> T *path::dnopath(const T *path,const T *dirsep)
             }
         }
         //Pfad bis inkl. Position k umkopieren
-        for(i=0; i<=k; i++)
+        for(i=0;i<=k;i++)
         {
             rp[i]=path[i];
         }
         rp[i]=0;
     }
     else
-    {
-        //pfad auf Verzeichnis
+    {//pfad auf Verzeichnis
         str::cpy(rp,path);
     }
     return rp;
@@ -335,9 +349,7 @@ template<class T> T *path::dnopath(const T *path)
 *****************************************************************/
 template<class T> T *path::pnopath(const T *path,const T dirsep)
 {
-    T a[2];
-    a[0]=dirsep;
-    a[1]=0;
+    T a[2];a[0]=dirsep;a[1]=0;
     return pnopath(path,a);
 }
 template<class T> T *path::pnopath(const T *path,const T *dirsep)
@@ -347,7 +359,7 @@ template<class T> T *path::pnopath(const T *path,const T *dirsep)
     T *rp=(T *)malloc((n+1)*sizeof(T));
     rp[0]=0;
     //Letztes auftreten eines Dirseperators ermitteln (ausgenommen letztes Zeichen, falls Pfad auf Verzeichnis)
-    for(i=n-2; i>0; i--)
+    for(i=n-2;i>0;i--)
     {
         h=0;
         while(dirsep[h])
@@ -361,7 +373,7 @@ template<class T> T *path::pnopath(const T *path,const T *dirsep)
         }
     }
     //Pfad bis inkl. Position k umkopieren
-    for(i=0; i<=k; i++)
+    for(i=0;i<=k;i++)
     {
         rp[i]=path[i];
     }
@@ -380,15 +392,9 @@ template<class T> T *path::pnopath(const T *path)
 *****************************************************************/
 template<class T> const T *path::sxopath(const T *path,const T dirsep,const T labelsep,const T susep)
 {
-    T a[2];
-    a[0]=dirsep;
-    a[1]=0;
-    T b[2];
-    b[0]=labelsep;
-    b[1]=0;
-    T c[2];
-    c[0]=susep;
-    c[1]=0;
+    T a[2];a[0]=dirsep;a[1]=0;
+    T b[2];b[0]=labelsep;b[1]=0;
+    T c[2];c[0]=susep;c[1]=0;
     return sxopath(path,a,b,c,a);
 }
 template<class T> const T *path::sxopath(const T *path,const T *dirsep,const T *labelsep,const T *susep)
@@ -405,7 +411,7 @@ template<class T> const T *path::sxopath(const T *path,const T *dirsep,const T *
     //T *sx=(T *)malloc((n+1)*sizeof(T));
     //sx[0]=0;
     //vom Ende, bis zum ersten Dirseperatorzeichen, Punkt (".") oder Label (":") durchlaufen
-    for(i=n-1; i>0; i--)
+    for(i=n-1;i>0;i--)
     {
         /*
         h=0;
@@ -436,7 +442,7 @@ template<class T> const T *path::sxopath(const T *path,const T *dirsep,const T *
                 goto m1;
             }
         }
-        m1:
+m1:
         if(found)
         */
         if(strman::matchsymbol(path,i,susep,dirsep,labelsep,rootsym))
@@ -460,6 +466,74 @@ template<class T> const T *path::sxopath(const T *path)
 {
     T a[CONSTSTR_MAXSEPS],b[CONSTSTR_MAXSEPS],c[CONSTSTR_MAXSEPS],d[CONSTSTR_MAXSEPS];
     return sxopath(path,conststr::dirsep(a),conststr::labelsep(b),conststr::susep(c),conststr::rootsym(d));
+}
+/*****************************************************************
+*                                                                *
+*  makeabspath()                                                 *
+*                                                                *
+*****************************************************************/
+template<class T> T *path::makeabspath(const T *path)
+{
+    T *cd=osdir::oscwd((T *)0,0);
+    T *ap=makeabspath(path,cd);
+    free(cd);
+    return ap;
+}
+template<class T> T *path::makeabspath(const T *path,const T *cd)
+{
+    T a[CONSTSTR_MAXSEPS];
+    return makeabspath(path,cd,conststr::dirsep(a));
+}
+template<class T> T *path::makeabspath(const T *path,const T *cd,const T *dirsep)
+{
+    //Pfad komprimieren
+    //compresspath(path);
+
+    T *abspath;
+
+    //Pfad-Typ ermitteln (abs. od. relativer Pfad)
+    int t=pathtype(path);
+
+    //In abs. Pfad umwandeln (nur wenn rel. Pfad)
+    if(t==0 || t==2)
+    {
+        //aktuelles Verzeichnis abfragen
+        //T *cd=getcdstring();//Pointer auf Original-String daher nicht freigeben.
+        //T *cd=osdir::oscwd((T *)0,0);
+
+        //absoluten Pfad zusammenbauen
+        abspath=(T *)malloc((str::len(cd)+str::len(path)+2)*sizeof(T));
+        str::cpy(abspath,cd);
+
+        int h=0;
+        bool found=false;
+        while(dirsep[h])
+        {
+            if(abspath[str::len(abspath)-1]==dirsep[h++])
+            {
+                found=true;
+                break;
+            }
+        }
+
+        if(!found)
+        {
+            T a[2];a[0]=dirsep[0];a[1]=0;
+            str::cat(abspath,a);
+        }
+
+        str::cat(abspath,path);
+
+        //free(cd);
+    }
+    else
+    {
+        //absoluten Pfad nur umkopieren (keine Änderung)
+        abspath=(T *)malloc((str::len(path)+1)*sizeof(T));
+        str::cpy(abspath,path);
+    }
+
+    return abspath;
 }
 /*****************************************************************
 *                                                                *
@@ -545,8 +619,7 @@ template<class T> bool path::copy(const T *targetpath,const T *sourcepath,const 
 *****************************************************************/
 template<class T> bool path::pathcmp(const T *a,const T *b)
 {
-    T s[CONSTSTR_MAXSEPS];
-    conststr::dirsep(s);
+    T s[CONSTSTR_MAXSEPS];conststr::dirsep(s);
     int i=-1;
     do
     {
@@ -554,9 +627,195 @@ template<class T> bool path::pathcmp(const T *a,const T *b)
         if(!(a[i]==b[i] || (strman::matchsymbol(a,i,s) && strman::matchsymbol(b,i,s))))
             return false;
 
-    }
-    while(a[i]);
+    }while(a[i]);
     return true;
+}
+/*****************************************************************
+*                                                                *
+*  compresspath()                                                *
+*                                                                *
+*****************************************************************/
+template<class T> T *path::compresspath(T *path)
+{
+    T a[CONSTSTR_MAXSEPS];
+    return compresspath(path,conststr::dirsep(a));
+}
+template<class T> T *path::compresspath(T *path,const T *dirsep)
+{
+    int h;bool found;
+
+    int n=str::len(path);
+    T *b=(T *)malloc((n+5)*sizeof(T));
+    b[0]=0;
+
+    int i=0,j=0;
+    int mode=0;
+
+    int repcount=0;
+
+    //osio::print("PATH_0: %s\n",path);
+
+    while(i<n)
+    {
+        // "./" immer ueberspringen
+        if(i+1<n && path[i]=='.')// && (path[i+1]==DIRSEPERATOR || path[i+1]==DIRSEPERATOR2))
+        {
+            h=0;found=false;
+            while(dirsep[h])
+            {
+                if(path[i+1]==dirsep[h++])
+                {
+                    found=true;
+                    break;
+                }
+            }
+
+            if(found)
+            {
+                i=i+2;
+            }
+        }
+        if(mode==0)
+        {
+            //Am Anfang alle "../" umkopieren.
+            if(i+2<n && path[i]=='.' && path[i+1]=='.')// && (path[i+2]==DIRSEPERATOR || path[i+2]==DIRSEPERATOR2))
+            {
+                h=0;found=false;
+                while(dirsep[h])
+                {
+                    if(path[i+2]==dirsep[h++])
+                    {
+                        found=true;
+                        break;
+                    }
+                }
+
+                if(found)
+                {
+                    T up[4];up[0]='.';up[1]='.';up[3]='/';up[3]=0;
+                    str::cat(b,up);
+                    i=i+3;
+                    j=j+3;
+                }
+                else
+                {
+                    mode=1;
+                }
+            }
+            else
+            {
+                /*
+                h=0;found=false;
+                while(dirsep[h])
+                {
+                    if(path[i+2]==dirsep[h++])
+                    {
+                        found=true;
+                        break;
+                    }
+                }
+                */
+                //if(!found)
+                //{
+                    mode=1;
+                //}
+            }
+            //osio::print("\n0:%s i=%d j=%d mode=%d rc=%d\n",b,i,j,mode,repcount);
+        }
+        if(mode==1)
+        {
+            /*
+            if(path[i]==DIRSEPERATOR || path[i]==DIRSEPERATOR2)
+            {
+                repcount=repcount+1;
+            }
+            */
+
+            h=0;found=false;
+            while(dirsep[h])
+            {
+                if(path[i]==dirsep[h++])
+                {
+                    found=true;
+                    break;
+                }
+            }
+
+            if(found)
+            {
+                repcount=repcount+1;
+            }
+
+            b[j]=path[i];
+            i=i+1;
+            j=j+1;
+            while(repcount>0 && i+2<n && path[i]=='.' && path[i+1]=='.')// && (path[i+2]==DIRSEPERATOR || path[i+2]==DIRSEPERATOR2))
+            {
+                h=0;found=false;
+                while(dirsep[h])
+                {
+                    if(path[i+2]==dirsep[h++])
+                    {
+                        found=true;
+                        break;
+                    }
+                }
+
+                if(!found)
+                {
+                    break;
+                }
+
+                //if(repcount>0 && i+2<n && path[i]=='.' && path[i+1]=='.')// && (path[i+2]==DIRSEPERATOR || path[i+2]==DIRSEPERATOR2))
+                //{
+                    i=i+3;
+                    j=j-2;
+                    while(j>=0)// && b[j]!=DIRSEPERATOR && b[j]!=DIRSEPERATOR2)
+                    {
+                        h=0;found=false;
+                        while(dirsep[h])
+                        {
+                            if(b[j]==dirsep[h++])
+                            {
+                                found=true;
+                                break;
+                            }
+                        }
+
+                        if(found)
+                        {
+                            break;
+                        }
+
+                        j=j-1;
+                    }
+                    j=j+1;
+                    if(j==0)
+                    {
+                        mode=0;
+                    }
+                    repcount=repcount-1;
+                //}
+                b[j]=0;
+                //osio::print("\n1:%s i=%d j=%d mode=%d rc=%d\n",b,i,j,mode,repcount);
+            }
+            b[j]=0;
+        }
+        //osio::print("\n%s\n",b);
+    }
+
+    j=0;
+    while(b[j]!=0)
+    {
+        path[j]=b[j];
+        j=j+1;
+    }
+    path[j]=0;
+
+    //osio::print("PATH_1: %s\n",path);
+
+    free(b);
+    return path;
 }
 
 #endif

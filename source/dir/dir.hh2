@@ -1,0 +1,24 @@
+#ifndef PLIB_CLASS_dir_all_interface_factory
+#define PLIB_CLASS_dir_all_interface_factory
+
+#ifdef PROKEE_USE_INTERFACE
+
+
+class DIRECTORYInterface
+{
+public:
+    
+};
+
+
+
+class TreeWalkCallbackInterface
+{
+public:
+    
+};
+
+
+
+#endif
+#endif

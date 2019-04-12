@@ -1,0 +1,30 @@
+#ifndef PLIB_CLASS_settings_all_interface_factory
+#define PLIB_CLASS_settings_all_interface_factory
+
+#ifdef PROKEE_USE_INTERFACE
+
+
+class AbsSettingsInterface
+{
+public:
+    static AbsSettings *createSettings()
+    {
+        return (AbsSettings *)new Settings();
+    }
+};
+
+
+
+class AbsMultiSettingsInterface
+{
+public:
+    static AbsMultiSettings *createMultiSettings()
+    {
+        return (AbsMultiSettings *)new MultiSettings();
+    }
+};
+
+
+
+#endif
+#endif

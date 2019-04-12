@@ -44,22 +44,70 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "csv/import/prokee.h"
+#include "csv.hh"
+//#include "CsvSettings.h"
+
 #define CSV_INI_FLD_LENGTH 128
 
-class CsvSettings;
-class FileReader;
-
-class CsvField
+//==============================================================================
+// CsvField
+//==============================================================================
+/**bmc
+DEF AbsCsvField_INTERFACE:INTERFACE
+{
+    class="AbsCsvField";
+    no_interface_superclass="TRUE";
+    implclass="CsvField";
+    headers
+    {
+        ->
+        \#include <stdio.h>
+        class Reader;
+        <--
+    }
+    DEF docu
+    {
+        title="AbsCsvField";
+        //text="<pre>@parent.parent.code</pre>";
+        section:func.LSECTION
+        {
+            title="Motivation";
+            text
+            {
+                ->
+                <-
+            }
+        }
+    }
+}
+DEF PAGE_02:FILE,WEBP1
+{
+    THE_INTERFACE="AbsCsvField_INTERFACE";
+    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
+    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
+}
+DEF AbsCsvField
+{
+    class="AbsCsvField";
+}
+DEF X:WRAPPER
+{
+    class="CsvField";
+    baseclass="AbsCsvField";
+}
+*/
+class CsvField:public AbsCsvField2
 {
 private:
     char *value;
     int value_ln;
-    CsvSettings *settings;
+    AbsCsvSettings *settings;
 public:
-    CsvField(CsvSettings *s);
+    CsvField(AbsCsvSettings *s);
     ~CsvField();
     // loading
-    int load(FileReader *r);
+    int load(Reader *r);
     // printing
     void print(FILE *f);
     void print(FILE *f,const char *val);

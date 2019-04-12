@@ -54,11 +54,60 @@ protected:
     FILE *f;
     bool file_opened_here;
 public:
+    FileReader(){printf("??? ---> FileReader()\n");}
     FileReader(FILE *file);
     FileReader(const char *a);
     FileReader(const wchar_t *a);
     virtual ~FileReader();
     virtual int getNextChar();
+};
+
+class WcsFileReader:public ReaderImpl
+{
+protected:
+    FILE *f;
+    bool file_opened_here;
+public:
+    WcsFileReader(FILE *file);
+    WcsFileReader(const char *a);
+    WcsFileReader(const wchar_t *a);
+    virtual ~WcsFileReader();
+    virtual int getNextChar();
+};
+
+class Char16FileReader:public FileReader
+{
+public:
+    Char16FileReader(FILE *file):FileReader(file){}
+    Char16FileReader(const char *a):FileReader(a){}
+    Char16FileReader(const wchar_t *a):FileReader(a){}
+    virtual ~Char16FileReader(){}
+    virtual int getNextChar();
+};
+
+class Char32FileReader:public FileReader
+{
+public:
+    Char32FileReader(FILE *file):FileReader(file){}
+    Char32FileReader(const char *a):FileReader(a){}
+    Char32FileReader(const wchar_t *a):FileReader(a){}
+    virtual ~Char32FileReader(){}
+    virtual int getNextChar();
+};
+
+#include "h3_AbsUniFileReader.h"
+class UniFileReader:virtual public FileReader,public AbsUniFileReader3
+{
+protected:
+    int char_size;
+public:
+    UniFileReader(FILE *file,int csize);
+    UniFileReader(const char *a,int csize);
+    UniFileReader(const wchar_t *a,int csize);
+    virtual ~UniFileReader(){}
+    virtual int getNextChar();
+    virtual int getCharSize();
+    virtual void setCharSize(int csize);
 };
 
 #endif

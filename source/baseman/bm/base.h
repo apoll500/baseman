@@ -42,10 +42,14 @@
 
 #include <string>
 
+//#include "csv/CsvData.h"
+//#include "settings/settings.h"
+//#include "path/path.h"
+
 #include "../baseman.h"
 #include "bm.h"
 
-extern MultiSettings *ini;
+extern AbsMultiSettings *ini;
 
 class Base:public Bm
 {
@@ -54,7 +58,7 @@ public:
     ~Base();
     Base(std::string base);
     void ini0(std::string base);
-    void set_values(CsvRecord *r);
+    void set_values(AbsCsvRecord *r);
     void info();
 };
 

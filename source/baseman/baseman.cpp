@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+//baseman/code/v01/files/source/baseman/baseman.cpp
+
 #include "baseman.h"
 
 #include "bm/bm.h"
@@ -44,7 +46,7 @@
 #include "bm/project.h"
 #include "bm/version.h"
 
-MultiSettings *ini;
+AbsMultiSettings *ini;
 
 Bm *bmObject(void)
 {
@@ -112,30 +114,33 @@ void create_base0(const char *base,const char *path)
 }
 void create_base(const char *base,const char *path,const char *group)
 {
-    CsvData data;
+    AbsCsvData *data=AbsCsvDataInterface::createCsvData();
 
-    data.load(BASEMAN_BASELISTPATH,"name,path,target,flag,description");
+    data->load(BASEMAN_BASELISTPATH,"name,path,target,flag,description");
 
-    data.useHeader(true);
-    int hid_name=data.getHeaderId("name");
+    data->useHeader(true);
+    int hid_name=data->getHeaderId("name");
 
-    CsvRecord **rec=data.getAllRecords("flag",group);
+    AbsCsvRecord **rec=data->getAllRecords("flag",group);
     int i=0;
     while(rec[i]!=0)
     {
         if(strcmp(rec[i++]->getField(hid_name),base)==0)
         {
             osio::print("Can't create base %s in group %s. Base already exists in this group.",base,group);
+            delete data;
             return;
         }
     }
 
-    int row=data.addRecord();
-    if(!data.setField(row,"name",base))osio::print("!-");
-    if(!data.setField(row,"path",path))osio::print("!-");
-    if(!data.setField(row,"flag",group))osio::print("!-");
+    int row=data->addRecord();
+    if(!data->setField(row,"name",base))osio::print("!-");
+    if(!data->setField(row,"path",path))osio::print("!-");
+    if(!data->setField(row,"flag",group))osio::print("!-");
 
-    data.save(BASEMAN_BASELISTPATH);
+    data->save(BASEMAN_BASELISTPATH);
+
+    delete data;
 }
 /*********************************************************
 *                                                        *
@@ -147,17 +152,17 @@ void list_selected_group(void)
     std::string group_s=ini->get("group");
     const char *group=group_s.c_str();
 
-    if(group[0]==0)list_group("1");
-    else list_group(group);
+    if(group[0]==0)group="1";
+    list_group(group);
 }
 void list_group(const char *group)
 {
-    CsvData data;
+    AbsCsvData *data=AbsCsvDataInterface::createCsvData();
 
-    data.load(BASEMAN_BASELISTPATH,"name,path,target,flag,description");
+    data->load(BASEMAN_BASELISTPATH,"name,path,target,flag,description");
 
-    data.useHeader(true);
-    int hid_name=data.getHeaderId("name");
+    data->useHeader(true);
+    int hid_name=data->getHeaderId("name");
 
     int col_list[2];
     col_list[0]=hid_name;
@@ -165,13 +170,15 @@ void list_group(const char *group)
 
     osio::print("\nBases:\n----------------------------------------------------------------------\n");
 
-    CsvRecord **rec=data.getAllRecords("flag",group);
+    AbsCsvRecord **rec=data->getAllRecords("flag",group);
     int i=0;
     while(rec && rec[i]!=0)
     {
         osio::print("    ");
         rec[i++]->print_ln(stdout,col_list);
     }
+
+    delete data;
 }
 /*********************************************************
 *                                                        *
@@ -306,4 +313,71 @@ void open_baselist(void)
     //osexe::myShellExecute(NULL,"open",BASEMAN_BASELISTPATH,NULL,NULL,SW_SHOW);
 }
 
+/*********************************************************
+*                                                        *
+*  prokee module interface                               *
+*                                                        *
+*********************************************************/
 #include "cli/runclp.h"
+/**bmc
+lp_argc:i
+{
+    name="argc";
+    desc="Die Anzahl Commandline-Parameter.";
+}
+lp_argv:cpp
+{
+    name="argv";
+    desc="Die Commandline-Parameter mit denen <code>baseman</code> ausgeführt werden soll.";
+}
+DEF inc_baseman
+{
+    class="baseman";
+}
+DEF lp_exprint:func
+{
+    func_name="print";
+    func_direction="IN";
+    func_desc="Die Funktion, die für die Ausgabe aufgerufen werden soll, oder @kw.null, falls die Ausgabe an <span class='out'>stdout</span> erfolgen soll.";
+    func_return:i="Die Funktion sollte die Anzahl Zeichen zurückgebene, die ausgegeben wurden.<br>Der Rückgabewert wird jedoch von <code>baseman</code> nicht verwendet.";
+    func_param:ccp
+    {
+        name="str";
+        desc="Der null-terminierte String, der ausgegeben werden soll. Die Funktion erhält einen UTF-8 String.";
+    }
+    func_param_classname="external_printer_function";
+}
+*/
+/**bmc
+DEF main:POINTER,inc_baseman
+{
+    function="@this.parent.NAME";
+    brief="Führt <code>baseman</code> aus.";
+    xinfo="Die Parameter <span class='out'>argc</span>  und <span class='out'>argv</span> sollen so angegeben werden, als würde <code>baseman</code> von der Commandline aufgerufen.";
+    param:lp_argc{};
+    param:lp_argv{};
+    return:i="immer EXIT_SUCCESS (0)";
+    docu{THEINTERFACE;};
+}
+*/
+int baseman::main(int argc,char **argv)
+{
+    runargs(argc,argv);
+    return EXIT_SUCCESS;
+}
+/**bmc
+DEF set_printer:POINTER,inc_baseman
+{
+    function="@this.parent.NAME";
+    brief="Setzt die Funktion, die für die Ausgabe aufgerufen werden soll.";
+    xinfo="Solange keine Funktion zugeordnet wurde, oder @kw.null als Funktionspointer zugewiesen wurde, erfolgte die Ausgabe an <span class='out'>stdout</span>.";
+    param:lp_exprint{};
+    return:v="";
+    docu{THEINTERFACE;};
+}
+*/
+void baseman::set_printer(int(*print)(const char *))
+{
+    osio::set_xprint(print);
+}
+external_print_t osio::external_print=0;

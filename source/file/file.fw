@@ -1,0 +1,16 @@
+#ifndef PLIB_FUNCTION_file_iface_all_fw
+#define PLIB_FUNCTION_file_iface_all_fw
+
+#ifdef PROKEE_USE_INTERFACE
+
+//Interfaces
+template< class T > class CondCopyControl;
+
+
+//Factories
+class CondCopyControlInterface;
+
+
+#endif
+
+#endif

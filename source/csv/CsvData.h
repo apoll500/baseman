@@ -44,35 +44,110 @@
 
 #include <vector>
 
+#include "csv/import/prokee.h"
+#include "csv.hh"
+
+//#include "CsvRecord.h"
+
 #define CSV_INI_DAT_LENGTH 32
 
-class CsvSettings;
-class CsvRecord;
-class FileReader;
-
-class CsvData
+//==============================================================================
+// CsvData
+//==============================================================================
+/**bmc
+DEF AbsCsvData_INTERFACE:INTERFACE
+{
+    class="AbsCsvData";
+    no_interface_superclass="TRUE";
+    implclass="CsvData";
+    headers
+    {
+        ->
+        class Reader;
+        <--
+    }
+    DEF docu
+    {
+        title="AbsCsvData";
+        //text="<pre>@parent.parent.code</pre>";
+        section:func.LSECTION
+        {
+            title="Motivation";
+            text
+            {
+                ->
+                <-
+            }
+        }
+    }
+}
+DEF PAGE_02:FILE,WEBP1
+{
+    THE_INTERFACE="AbsCsvData_INTERFACE";
+    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
+    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
+}
+DEF AbsCsvData
+{
+    class="AbsCsvData";
+}
+DEF X:WRAPPER
+{
+    class="CsvData";
+    baseclass="AbsCsvData";
+}
+*/
+class CsvData:public AbsCsvData2
 {
 public:
-    CsvSettings *settings;
+    /**bmc
+    DEF settings:AbsCsvData,PUBLIC_MEMBER
+    {
+        CsvData="TRUE";
+        AbsCsvData="TRUE";
+        variable_name="@this.parent.NAME";
+        variable_type:manu
+        {
+            param_classname="AbsCsvSettings";
+        };
+        brief="Einstellungen.";
+        docu
+        {
+            AbsCsvData_INTERFACE;
+        }
+    }
+    */
+    //CsvSettings *settings;//specification of csv input and output format
 private:
-    CsvRecord **data;
+    //std::vector<CsvRecord> data;
+    AbsCsvRecord **data;
     int data_memln;
     int data_size;
     bool header;//set to true if first line contains header
 public:
+    //----------------------------------------------------
+    // Constructors
+    //----------------------------------------------------
     CsvData();
     ~CsvData();
+    //----------------------------------------------------
+    // Interface
+    //----------------------------------------------------
     //load file
 #ifdef OS_WIN
     int load(const wchar_t *filename,const char *docreate);
+    //int load_wcs(const wchar_t *filename,const char *docreate);
     int load(const wchar_t *filename);
+    //int load_wcs(const wchar_t *filename);
 #endif
     int load(const char *filename,const char *docreate);
+    //int load_wcs(const char *filename,const char *docreate);
     int load(const char *filename);
-    int load(FileReader *r);
-    void addRecord(CsvRecord *rec);
+    //int load_wcs(const char *filename);
+    int load(Reader *r);
+    void addRecord(AbsCsvRecord *rec);
     //load next record
-    CsvRecord *load_rec(FileReader *r);
+    AbsCsvRecord *load_rec(Reader *r);
     //header
     void useHeader(bool h);
     int getHeaderId(const char *col);
@@ -83,19 +158,28 @@ public:
     int addRecord();
     int addRecord(int fldcount);
     bool addFieldToRecord(int row);
+    //void delRecord(int row);
     //get record
-    CsvRecord *getRecord(int col,const char *val);
-    CsvRecord *getRecord(int *col,const char **val);
-    CsvRecord *getRecord(int row);
-    CsvRecord *getRecord(const char *col,const char *val);
-    CsvRecord *getRecord(const char **col,const char **val);
-    CsvRecord **getAllRecords(int col,const char *val);
-    CsvRecord **getAllRecords();
-    CsvRecord **getAllRecords(const char *col,const char *val);
+    AbsCsvRecord *getRecord(int col,const char *val);
+    AbsCsvRecord *getRecord(int *col,const char **val);
+    AbsCsvRecord *getRecord(int row);
+    AbsCsvRecord *getRecord(const char *col,const char *val);
+    AbsCsvRecord *getRecord(const char **col,const char **val);
+    AbsCsvRecord **getAllRecords(int col,const char *val);
+    AbsCsvRecord **getAllRecords();
+    AbsCsvRecord **getAllRecords(const char *col,const char *val);
     //print
     bool save(const char *filename);
     void print(FILE *f);
     void print(FILE *f,int *row,int *col);
+    //copy
+    //void copy(Reader *r,FILE *f,int *row,int *col);
 };
+
+////#include "CsvData.h"
+//#include "CsvField.h"
+//#include "CsvSettings.h"
+
+//#include "csv.hh2"
 
 #endif

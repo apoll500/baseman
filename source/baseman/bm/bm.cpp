@@ -64,7 +64,7 @@ void Bm::load()
         return;
     }
 
-    CsvData *data=load_data(tabname.c_str());
+    AbsCsvData *data=load_data(tabname.c_str());
     if(!data)
     {
         osio::print("Could'nt open file %s.\n",tabname.c_str());
@@ -72,13 +72,13 @@ void Bm::load()
         return;
     }
 
-    const char *cols[3]= {key_name.c_str(),"flag",0};
+    const char *cols[3]={key_name.c_str(),"flag",0};
     const char *vals[3];
     vals[0]=key_value.c_str();
     vals[1]=flag.c_str();
     vals[2]=0;
 
-    CsvRecord *r=data->getRecord(cols,vals);
+    AbsCsvRecord *r=data->getRecord(cols,vals);
     if(r!=0)
     {
         set_values(r);
@@ -91,9 +91,9 @@ void Bm::load()
 
     delete data;
 }
-CsvData *Bm::load_data(const char *filename)
+AbsCsvData *Bm::load_data(const char *filename)
 {
-    CsvData *data=new CsvData();
+    AbsCsvData *data=AbsCsvDataInterface::createCsvData();
     if(data->load(filename))
     {
         osio::print("Missing file: %s\n",filename);
@@ -104,9 +104,9 @@ CsvData *Bm::load_data(const char *filename)
     data->useHeader(true);
     return data;
 }
-CsvData *Bm::load_data_quiet(const char *filename)
+AbsCsvData *Bm::load_data_quiet(const char *filename)
 {
-    CsvData *data=new CsvData();
+    AbsCsvData *data=AbsCsvDataInterface::createCsvData();
     if(data->load(filename))
     {
         delete data;
@@ -116,14 +116,14 @@ CsvData *Bm::load_data_quiet(const char *filename)
     data->useHeader(true);
     return data;
 }
-CsvRecord *Bm::get_record(CsvData *data,const char *sfld,const char *name,const char *flag)
+AbsCsvRecord *Bm::get_record(AbsCsvData *data,const char *sfld,const char *name,const char *flag)
 {
-    const char *cols[3]= {sfld,"flag",0};
+    const char *cols[3]={sfld,"flag",0};
     const char *vals[3];
     vals[0]=name;
     vals[1]=flag;
     vals[2]=0;
-    CsvRecord *record=data->getRecord(cols,vals);
+    AbsCsvRecord *record=data->getRecord(cols,vals);
     return record;
 }
 /*****************************************************************
@@ -326,6 +326,7 @@ Bm *Bm::createBm(std::string basename,std::string projname,std::string versname,
         if(download)
         {
             std::string downloads_activated=ini->get("main","downloads");
+            printf("downloads_activated=%s\n",downloads_activated.c_str());
             if(downloads_activated=="true")
             {
                 //in case of missing project
@@ -424,6 +425,20 @@ std::string Bm::projecttarget()
         }
     }
 }
+/*
+std::string Bm::webtargetpath(std::string filetarget)
+{
+    if(filetarget=="")
+    {
+        return webtarget()+project_name()+"/";
+    }
+    else if(path::pathtype(filetarget.c_str()) & PATH_ABS)
+    {
+        return filetarget;
+    }
+    return webtarget()+filetarget;
+}
+*/
 std::string Bm::webtarget()
 {
     if(path::pathtype(target.c_str()) & PATH_ABS)
@@ -446,6 +461,30 @@ std::string Bm::webtarget()
         }
     }
 }
+/*
+std::string Bm::runtarget()
+{
+    if(run!="")
+    {
+        return run;
+    }
+    else
+    {
+        if(parent)
+        {
+            return parent->runtarget();
+        }
+        else if(plevelitem)
+        {
+            return plevelitem->runtarget();
+        }
+        else
+        {
+            return run;
+        }
+    }
+}
+*/
 std::string Bm::basetarget()
 {
     if(path::pathtype(target.c_str()) & PATH_ABS)
@@ -525,14 +564,14 @@ bool Bm::set_field(const char *tab,const char *sfld,const char *item,const char 
         return false;
     }
 
-    CsvData *data=load_data(tab);
+    AbsCsvData *data=load_data(tab);
     if(!data)
     {
         osio::print("Could'nt open file %s.\n",tab);
         return false;
     }
 
-    CsvRecord *record=get_record(data,sfld,item,flag);
+    AbsCsvRecord *record=get_record(data,sfld,item,flag);
     if(!record)
     {
         osio::print("Could'nt select record with name='%s' and flag='%s'.\n",item,flag);
@@ -559,9 +598,9 @@ void Bm::set(const char *name,const char *value)
 *                                                                *
 *****************************************************************/
 bool Bm::select(const char *tab,const char *key,const char *selected_name,
-                void (*select_function)(const char *))
+            void (*select_function)(const char *))
 {
-    CsvData *data=load_data_quiet(tab);
+    AbsCsvData *data=load_data_quiet(tab);
     if(!data)
     {
         return false;
@@ -569,7 +608,7 @@ bool Bm::select(const char *tab,const char *key,const char *selected_name,
 
     int hid_name=data->getHeaderId(key);
 
-    CsvRecord **rec=data->getAllRecords("flag","1");
+    AbsCsvRecord **rec=data->getAllRecords("flag","1");
     int i=0;
     while(rec[i]!=0)
     {
@@ -586,9 +625,9 @@ bool Bm::select(const char *tab,const char *key,const char *selected_name,
     return false;
 }
 bool Bm::select_line(const char *tab,const char *key,int selected_line,
-                     void (*select_function)(const char *))
+            void (*select_function)(const char *))
 {
-    CsvData *data=load_data_quiet(tab);
+    AbsCsvData *data=load_data_quiet(tab);
     if(!data)
     {
         return false;
@@ -596,7 +635,7 @@ bool Bm::select_line(const char *tab,const char *key,int selected_line,
 
     int hid_name=data->getHeaderId(key);
 
-    CsvRecord **rec=data->getAllRecords("flag","1");
+    AbsCsvRecord **rec=data->getAllRecords("flag","1");
     int i=0;
     while(rec[i]!=0)
     {
@@ -635,7 +674,7 @@ bool Bm::selline_version(int selected_line)
 *****************************************************************/
 void Bm::list(const char *title,const char *tab,const char *key)
 {
-    CsvData *data=load_data(tab);
+    AbsCsvData *data=load_data(tab);
     if(!data)
     {
         osio::print("Could'nt open file %s.\n",tab);
@@ -650,7 +689,7 @@ void Bm::list(const char *title,const char *tab,const char *key)
 
     osio::print("\n%s:\n----------------------------------------------------------------------\n",title);
 
-    CsvRecord **rec=data->getAllRecords("flag","1");
+    AbsCsvRecord **rec=data->getAllRecords("flag","1");
     int i=0;
     while(rec[i]!=0)
     {
@@ -663,7 +702,7 @@ void Bm::list(const char *title,const char *tab,const char *key)
 }
 void Bm::list_files(const char *title,const char *tab)
 {
-    CsvData *data=load_data(tab);
+    AbsCsvData *data=load_data(tab);
     if(!data)
     {
         osio::print("Could'nt open file %s.\n",tab);
@@ -688,7 +727,7 @@ void Bm::list_files(const char *title,const char *tab)
     osio::print("         base,project,version,path,filename\n");
     osio::print("                                           \n");
 
-    CsvRecord **rec=data->getAllRecords("flag","1");
+    AbsCsvRecord **rec=data->getAllRecords("flag","1");
     int i=0;
     while(rec[i]!=0)
     {
@@ -769,30 +808,33 @@ void Bm::print_path()
 *****************************************************************/
 void Bm::create(const char *tab,const char *key,const char *name,const char *path)
 {
-    CsvData data;
-    
-    data.load(tab);
+    AbsCsvData *data=AbsCsvDataInterface::createCsvData();
 
-    data.useHeader(true);
-    int hid_name=data.getHeaderId(key);
+    data->load(tab);
 
-    CsvRecord **rec=data.getAllRecords("flag","1");
+    data->useHeader(true);
+    int hid_name=data->getHeaderId(key);
+
+    AbsCsvRecord **rec=data->getAllRecords("flag","1");
     int i=0;
     while(rec[i]!=0)
     {
         if(strcmp(rec[i++]->getField(hid_name),name)==0)
         {
             osio::print("Can't create %s. Object already exists here.",name);
+            delete data;
             return;
         }
     }
 
-    int row=data.addRecord();
-    if(!data.setField(row,key,name))osio::print("!-");
-    if(!data.setField(row,"path",path))osio::print("!-");
-    if(!data.setField(row,"flag","1"))osio::print("!-");
+    int row=data->addRecord();
+    if(!data->setField(row,key,name))osio::print("!-");
+    if(!data->setField(row,"path",path))osio::print("!-");
+    if(!data->setField(row,"flag","1"))osio::print("!-");
 
-    data.save(tab);
+    data->save(tab);
+
+    delete data;
 }
 void Bm::create_project(const char *name,const char *path)
 {
@@ -819,8 +861,8 @@ void Bm::run_web()
     if(target_path.substr(0,webspace.size())==webspace)
     {
         std::string url="http://localhost/"
-                        +target_path.substr(webspace.size(),std::string::npos)
-                        +getrun();
+                            +target_path.substr(webspace.size(),std::string::npos)
+                            +getrun();
         osio::print("open %s\n",url.c_str());
         //--TODO--
         //osexe::myShellExecute(NULL,"open",url.c_str(),NULL,NULL,SW_SHOW);
@@ -866,7 +908,7 @@ all_projects_info Bm::get_all_projects()
         //check items of files.csv
         //printf("loading %s\n",files_tabname.c_str());
         //open files.csv file.
-        CsvData *data=load_data(files_tabname.c_str());
+        AbsCsvData *data=load_data(files_tabname.c_str());
         if(!data)
         {
             osio::print("Could'nt open file %s.\n",files_tabname.c_str());
@@ -882,7 +924,7 @@ all_projects_info Bm::get_all_projects()
         //int hid_targ=data->getHeaderId("target");
         //int hid_desc=data->getHeaderId("description");
         //load all records
-        CsvRecord **rec=data->getAllRecords("flag","1");
+        AbsCsvRecord **rec=data->getAllRecords("flag","1");
         int i=0;
         while(rec[i]!=0)
         {
@@ -905,7 +947,7 @@ all_projects_info Bm::get_all_projects()
                 if(b)
                 {
                     all_projects_info a2=b->get_all_projects();
-                    for(unsigned int k=0; k<a2.project.size(); k++)
+                    for(unsigned int k=0;k<a2.project.size();k++)
                     {
                         a.project.push_back(a2.project[k]);
                         //printf(">>>> | %s | %s | %s |\n",a2.project[k].base.c_str(),a2.project[k].project.c_str(),a2.project[k].version.c_str());
@@ -928,3 +970,22 @@ all_projects_info Bm::get_all_projects()
     a.project.push_back(t);
     return a;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -73,7 +73,7 @@ void Base::ini0(std::string base)
     load();
 }
 
-void Base::set_values(CsvRecord *r)
+void Base::set_values(AbsCsvRecord *r)
 {
     char *path_cstr=r->getField(r->getTab()->getHeaderId("path"));
     char *target_cstr=r->getField(r->getTab()->getHeaderId("target"));

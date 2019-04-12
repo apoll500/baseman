@@ -40,24 +40,10 @@
 #ifndef Reader_HPP
 #define Reader_HPP
 
+#include "ReaderImpl.h"
 
-class ReaderImpl;
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <string>
-
-#define READER_COMPMODE_OFF 0
-#define READER_COMPMODE_STD 1
-#define READER_COMPMODE_EXT 2
-#include <uchar.h>
-
-#define READER_NOERROR 0
-#define READER_ERROR_OPEN_FILE 1
-
-
-class ReaderImpl
+#include "h3_Reader.h"
+class ReaderImpl:public Reader3
 {
 protected:
     int ahead;
@@ -67,14 +53,9 @@ protected:
     int lastErrorDetail;
     int lastline;
     int lastcolumn;
-    //
-    int currcolumn;
-    int currline;
-    int line_break_char;
-    int compatibility_mode;
 public:
     ReaderImpl();
-    virtual ~ReaderImpl() {};
+    virtual ~ReaderImpl(){};
     int get();
     int getChar();
     int getLastError();
@@ -86,11 +67,20 @@ public:
     void setCurrColumn(int n);
     int getLine();
     int getColumn();
-private:
+public:
     int getNext();
     void getNext_ahead();
-    virtual int getNextChar()=0;
     void moveCursorPos();
-};
+public:
+    virtual int getNextChar()=0;
+    //virtual int getNextChar(){return 1;}
+    //--------------------------------------------------------------------------
+    // DUMMY METHODS
+    // This methods have to be added here, to be included in the symbol table.
+    // Do not call this methods. These are only placeholders.
+    //--------------------------------------------------------------------------
+    //virtual int getCharSize(){return 0;}
+    //virtual void setCharSize(int){}
+ };
 
 #endif

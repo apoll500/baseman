@@ -1,0 +1,28 @@
+#ifndef PLIB_FUNCTION_csv_iface_all_fw
+#define PLIB_FUNCTION_csv_iface_all_fw
+
+#ifdef PROKEE_USE_INTERFACE
+
+//Interfaces
+class AbsCsvField;
+
+class AbsCsvRecord;
+
+class AbsCsvSettings;
+
+class AbsCsvData;
+
+
+//Factories
+class AbsCsvFieldInterface;
+
+class AbsCsvRecordInterface;
+
+class AbsCsvSettingsInterface;
+
+class AbsCsvDataInterface;
+
+
+#endif
+
+#endif

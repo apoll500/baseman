@@ -1,0 +1,9 @@
+#ifndef PLIB_CLASS_strconv_all_interface_factory
+#define PLIB_CLASS_strconv_all_interface_factory
+
+#ifdef PROKEE_USE_INTERFACE
+
+
+
+#endif
+#endif

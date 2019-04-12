@@ -1,0 +1,20 @@
+#ifndef PLIB_FUNCTION_dir_iface_all_fw
+#define PLIB_FUNCTION_dir_iface_all_fw
+
+#ifdef PROKEE_USE_INTERFACE
+
+//Interfaces
+template< class T > class DIRECTORY;
+
+template< class T > class TreeWalkCallback;
+
+
+//Factories
+class DIRECTORYInterface;
+
+class TreeWalkCallbackInterface;
+
+
+#endif
+
+#endif

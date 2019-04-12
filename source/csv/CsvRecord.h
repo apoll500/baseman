@@ -42,24 +42,71 @@
 
 #include <stdio.h>
 
+#include "csv/import/prokee.h"
+#include "csv.hh"
+
 #define CSV_INI_REC_LENGTH 16
 
 class CsvData;
 class CsvField;
-class FileReader;
 
-class CsvRecord
+//==============================================================================
+// CsvRecord
+//==============================================================================
+/**bmc
+DEF AbsCsvRecord_INTERFACE:INTERFACE
+{
+    class="AbsCsvRecord";
+    no_interface_superclass="TRUE";
+    implclass="CsvRecord";
+    headers
+    {
+        ->
+        <--
+    }
+    DEF docu
+    {
+        title="AbsCsvRecord";
+        //text="<pre>@parent.parent.code</pre>";
+        section:func.LSECTION
+        {
+            title="Motivation";
+            text
+            {
+                ->
+                <-
+            }
+        }
+    }
+}
+DEF PAGE_02:FILE,WEBP1
+{
+    THE_INTERFACE="AbsCsvRecord_INTERFACE";
+    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
+    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
+}
+DEF AbsCsvRecord
+{
+    class="AbsCsvRecord";
+}
+DEF X:WRAPPER
+{
+    class="CsvRecord";
+    baseclass="AbsCsvRecord";
+}
+*/
+class CsvRecord:public AbsCsvRecord2
 {
 private:
     CsvField **record;
     int record_memln;
     int record_size;
-    CsvData *top;
+    AbsCsvData *top;
 public:
-    CsvRecord(CsvData *d);
+    CsvRecord(AbsCsvData *d);
     ~CsvRecord();
     // loading
-    int load(FileReader *r);
+    int load(Reader *r);
     // add fields
     void addField();
     void addField(CsvField *fld);
@@ -68,7 +115,7 @@ public:
     char *getField(int col);
     const char *getField_f(int col);
     bool setField(int col,const char *val);
-    CsvData *getTab();
+    AbsCsvData *getTab();
     // match
     int match(int col,const char *val);
     int match(const char *val);
@@ -78,5 +125,10 @@ public:
     void print_ln(FILE *f);
     void print_ln(FILE *f,int *col);
 };
+
+//#include "CsvData.h"
+////#include "CsvRecord.h"
+//#include "CsvField.h"
+//#include "CsvSettings.h"
 
 #endif

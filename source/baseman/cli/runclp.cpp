@@ -62,11 +62,11 @@ void runargs(int argc,char **argv)
     }
     else if(strcmp(argv[1],"")==0)
     {
-        //nothing to do
+        //nothing
     }
     else if(strcmp(argv[1],"docu")==0)
     {
-        //show documentation ... not implemented
+        //
     }
     else if(strcmp(argv[1],"reset")==0)
     {
@@ -193,7 +193,7 @@ void runargs(int argc,char **argv)
             Bm *p=bmObject();
             if(p)a=p->get_all_projects(),delete p;
             else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
-            for(unsigned int i=0; i<a.project.size(); i++)
+            for(unsigned int i=0;i<a.project.size();i++)
             {
                 printf("%d) %s --> %s --> %s\n",i,a.project[i].base.c_str(),a.project[i].project.c_str(),a.project[i].version.c_str());
             }
@@ -211,8 +211,7 @@ void runargs(int argc,char **argv)
 
 void imode(void)
 {
-    char command[1024];
-    command[0]=0;
+    char command[1024];command[0]=0;
     int i,j,h;
     char *opt[5];
     osio::print("baseman  Copyright (C) 2016-2019  Andreas Pollhammer\n");
@@ -244,7 +243,7 @@ void imode(void)
         }
         opt[0]=&command[i];
         opt[1]=&command[0];
-        for(h=j; h<5; h++)opt[h]=&command[i];
+        for(h=j;h<5;h++)opt[h]=&command[i];
         //osio::print("%s(%s,%s)\n",opt[1],opt[2],opt[3]);
         runargs(j,opt);
     }
@@ -254,7 +253,7 @@ int cli_main(int argc,char **argv)
 {
     setbuf(stdout,NULL);
 
-    ini=new MultiSettings();
+    ini=AbsMultiSettingsInterface::createMultiSettings();
 
     if(!ini->loadfile(BASEMAN_INIPATH))
     {
@@ -291,24 +290,23 @@ void runargs_delete_log(int argc,char **)
 
 void runargs_export(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_DONOTHING
-                   };
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_DONOTHING};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -327,24 +325,23 @@ void runargs_export(int argc,char **)
 
 void runargs_package(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_PACKAGE,
-                    ACTION_PACKAGE,
-                    ACTION_PACKAGE,
+                  ACTION_PACKAGE,
+                  ACTION_PACKAGE,
+                  ACTION_PACKAGE,
 
-                    ACTION_PACKAGE,
-                    ACTION_PACKAGE,
-                    ACTION_PACKAGE,
+                  ACTION_PACKAGE,
+                  ACTION_PACKAGE,
+                  ACTION_PACKAGE,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_PACKAGE,
-                    ACTION_PACKAGE,
-                    ACTION_DONOTHING
-                   };
+                  ACTION_PACKAGE,
+                  ACTION_PACKAGE,
+                  ACTION_DONOTHING};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -363,24 +360,23 @@ void runargs_package(int argc,char **)
 
 void runargs_merge(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_IMPORT_BACKUP,
-                    ACTION_EXPORT,
+                  ACTION_DONOTHING,
+                  ACTION_IMPORT_BACKUP,
+                  ACTION_EXPORT,
 
-                    ACTION_EXPORT_BACKUP,
-                    ACTION_CONFLICT_CHANGED,
-                    ACTION_EXPORT,
+                  ACTION_EXPORT_BACKUP,
+                  ACTION_CONFLICT_CHANGED,
+                  ACTION_EXPORT,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_CONFLICT_NEW,
-                    ACTION_EXPORT,
-                    ACTION_INFO_NEW
-                   };
+                  ACTION_CONFLICT_NEW,
+                  ACTION_EXPORT,
+                  ACTION_INFO_NEW};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -399,24 +395,23 @@ void runargs_merge(int argc,char **)
 
 void runargs_import(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_IMPORT_BACKUP,
-                    ACTION_DONOTHING,
-                    ACTION_IMPORT
-                   };
+                  ACTION_IMPORT_BACKUP,
+                  ACTION_DONOTHING,
+                  ACTION_IMPORT};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -435,24 +430,23 @@ void runargs_import(int argc,char **)
 
 void runargs_import_p(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_IMPORT_BACKUP,
-                    ACTION_DONOTHING,
-                    ACTION_IMPORT
-                   };
+                  ACTION_IMPORT_BACKUP,
+                  ACTION_DONOTHING,
+                  ACTION_IMPORT};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -471,24 +465,23 @@ void runargs_import_p(int argc,char **)
 
 void runargs_clean(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_DELETE_BACKUP,
-                    ACTION_DELETE_BACKUP,
-                    ACTION_DONOTHING,
+                  ACTION_DELETE_BACKUP,
+                  ACTION_DELETE_BACKUP,
+                  ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING
-                   };
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -507,24 +500,23 @@ void runargs_clean(int argc,char **)
 
 void runargs_snapshot(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_DONOTHING
-                   };
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_DONOTHING};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -543,24 +535,23 @@ void runargs_snapshot(int argc,char **)
 
 void runargs_update(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_DONOTHING
-                   };
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_DONOTHING};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -579,24 +570,23 @@ void runargs_update(int argc,char **)
 
 void runargs_diff(int argc,char **)
 {
-    int actions[]= {ACTION_DONOTHING,
+    int actions[]={ACTION_DONOTHING,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
 
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
-                    ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
 
-                    ACTION_EXPORT,
-                    ACTION_EXPORT,
-                    ACTION_DONOTHING
-                   };
+                  ACTION_EXPORT,
+                  ACTION_EXPORT,
+                  ACTION_DONOTHING};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -617,24 +607,23 @@ void runargs_simu(int argc,char **argv)
 {
     if(argc==2)
     {
-        int actions[]= {ACTION_DONOTHING,
+        int actions[]={ACTION_DONOTHING,
 
-                        ACTION_PRINT_INFO,
-                        ACTION_PRINT_INFO,
-                        ACTION_PRINT_INFO,
+                      ACTION_PRINT_INFO,
+                      ACTION_PRINT_INFO,
+                      ACTION_PRINT_INFO,
 
-                        ACTION_PRINT_INFO,
-                        ACTION_PRINT_INFO,
-                        ACTION_PRINT_INFO,
+                      ACTION_PRINT_INFO,
+                      ACTION_PRINT_INFO,
+                      ACTION_PRINT_INFO,
 
-                        ACTION_DONOTHING,
-                        ACTION_DONOTHING,
-                        ACTION_DONOTHING,
+                      ACTION_DONOTHING,
+                      ACTION_DONOTHING,
+                      ACTION_DONOTHING,
 
-                        ACTION_PRINT_INFO,
-                        ACTION_PRINT_INFO,
-                        ACTION_DONOTHING
-                       };
+                      ACTION_PRINT_INFO,
+                      ACTION_PRINT_INFO,
+                      ACTION_DONOTHING};
         Bm *p=bmObject();
         if(p)
         {
@@ -647,24 +636,23 @@ void runargs_simu(int argc,char **argv)
     {
         if(strcmp(argv[2],"source")==0)
         {
-            int actions[]= {ACTION_DONOTHING,
+            int actions[]={ACTION_DONOTHING,
 
-                            ACTION_PRINT_SOURCE,
-                            ACTION_PRINT_SOURCE,
-                            ACTION_PRINT_SOURCE,
+                          ACTION_PRINT_SOURCE,
+                          ACTION_PRINT_SOURCE,
+                          ACTION_PRINT_SOURCE,
 
-                            ACTION_PRINT_SOURCE,
-                            ACTION_PRINT_SOURCE,
-                            ACTION_PRINT_SOURCE,
+                          ACTION_PRINT_SOURCE,
+                          ACTION_PRINT_SOURCE,
+                          ACTION_PRINT_SOURCE,
 
-                            ACTION_DONOTHING,
-                            ACTION_DONOTHING,
-                            ACTION_DONOTHING,
+                          ACTION_DONOTHING,
+                          ACTION_DONOTHING,
+                          ACTION_DONOTHING,
 
-                            ACTION_PRINT_SOURCE,
-                            ACTION_PRINT_SOURCE,
-                            ACTION_DONOTHING
-                           };
+                          ACTION_PRINT_SOURCE,
+                          ACTION_PRINT_SOURCE,
+                          ACTION_DONOTHING};
             Bm *p=bmObject();
             if(p)
             {
@@ -675,24 +663,23 @@ void runargs_simu(int argc,char **argv)
         }
         else if(strcmp(argv[2],"target")==0)
         {
-            int actions[]= {ACTION_DONOTHING,
+            int actions[]={ACTION_DONOTHING,
 
-                            ACTION_PRINT_TARGET,
-                            ACTION_PRINT_TARGET,
-                            ACTION_PRINT_TARGET,
+                          ACTION_PRINT_TARGET,
+                          ACTION_PRINT_TARGET,
+                          ACTION_PRINT_TARGET,
 
-                            ACTION_PRINT_TARGET,
-                            ACTION_PRINT_TARGET,
-                            ACTION_PRINT_TARGET,
+                          ACTION_PRINT_TARGET,
+                          ACTION_PRINT_TARGET,
+                          ACTION_PRINT_TARGET,
 
-                            ACTION_DONOTHING,
-                            ACTION_DONOTHING,
-                            ACTION_DONOTHING,
+                          ACTION_DONOTHING,
+                          ACTION_DONOTHING,
+                          ACTION_DONOTHING,
 
-                            ACTION_PRINT_TARGET,
-                            ACTION_PRINT_TARGET,
-                            ACTION_DONOTHING
-                           };
+                          ACTION_PRINT_TARGET,
+                          ACTION_PRINT_TARGET,
+                          ACTION_DONOTHING};
             Bm *p=bmObject();
             if(p)
             {
@@ -1219,7 +1206,8 @@ void runargs_add_intro(int argc,char **argv)
     if(argc==3)
     {
         system("baseman simu target > .baseman/target_list.txt");
-        std::string command=(std::string)"add_intro .baseman/target_list.txt intro_"+argv[2]+".txt "+ini->get("project")+" "+argv[2];
+        std::string command=(std::string)"add_intro .baseman/target_list.txt .baseman/intro_"+argv[2]+".txt "+ini->get("project")+" "+argv[2];
+        printf("> %s\n",command.c_str());
         system(command.c_str());
     }
     else

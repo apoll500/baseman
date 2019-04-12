@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+// file.cpp
+
 #include "file.h"
 
 /*****************************************************************
@@ -85,6 +87,10 @@ void *file::readfile(FILE *f,char *data)
     }
     return data;
 }
+//int file::read_bytes(FILE *f,char *data,unsigned int length)
+//{
+//    return fread(data,1,length,f);
+//}
 /*****************************************************************
 *                                                                *
 *  writefile()                                                   *

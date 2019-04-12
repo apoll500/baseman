@@ -105,7 +105,7 @@ void Project::ini0(char **projects,std::string basename)
     load();
 }
 
-void Project::set_values(CsvRecord *r)
+void Project::set_values(AbsCsvRecord *r)
 {
     char *path_cstr=r->getField(r->getTab()->getHeaderId("path"));
     char *target_cstr=r->getField(r->getTab()->getHeaderId("target"));

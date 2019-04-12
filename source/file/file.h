@@ -37,6 +37,7 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+// file.h
 #ifndef MOD_file_H
 #define MOD_file_H
 
@@ -61,10 +62,33 @@
 #include<direct.h>
 #endif
 
+//Pointers to other modules
+#define PROKEE_USE_INTERFACE
+#define PROKEE_USE_WRAPPER
 #include "file/file.hh"
 template<class T> class DIRECTORY;
 template<class T> class TreeWalkCallback;
+#include "file/import/prokee.h"
 
+/*
+template<class T> class CondCopyControl
+{
+public:
+    virtual ~CondCopyControl(){}
+    virtual bool doCopyFile(const T *targetpath,const T *sourcepath)=0;
+    virtual void filecopied(const T *targetpath,const T *sourcepath,size_t bytes)=0;
+    virtual bool ignoreEmptyDir(const T *path)=0;
+    virtual void feedback()=0;
+    virtual size_t feedback_bytes()=0;
+    virtual time_t feedback_time()=0;
+};
+*/
+
+/*********************************************************************
+*                                                                    *
+*  File-Functions                                                    *
+*                                                                    *
+*********************************************************************/
 class file
 {
 public:
@@ -86,6 +110,12 @@ public:
     static void *readfile(FILE *f,char *data);
     /*****************************************************************
     *                                                                *
+    *  read_bytes()                                                  *
+    *                                                                *
+    *****************************************************************/
+    //static int read_bytes(FILE *f,char *data,unsigned int length);
+    /*****************************************************************
+    *                                                                *
     *  writefile()                                                   *
     *                                                                *
     *****************************************************************/
@@ -94,6 +124,12 @@ public:
     static int writefile(FILE *file,void *data,unsigned int length);
     static int writefile(int file,void *data,unsigned int length);
     template<class T> static T *write_newfile(const T *filename,void *data,unsigned int length);
+    /*****************************************************************
+    *                                                                *
+    *  rwfile()                                                      *
+    *                                                                *
+    *****************************************************************/
+    template<class T> static bool rwfile(const T *filename,unsigned int rep,bool dodelete);
     /*****************************************************************
     *                                                                *
     *  testfile()                                                    *
@@ -136,8 +172,9 @@ public:
     template<class T> static bool remove_clean(const T *filename);
 };
 
-#include "dir/dir.h"
-#include "path/path.h"
+//#include "path.h"
+//#include "dir.h"
+#include "file/import/modules.h"
 
 /*****************************************************************
 *                                                                *
@@ -158,10 +195,8 @@ template<class T> FILE *file::openfile(const T *path,const T *name,const T *mode
 }
 template<class T> FILE *file::openfile(const T *filename,const T *mode)
 {
-    T a[3];
-    conststr::cast(a,"w");
-    T b[3];
-    conststr::cast(b,"a");
+    T a[3];conststr::cast(a,"w");
+    T b[3];conststr::cast(b,"a");
     if(mode[0]==a[0] || mode[0]==b[0])//str::cmp(mode,conststr::cast(a,"wb"))==0 || str::cmp(mode,conststr::cast(a,"wt"))==0)
     {
         dir::createdir(filename);
@@ -306,6 +341,51 @@ template<class T> T *file::write_newfile(const T *filename,void *data,unsigned i
         return newfilename;
     }
     return 0;
+}
+/*****************************************************************
+*                                                                *
+*  rwfile()                                                      *
+*                                                                *
+*****************************************************************/
+template<class T> bool file::rwfile(const T *filename,unsigned int rep,bool dodelete)
+{
+    unsigned long length=osfile::get_size(filename);
+
+    T a[3];
+    FILE *f=openfile(filename,conststr::cast(a,"r+b"));
+
+    if(!f)return false;
+
+    unsigned long i,j,pos=0;
+    char bu[BUFSIZ];
+
+    srand(time(0));
+
+    // RAND_MAX my be not more than 32767 (depending on implementation of the library)
+    // Therefor taking only 8 bits of every random pseudo value.
+
+    for(i=0;i<rep;i++)
+    {
+        fseek(f,0,SEEK_SET);
+        while(pos<length)
+        {
+            for(j=0;j<BUFSIZ;j++)
+            {
+                bu[j]=(char)rand();
+            }
+            fwrite(bu,1,pos+BUFSIZ<length?BUFSIZ:length-pos,f);
+            pos+=BUFSIZ;
+        }
+        fflush(f);
+    }
+
+    fclose(f);
+
+    if(dodelete)
+    {
+        return remove_clean(filename);
+    }
+    return true;
 }
 /*****************************************************************
 *                                                                *
@@ -504,11 +584,7 @@ template<class T> bool file::compare(const T *patha,const T *pathb)
     FILE *fa=osfile::open(patha,m);
     if(!fa)return false;
     FILE *fb=osfile::open(pathb,m);
-    if(!fb)
-    {
-        fclose(fa);
-        return false;
-    }
+    if(!fb){fclose(fa);return false;}
 
     char a[BUFSIZ];
     char b[BUFSIZ];
@@ -518,20 +594,10 @@ template<class T> bool file::compare(const T *patha,const T *pathb)
     {
         lna=fread(a,1,BUFSIZ,fa);
         lnb=fread(b,1,BUFSIZ,fb);
-        if(lna!=lnb)
+        if(lna!=lnb){fclose(fa);fclose(fb);return false;}
+        for(i=0;i<lna;i++)
         {
-            fclose(fa);
-            fclose(fb);
-            return false;
-        }
-        for(i=0; i<lna; i++)
-        {
-            if(a[i]!=b[i])
-            {
-                fclose(fa);
-                fclose(fb);
-                return false;
-            }
+            if(a[i]!=b[i]){fclose(fa);fclose(fb);return false;}
         }
     }
     fclose(fa);

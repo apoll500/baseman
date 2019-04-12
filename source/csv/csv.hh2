@@ -1,0 +1,52 @@
+#ifndef PLIB_CLASS_csv_all_interface_factory
+#define PLIB_CLASS_csv_all_interface_factory
+
+#ifdef PROKEE_USE_INTERFACE
+
+
+class AbsCsvFieldInterface
+{
+public:
+    static AbsCsvField *createCsvField(AbsCsvSettings *s)
+    {
+        return (AbsCsvField *)new CsvField(s);
+    }
+};
+
+
+
+class AbsCsvRecordInterface
+{
+public:
+    static AbsCsvRecord *createCsvRecord(AbsCsvData *d)
+    {
+        return (AbsCsvRecord *)new CsvRecord(d);
+    }
+};
+
+
+
+class AbsCsvSettingsInterface
+{
+public:
+    static AbsCsvSettings *createCsvSettings(int f,int r,int s)
+    {
+        return (AbsCsvSettings *)new CsvSettings(f,r,s);
+    }
+};
+
+
+
+class AbsCsvDataInterface
+{
+public:
+    static AbsCsvData *createCsvData()
+    {
+        return (AbsCsvData *)new CsvData();
+    }
+};
+
+
+
+#endif
+#endif

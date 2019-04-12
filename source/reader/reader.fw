@@ -1,0 +1,20 @@
+#ifndef PLIB_FUNCTION_reader_iface_all_fw
+#define PLIB_FUNCTION_reader_iface_all_fw
+
+#ifdef PROKEE_USE_INTERFACE
+
+//Interfaces
+class Reader;
+
+class AbsUniFileReader;
+
+
+//Factories
+class ReaderInterface;
+
+class AbsUniFileReaderInterface;
+
+
+#endif
+
+#endif

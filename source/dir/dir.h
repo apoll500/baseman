@@ -37,8 +37,23 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+// dir.h
 #ifndef MOD_dir_H
 #define MOD_dir_H
+
+/*
+#include <windows.h>
+#include <stdio.h>
+#include <tchar.h>
+#include <io.h>
+
+#include <math.h>
+#include <time.h>
+#include <limits.h>
+
+//für _getdrives()
+#include<direct.h>
+*/
 
 #include <stdlib.h>
 
@@ -49,11 +64,20 @@
 
 #ifdef OS_LIN
 #include <dirent.h>
+//#include <stdio.h>
+//#include <sys/types.h>
+//#include <sys/stat.h>
+//#include <unistd.h>
+
 #endif
 
+#define PROKEE_USE_INTERFACE
+#define PROKEE_USE_WRAPPER
 #include "dir/dir.hh"
 
 #include "file/file.hh"
+
+#include "dir/import/prokee.h"
 
 #ifdef OS_WIN
 template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
@@ -89,7 +113,7 @@ public:
             {
                 if(hfind!=0 && hfind!=INVALID_HANDLE_VALUE)
                 {
-                    dirsep();
+					dirsep();
                 }
                 else
                 {
@@ -206,11 +230,116 @@ public:
         }
     }
 };
+/*
+class DIRECTORY_Impl:public DIRECTORY<wchar_t>
+{
+public:
+    DIRECTORY_Impl(const wchar_t *)
+    {
+    }
+    ~DIRECTORY_Impl()
+    {
+    }
+    T *read()
+    {
+        return 0;
+    }
+    bool item_isdir()
+    {
+        return false;
+    }
+    void dirsep()
+    {
+    }
+};
+*/
+/*
+template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
+{
+    struct dirent *diritem;
+    DIR *ddir;
+    T *dirpath;
+    T currentItemName[1024];
+public:
+    DIRECTORY_Impl(const char *path)
+    {
+        dirpath=(T *)malloc((str::len(path)+1)*sizeof(T));
+        str::cpy(dirpath,path);
+        ddir=opendir(path);
+    }
+    DIRECTORY_Impl(const wchar_t *)
+    {
+        // --TODO--
+    }
+    ~DIRECTORY_Impl()
+    {
+        if(ddir)closedir(ddir);
+        free(dirpath);
+    }
+    T *read()
+    {
+        if(ddir)
+        {
+            diritem=readdir(ddir);
+            if(!diritem)
+            {
+                currentItemName[0]=0;
+                return currentItemName;
+            }
+            dirsep();
+        }
+        else
+        {
+            currentItemName[0]=0;
+        }
+        return currentItemName;
+    }
+    bool item_isdir()
+    {
+        struct stat sb;
+        T *a=(T *)malloc((str::len(dirpath)+str::len(diritem->d_name)+1)*sizeof(T));
+        str::cpy(a,dirpath);
+        str::cat(a,diritem->d_name);
+        if(lstat(a,&sb)==-1)
+        {
+            free(a);
+            perror("stat");
+            return false;
+        }
+        free(a);
+        if((sb.st_mode & S_IFMT)==S_IFDIR)
+        {
+            return true;
+        }
+        return false;
+    }
+    void dirsep()
+    {
+        str::cpy(currentItemName,diritem->d_name);
+        if(item_isdir())
+        {
+            T a[2];
+            str::cat(currentItemName,conststr::dirsep1(a));
+        }
+    }
+};
+*/
 #endif
 
+/*********************************************************************
+*                                                                    *
+*  Directory-Functions                                               *
+*                                                                    *
+*********************************************************************/
 class dir
 {
 public:
+    /*****************************************************************
+    *                                                                *
+    *  getProgramDirectory()                                         *
+    *                                                                *
+    *****************************************************************/
+    template<class T> static T *getProgramDirectory(const T *param);
     /*****************************************************************
     *                                                                *
     *  createdir()                                                   *
@@ -229,6 +358,11 @@ public:
     *                                                                *
     *****************************************************************/
     template<class T> static bool deletedir(const T *path);
+    /*****************************************************************
+    *                                                                *
+    *  listdir()                                                     *
+    *                                                                *
+    *****************************************************************/
     /*****************************************************************
     *                                                                *
     *  opendir()                                                     *
@@ -255,10 +389,30 @@ public:
     template<class T> static bool isEmpty(const T *path);
     /*****************************************************************
     *                                                                *
+    *  resetdir()                                                    *
+    *                                                                *
+    *****************************************************************/
+    /*****************************************************************
+    *                                                                *
+    *  getAllItems()                                                 *
+    *                                                                *
+    *****************************************************************/
+    /*****************************************************************
+    *                                                                *
     *  closedir()                                                    *
     *                                                                *
     *****************************************************************/
     template<class T> static bool closedir(DIRECTORY<T> *d);
+    /*****************************************************************
+    *                                                                *
+    *  renamedir()                                                   *
+    *                                                                *
+    *****************************************************************/
+    /*****************************************************************
+    *                                                                *
+    *  movedir()                                                     *
+    *                                                                *
+    *****************************************************************/
     /*****************************************************************
     *                                                                *
     *  tree()                                                        *
@@ -279,11 +433,36 @@ public:
     template<class T> static bool copydir(const T *targetpath,const T *sourcepath,const T *directory,CondCopyControl<T> *cc);
 };
 
-#include "file/file.h"
-#include "label/label.h"
-#include "path/path.h"
-#include "strman/strman.h"
+#include "dir/import/modules.h"
 
+/*****************************************************************
+*                                                                *
+*  getProgramDirectory()                                         *
+*                                                                *
+*****************************************************************/
+template<class T> T *dir::getProgramDirectory(const T *param)
+{
+    T *path=path::pnopath(param);
+    //In case, if a relative path is given. (prepend current working directory)
+    if(!(path::pathtype(path) & PATH_ABS))
+    {
+        //finding out current directory:
+        //  POSIX:   getcwd()
+        //  ISO:     _getcwd() and _wgetcwd() ... (Not included in C-Runtime Library?)
+        //  WINDOWS: GetCurrentDirectory()
+        T *cwd=osdir::oscwd((T *)0,0);//Argument 0 lets the Funktion allocate the required memory.
+        if(cwd!=0)
+        {
+            T a[CONSTSTR_MAXSEPS];
+            cwd=(T *)realloc(cwd,(str::len(cwd)+str::len(path)+2)*sizeof(T));
+            str::cat(cwd,conststr::dirsep1(a));
+            str::cat(cwd,path);
+            free(path);
+            path=cwd;
+        }
+    }
+    return path;
+}
 /*****************************************************************
 *                                                                *
 *  createdir()                                                   *
@@ -469,7 +648,7 @@ template<class T> T *dir::getNextItem(DIRECTORY<T> *d)
     T a[4];
     T *item=d->read();
     while(str::cmp(item,conststr::cast(a,"./"))==0 ||
-            str::cmp(item,conststr::cast(a,"../"))==0)
+          str::cmp(item,conststr::cast(a,"../"))==0)
     {
         item=d->read();
     }
@@ -523,6 +702,16 @@ template<class T> bool dir::isEmpty(const T *path)
 }
 /*****************************************************************
 *                                                                *
+*  resetdir()                                                    *
+*                                                                *
+*****************************************************************/
+/*****************************************************************
+*                                                                *
+*  getAllItems()                                                 *
+*                                                                *
+*****************************************************************/
+/*****************************************************************
+*                                                                *
 *  closedir()                                                    *
 *                                                                *
 *****************************************************************/
@@ -531,6 +720,16 @@ template<class T> bool dir::closedir(DIRECTORY<T> *d)
     delete d;
     return true;
 }
+/*****************************************************************
+*                                                                *
+*  renamedir()                                                   *
+*                                                                *
+*****************************************************************/
+/*****************************************************************
+*                                                                *
+*  movedir()                                                     *
+*                                                                *
+*****************************************************************/
 /*****************************************************************
 *                                                                *
 *  tree()                                                        *
@@ -548,7 +747,7 @@ template<class T> bool dir::printtree(const T *path,int depth)
             a=dir::getNextItem(sd);
             if(a[0]!=0)
             {
-                for(int i=0; i<depth; i++)osio::print("  ");
+                for(int i=0;i<depth;i++)osio::print("  ");
                 osio::print("%s\n",a);
                 if(path::pathtype(a) & PATH_DIR)
                 {
