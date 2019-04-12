@@ -37,3 +37,6 @@ run.sh
 #Code::Blocks
 *.layout
 *.depend
+
+#bmc
+*.def
