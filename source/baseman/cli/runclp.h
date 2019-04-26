@@ -95,13 +95,17 @@ void runargs_info(int argc,char **argv);
 void runargs_path(int argc,char **argv);
 void runargs_open(int argc,char **argv);
 void runargs_setgroup(int argc,char **argv);
-void select_element(Bm *p,const char *arg);
+
+bool select_element(Bm *p,const char *arg);
 void select_line(Bm *p,const char *arg);
-void select_element_project(Bm *p,const char *arg);
-void select_element_version(Bm *p,const char *arg);
+bool select_element_project(Bm *p,const char *arg);
+bool select_element_version(Bm *p,const char *arg);
 void select_project_line(Bm *p,const char *arg);
 void select_version_line(Bm *p,const char *arg);
+bool select_full_path(const char *path,bool (*selector_function)(Bm *,const char *));
+bool select_path(const char *path,bool (*selector_function)(Bm *,const char *));
 void runargs_select(int argc,char **argv);
+
 void runargs_set(int argc,char **argv);
 void runargs_setiniblock(int argc,char **argv);
 void runargs_add_intro(int argc,char **argv);

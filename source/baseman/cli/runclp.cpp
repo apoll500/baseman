@@ -904,7 +904,7 @@ void runargs_setgroup(int argc,char **argv)
     }
 }
 
-void select_element(Bm *p,const char *arg)
+bool select_element(Bm *p,const char *arg)
 {
     bool b=true;
     if(ini->get("version")!="")
@@ -929,6 +929,7 @@ void select_element(Bm *p,const char *arg)
     {
         osio::print("No element with name '%s' found.\n",arg);
     }
+    return b;
 }
 
 void select_line(Bm *p,const char *arg)
@@ -959,12 +960,13 @@ void select_line(Bm *p,const char *arg)
     }
 }
 
-void select_element_project(Bm *p,const char *arg)
+bool select_element_project(Bm *p,const char *arg)
 {
     bool b=true;
     if(ini->get("version")!="")
     {
         osio::print("No project supposed to be here.\n");
+        return false;
     }
     else if(ini->get("project")!="")
     {
@@ -977,14 +979,16 @@ void select_element_project(Bm *p,const char *arg)
     else
     {
         osio::print("No project supposed to be here.\n");
+        return false;
     }
     if(!b)
     {
         osio::print("No element with name '%s' found.\n",arg);
     }
+    return b;
 }
 
-void select_element_version(Bm *p,const char *arg)
+bool select_element_version(Bm *p,const char *arg)
 {
     bool b=true;
     if(ini->get("version")!="")
@@ -1002,11 +1006,13 @@ void select_element_version(Bm *p,const char *arg)
     else
     {
         osio::print("No version supposed to be here.\n");
+        return false;
     }
     if(!b)
     {
         osio::print("No element with name '%s' found.\n",arg);
     }
+    return b;
 }
 
 void select_project_line(Bm *p,const char *arg)
@@ -1061,28 +1067,64 @@ void select_version_line(Bm *p,const char *arg)
     }
 }
 
+bool select_full_path(const char *path,bool (*selector_function)(Bm *,const char *))
+{
+    reset();
+    return select_path(path,selector_function);
+}
+
+bool select_path(const char *path,bool (*selector_function)(Bm *,const char *))
+{
+    char **a=strman::explode("/",path);
+    for(int i=0;i<strman::explode_count(a);i++)
+    {
+        Bm *p=bmObject();
+        if(p)
+        {
+            bool b=selector_function(p,a[i]);
+            if(!b)
+            {
+                strman::explode_free(a);
+                osio::print("[ERROR] baseman: could not select path %s.\n",path);
+                return false;
+            }
+            delete p;
+        }
+        else
+        {
+            select_base(a[i]);
+        }
+    }
+    strman::explode_free(a);
+    return true;
+}
+
 void runargs_select(int argc,char **argv)
 {
     if(argc==3)
     {
-        Bm *p=bmObject();
-        if(p)select_element(p,argv[2]),delete p;
-        else select_base(argv[2]);
+        if(!select_path(argv[2],select_element))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else if(argc==4)
     {
-        Bm *p=bmObject();
         if(strcmp(argv[2],"project")==0)
         {
-            if(p)select_element_project(p,argv[3]);
+            if(!select_path(argv[3],select_element_project))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"version")==0)
         {
-            if(p)select_element_version(p,argv[3]);
+            if(!select_path(argv[3],select_element_version))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        }
+        else if(strcmp(argv[2],"fullpath")==0)
+        {
+            if(!select_full_path(argv[3],select_element))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"line")==0)
         {
+            Bm *p=bmObject();
             if(p)select_line(p,argv[3]);
+            if(p)delete p;
+            else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"file")==0)
         {
@@ -1092,8 +1134,6 @@ void runargs_select(int argc,char **argv)
         {
             osio::print("Unknown type '%s'.\n",argv[2]);
         }
-        if(p)delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else if(argc==5)
     {
