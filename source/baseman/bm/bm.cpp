@@ -855,7 +855,7 @@ void Bm::create_file(const char *name,const char *path)
 *****************************************************************/
 void Bm::run_web()
 {
-    std::string webspace=ini->get("webspace");
+    std::string webspace=ini->get("main","webspace");
     std::string target_path=abstarget();
     if(project_target()=="")target_path+=project_name();
     if(target_path.substr(0,webspace.size())==webspace)
@@ -864,8 +864,7 @@ void Bm::run_web()
                             +target_path.substr(webspace.size(),std::string::npos)
                             +getrun();
         osio::print("open %s\n",url.c_str());
-        //--TODO--
-        //osexe::myShellExecute(NULL,"open",url.c_str(),NULL,NULL,SW_SHOW);
+        osexe::myShellExecute(NULL,"open",url.c_str(),NULL,NULL,SW_SHOW);
     }
     else
     {
@@ -879,14 +878,11 @@ void Bm::run_web()
 *****************************************************************/
 void Bm::open_folder_os()
 {
-    //--TODO--
-    //osexe::myShellExecute(NULL,"open",fullpath.c_str(),NULL,NULL,SW_SHOW);
+    osexe::myShellExecute(NULL,"open",fullpath.c_str(),NULL,NULL,SW_SHOW);
 }
 void Bm::open_csv()
 {
     std::string p=fullpath+"projects.csv";
-    //--TODO--
-    /*
     if(file::testfile(p.c_str()))
         osexe::myShellExecute(NULL,"edit",p.c_str(),NULL,NULL,SW_SHOW);
 
@@ -897,7 +893,6 @@ void Bm::open_csv()
     p=fullpath+"files.csv";
     if(file::testfile(p.c_str()))
         osexe::myShellExecute(NULL,"edit",p.c_str(),NULL,NULL,SW_SHOW);
-    */
 }
 all_projects_info Bm::get_all_projects()
 {

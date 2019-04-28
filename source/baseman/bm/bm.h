@@ -64,6 +64,7 @@ void select_version(const char *version);
 
 #include "../baseman.h"
 #include "macros/macros.h"
+#include "wwrap/osexe.h"
 
 extern AbsMultiSettings *ini;
 
