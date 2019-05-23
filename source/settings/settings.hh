@@ -92,7 +92,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
-class AbsSettings2:virtual public AbsSettings
+class AbsSettings2:public AbsSettings
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------

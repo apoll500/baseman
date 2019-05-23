@@ -48,7 +48,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
-class AbsCsvField2:virtual public AbsCsvField
+class AbsCsvField2:public AbsCsvField
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------
@@ -132,7 +132,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
-class AbsCsvRecord2:virtual public AbsCsvRecord
+class AbsCsvRecord2:public AbsCsvRecord
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------
@@ -188,7 +188,7 @@ public:
     virtual void set_string_marker_in(int value)=0;
     virtual void set_string_marker_out(int value)=0;
 };
-class AbsCsvSettings2:virtual public AbsCsvSettings
+class AbsCsvSettings2:public AbsCsvSettings
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------
@@ -298,6 +298,9 @@ public:
     virtual AbsCsvRecord *load_rec(Reader *reader)=0;
     
     
+    virtual int get_record_count()=0;
+    
+    
     virtual void useHeader(bool h)=0;
     
     
@@ -359,7 +362,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     virtual void set_settings(AbsCsvSettings *value)=0;
 };
-class AbsCsvData2:virtual public AbsCsvData
+class AbsCsvData2:public AbsCsvData
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------

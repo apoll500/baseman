@@ -1,10 +1,34 @@
 #ifndef H_WWRAP_EXE_WWIN
 #define H_WWRAP_EXE_WWIN
 
+#include "macros/macros.h"
+
+//------------------------------------------------------------------------------
+/*
+#ifdef COMPILE_PROKEE_MODULE
+#define PROKEE_USE_WRAPPER
+#include "strconv/v01/module.h"
+#else
+#include "strconv/strconv.h"
+#endif
+*/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+#ifdef COMPILE_PROKEE_MODULE
+#ifndef COMPILE_PROKEE_MODULE_NO_STRCONV
+#define PROKEE_USE_WRAPPER
+#include "strconv/v01/module.h"
+#else
+#include "strconv/strconv.h"
+#endif
+#else
+#include "strconv/strconv.h"
+#endif
+//------------------------------------------------------------------------------
+
 #include <stdio.h>
 #include <windows.h>
-
-#include "../blib/strconv.h"
 
 class osexe
 {

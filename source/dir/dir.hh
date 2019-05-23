@@ -42,7 +42,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
-template< class T > class DIRECTORY2:virtual public DIRECTORY< T >
+template< class T > class DIRECTORY2:public DIRECTORY< T >
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------
@@ -90,7 +90,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
-template< class T > class TreeWalkCallback2:virtual public TreeWalkCallback< T >
+template< class T > class TreeWalkCallback2:public TreeWalkCallback< T >
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------

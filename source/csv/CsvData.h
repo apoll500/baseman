@@ -110,7 +110,7 @@ public:
         {
             param_classname="AbsCsvSettings";
         };
-        brief="Einstellungen.";
+        brief="Provides settings for reading and writing csv files. (see <a href='@modname[]_@version[]_AbsCsvSettings.php'>AbsCsvSettings</a>)";
         docu
         {
             AbsCsvData_INTERFACE;
@@ -148,6 +148,7 @@ public:
     void addRecord(AbsCsvRecord *rec);
     //load next record
     AbsCsvRecord *load_rec(Reader *r);
+    int get_record_count();
     //header
     void useHeader(bool h);
     int getHeaderId(const char *col);

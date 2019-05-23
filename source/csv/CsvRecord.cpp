@@ -50,21 +50,22 @@
 DEF param_CsvData:manu
 {
     name="d";
-    desc="Pointer to an instance of an implementation of AbsCsvData.<br>See <a href='@param_classinfo[]_AbsCsvData\.php'>@param_classinfo\:AbsCsvData</a>.";
+    desc="Pointer to an instance of an implementation of AbsCsvData.<br>See <a href='@param_classinfo[]_@version[]_AbsCsvData\.php'>@param_classinfo\:AbsCsvData</a>.";
     param_classname="AbsCsvData";
     param_classinfo="csv";
 }
 DEF param_CsvRecord:manu
 {
     name="r";
-    desc="Pointer to an instance of an implementation of AbsCsvRecord.<br>See <a href='@param_classinfo[]_AbsCsvData\.php'>@param_classinfo\:AbsCsvData</a>.";
+    desc="Pointer to an instance of an implementation of AbsCsvRecord.<br>See <a href='@param_classinfo[]_@version[]_AbsCsvData\.php'>@param_classinfo\:AbsCsvData</a>.";
     param_classname="AbsCsvRecord";
     param_classinfo="csv";
 }
 DEF param_CsvRecord2:manupp
 {
     name="r";
-    desc="Pointer to an instance of an implementation of AbsCsvRecord.<br>See <a href='@param_classinfo[]_AbsCsvData\.php'>@param_classinfo\:AbsCsvData</a>.";
+    direction="IN";
+    desc="A pointer to an buffer which contains a null-terminated sequence of pointers to instances of implementations of AbsCsvRecord.<br>See <a href='@param_classinfo[]_@version[]_AbsCsvRecord\.php'>@param_classinfo\:AbsCsvRecord</a>.";
     param_classname="AbsCsvRecord";
     param_classinfo="csv";
 }

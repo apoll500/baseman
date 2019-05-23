@@ -8,6 +8,7 @@
 //extern IniSettingsM *ini;
 
 #include <string>
+#include <string.h>
 
 class osexe
 {
@@ -17,7 +18,7 @@ public:
         std::string a;
         if(strman::isprefix("http://",filename) || strman::isprefix("https://",filename))
         {
-            if(str::cmp(action,"open")==0)
+            if(strcmp(action,"open")==0)
             {
                 a=ini->get("main","browser");
                 if(a=="")a="xdg-open";
@@ -28,7 +29,7 @@ public:
         }
         else
         {
-            if(str::cmp(action,"open")==0)
+            if(strcmp(action,"open")==0)
             {
                 a=ini->get("main","fileman");
                 if(a=="")a="xdg-open";
@@ -36,7 +37,7 @@ public:
                 printf("> %s\n",a.c_str());
                 system(a.c_str());
             }
-            else if(str::cmp(action,"edit")==0)
+            else if(strcmp(action,"edit")==0)
             {
                 a=ini->get("main","editor");
                 if(a=="")a="xdg-open";

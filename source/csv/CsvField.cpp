@@ -48,7 +48,7 @@
 DEF param_CsvSettings:manu
 {
     name="s";
-    desc="Pointer to an instance of an implementation of AbsCsvSettings.<br>See <a href='@param_classinfo[]_AbsCsvSettings\.php'>@param_classinfo\:AbsCsvSettings</a>.";
+    desc="Pointer to an instance of an implementation of AbsCsvSettings.<br>See <a href='@param_classinfo[]_@version[]_AbsCsvSettings\.php'>@param_classinfo\:AbsCsvSettings</a>.";
     param_classname="AbsCsvSettings";
     param_classinfo="csv";
 }
@@ -214,8 +214,8 @@ bool CsvField::match(const char *val)
 DEF get:ABSTRACT_METHOD
 {
     function="get";
-    brief="Gibt den Wert des Feldes zurück.";
-    return:cp="Der Wert des Feldes.";
+    brief="Returns a pointer to the buffer which holds the value of the field.<br>The value is represented as null-terminated string.<br>Do not free the returned buffer.";
+    return:cp="The value of the field.";
 }
 DEF x:METHOD,get
 {
@@ -237,11 +237,19 @@ char *CsvField::get()
     return value;
 }
 /**bmc
+DEF param_field_val:ccp
+{
+    name="val";
+    direction="IN";
+    desc="The null-terminated string, that should be stored as the new value of this field.<br>The method copies this string into the buffer of this field.";
+}
+*/
+/**bmc
 DEF set:ABSTRACT_METHOD
 {
     function="set";
-    brief="Setzt den Wert des Feldes.";
-    param:param_val{};
+    brief="Sets the value of the field.";
+    param:param_field_val{};
     return:v="";
 }
 DEF x:METHOD,set
@@ -261,8 +269,25 @@ DEF x:set,AbsCsvField,IMETHOD
 */
 void CsvField::set(const char *v)
 {
-    value=(char *)realloc(value,(strlen(v)+1)*sizeof(char));
-    strcpy(value,v);
+    //value=(char *)realloc(value,(strlen(v)+1)*sizeof(char));
+    //strcpy(value,v);
+    int i=0;
+    while(v[i])
+    {
+        if(i>=value_ln)
+        {
+            value_ln*=2;
+            value=(char *)realloc(value,(value_ln+1)*sizeof(char));
+        }
+        value[i]=v[i];
+        i++;
+    }
+    if(i>=value_ln)
+    {
+        value_ln*=2;
+        value=(char *)realloc(value,(value_ln+1)*sizeof(char));
+    }
+    value[i]=0;
 }
 /**bmc
 DEF printF1:ABSTRACT_METHOD
@@ -294,11 +319,19 @@ void CsvField::print(FILE *f)
     print(f,value);
 }
 /**bmc
+DEF param_field_val_print:ccp
+{
+    name="val";
+    direction="IN";
+    desc="The null-terminated string, that should be printed as the value of the field. (The string currently stored as the value of this field is ignored.)";
+}
+*/
+/**bmc
 DEF printF2:ABSTRACT_METHOD
 {
     function="print";
     suffix="2";
-    brief="Schreibt den Wert <code class='name'>val</code> als csv-Feld in die Datei <code class='name'>f</code>.";
+    brief="This method writes value <code class='name'>val</code> formatted as a csv value to file <code class='name'>f</code>.";
     xinfo="Es wird <code class='name'>val</code> entweder unverändert ausgegeben, oder falls erforderlich unter Anführungszeichen (bzw. mit String-Markierngs-Symbolen versehen, wie durch <a href='@modname[]_AbsCsvSettings.php&num;string_marker_out'>string_marker_out</a> festgelegt).
     <br><br>
     Beispiele:
@@ -307,7 +340,7 @@ DEF printF2:ABSTRACT_METHOD
     <br>c) <code class='name'>\"Hallo\"</code> wird ausgegeben als <code class='name'>\"\"\"Hallo\"\"\"</code>.
     ";
     param:param_file{};
-    param:param_val{};
+    param:param_field_val_print{};
     return:v="";
 }
 DEF x:METHOD,printF2

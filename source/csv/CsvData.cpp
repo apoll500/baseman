@@ -73,7 +73,7 @@ DEF param_docreate:ccp
 DEF param_Reader:manu
 {
     name="reader";
-    desc="Pointer to an instance of an implementation of Reader.<br>See <a href='@param_classinfo[]_Reader\.php'>@param_classinfo\:Reader</a>.";
+    desc="Pointer to an instance of an implementation of Reader.<br>See <a href='@param_classinfo[]_@version[]_Reader\.php'>@param_classinfo\:Reader</a>.";
     param_classname="Reader";
     param_classinfo="reader";
 }
@@ -139,7 +139,7 @@ DEF CsvData:CONSTRUCTOR,inc_CsvData
     brief
     {
         ->
-        ...
+        Provides functionality to load, manage and store csv data.
         <-
     }
     return:vp="Returns an instance of <code>@class</code>\.";
@@ -180,13 +180,13 @@ CsvData::~CsvData()
 /**bmc
 DEF load_str1:ABSTRACT_METHOD
 {
-    txt_bevore="Csv-Daten laden";
+    txt_bevore="Loading CSV Files";
     function="load";
     suffix="1";
-    brief="Loads a csv file.";
+    brief="Loads a csv-data from a file.";
     param:param_filename{};
     param:param_docreate{};
-    return:i="...";
+    return:i="Returns 0 if successful, or a value other than 0 otherwise.";
 }
 DEF x:METHOD,load_str1
 {
@@ -223,9 +223,9 @@ DEF load_str2:ABSTRACT_METHOD
 {
     function="load";
     suffix="2";
-    brief="Loads a csv file.";
+    brief="Loads a csv-data from a file.";
     param:param_filename{};
-    return:i="...";
+    return:i="Returns 0 if successful, or a value other than 0 otherwise.";
 }
 DEF x:METHOD,load_str2
 {
@@ -262,10 +262,10 @@ DEF load_str3:ABSTRACT_METHOD
     function="load";
     suffix="3";
     switch="#ifdef OS_WIN";
-    brief="Loads a csv file.";
+    brief="Loads a csv-data from a file.";
     param:param_filenameW{};
     param:param_docreate{};
-    return:i="...";
+    return:i="Returns 0 if successful, or a value other than 0 otherwise.";
 }
 DEF x:METHOD,load_str3
 {
@@ -306,9 +306,9 @@ DEF load_str4:ABSTRACT_METHOD
     function="load";
     suffix="4";
     switch="#ifdef OS_WIN";
-    brief="Loads a csv file.";
+    brief="Loads a csv-data from a file.";
     param:param_filenameW{};
-    return:i="...";
+    return:i="Returns 0 if successful, or a value other than 0 otherwise.";
 }
 DEF x:METHOD,load_str4
 {
@@ -500,7 +500,7 @@ DEF load:ABSTRACT_METHOD
     suffix="5";
     brief="Loads csv data.";
     param:param_Reader{};
-    return:i="...";
+    return:i="Returns 0.";
 }
 DEF x:METHOD,load
 {
@@ -570,6 +570,33 @@ AbsCsvRecord *CsvData::load_rec(Reader *r)
     AbsCsvRecord *rec=new CsvRecord(this);
     rec->load(r);
     return rec;
+}
+/**bmc
+DEF get_record_count:ABSTRACT_METHOD
+{
+    txt_bevore="Counting Records";
+    function="get_record_count";
+    brief="Returns the number of currently loaded records.";
+    return:i="The number of records.";
+}
+DEF x:METHOD,get_record_count
+{
+    CsvData="TRUE";
+    class="CsvData";
+}
+DEF x:get_record_count,AbsCsvData,IMETHOD
+{
+    AbsCsvData="TRUE";
+    memclass="virtual";
+    docu
+    {
+        AbsCsvData_INTERFACE;
+    }
+}
+*/
+int CsvData::get_record_count()
+{
+    return data_size;
 }
 /**bmc
 DEF useHeader:ABSTRACT_METHOD
@@ -662,7 +689,7 @@ char *CsvData::getHeader(int column_id)
 /**bmc
 DEF setField1:ABSTRACT_METHOD
 {
-    txt_bevore="Setting fields";
+    txt_bevore="Setting Values of Fields";
     function="setField";
     suffix="1";
     brief="...";
@@ -728,6 +755,7 @@ bool CsvData::setField(int row,const char *col,const char *val)
 /**bmc
 DEF addRecord1:ABSTRACT_METHOD
 {
+    txt_bevore="Adding Records";
     function="addRecord";
     suffix="1";
     brief="...";
@@ -837,6 +865,7 @@ bool CsvData::addFieldToRecord(int row)
 /**bmc
 DEF getRecord1:ABSTRACT_METHOD
 {
+    txt_bevore="Getting a Record";
     function="getRecord";
     suffix="1";
     brief="...";
@@ -1048,14 +1077,40 @@ AbsCsvRecord *CsvData::getRecord(const char **col,const char **val)
     return r;
 }
 /**bmc
+DEF getAllRecords_free:REMARK
+{
+    text="The application has to free the returned buffer.
+    (Do NOT free returned records: <s><code>free(r[i]);</code></s> or <s><code>delete r[i];</code></s>.)
+<div style='margin-left:20px;background-color:rgb(200,200,200);'>
+<code>AbsCsvRecord **r=getAllRecords();<br>
+...<br>
+free(r);
+</code>
+</div>";
+}
+DEF getAllRecords_free2:REMARK
+{
+    text="The application has to free the returned buffer.
+    (Do NOT free returned records: <s><code>free(r[i]);</code></s> or <s><code>delete r[i];</code></s>.)
+<div style='margin-left:20px;background-color:rgb(200,200,200);'>
+<code>AbsCsvRecord **r=getAllRecords();<br>
+...<br>
+if(r)free(r);
+</code>
+</div>";
+}
+*/
+/**bmc
 DEF getAllRecords1:ABSTRACT_METHOD
 {
+    txt_bevore="Selecting Records";
     function="getAllRecords";
     suffix="1";
-    brief="...";
+    brief="Selects all records with value <i>val</i> in column <i>col</i>.";
     param:param_col{};
     param:param_val{};
-    return:param_CsvRecord2="...";
+    return:param_CsvRecord2="The method returns a pointer to a null-terminated sequence of pointers to the found records. If no records are found, or if column <i>col</i> does not exist, the method returns an empty sequence (where getAllRecords(col,val)[0]==0).";
+    remark:getAllRecords_free{};
 }
 DEF x:METHOD,getAllRecords1
 {
@@ -1116,8 +1171,9 @@ DEF getAllRecords2:ABSTRACT_METHOD
 {
     function="getAllRecords";
     suffix="2";
-    brief="...";
-    return:param_CsvRecord2="...";
+    brief="Selects all records";
+    return:param_CsvRecord2="The method returns a pointer to a null-terminated sequence of pointers to all records.";
+    remark:getAllRecords_free{};
 }
 DEF x:METHOD,getAllRecords2
 {
@@ -1160,11 +1216,6 @@ AbsCsvRecord **CsvData::getAllRecords()
     r=(AbsCsvRecord **)malloc((rmax+1)*sizeof(AbsCsvRecord *));
     for(int i=header;i<data_size;i++)
     {
-        if(rpos>=rmax)
-        {
-            rmax*=2;
-            r=(AbsCsvRecord **)realloc(r,(rmax+1)*sizeof(AbsCsvRecord *));
-        }
         r[rpos++]=data[i];
     }
     r[rpos]=0;
@@ -1176,10 +1227,11 @@ DEF getAllRecords3:ABSTRACT_METHOD
 {
     function="getAllRecords";
     suffix="3";
-    brief="...";
+    brief="Selects all records with value <i>val</i> in column <i>column_name</i>.";
     param:param_colname{};
     param:param_val{};
-    return:param_CsvRecord2="...";
+    return:param_CsvRecord2="The method returns 0, if headers are disabled or if the header field is missing. Otherwise the method returns a pointer to a null-terminated sequence of pointers to the found records.";
+    remark:getAllRecords_free2{};
 }
 DEF x:METHOD,getAllRecords3
 {
@@ -1209,7 +1261,7 @@ AbsCsvRecord **CsvData::getAllRecords(const char *col,const char *val)
 /**bmc
 DEF saveD:ABSTRACT_METHOD
 {
-    txt_bevore="Csv-Daten ausgeben";
+    txt_bevore="Writing CSV Data";
     function="save";
     brief="...";
     param:param_filename{};

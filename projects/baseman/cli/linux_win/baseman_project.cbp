@@ -1,1 +1,114 @@
--- run make.def --
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+    <FileVersion major="1" minor="6" />
+    <Project>
+        <Option title="baseman" />
+        <Option pch_mode="2" />
+        <Option compiler="gcc" />
+        <Build>
+            <Target title="Debug">
+                <Option output="./baseman" prefix_auto="1" extension_auto="1" />
+                <Option object_output="obj/Debug/" />
+                <Option type="1" />
+                <Option compiler="gcc" />
+                <Compiler>
+                    <Add option="-g" />
+                </Compiler>
+                <Linker>
+                    
+                    
+                </Linker>
+            </Target>
+            <Target title="Release">
+                <Option output="./baseman" prefix_auto="1" extension_auto="1" />
+                <Option object_output="obj/Release/" />
+                <Option type="1" />
+                <Option compiler="gcc" />
+                <Compiler>
+                    <Add option="-fexpensive-optimizations" />
+                    <Add option="-O3" />
+                </Compiler>
+                <Linker>
+                    <Add option="-s" />
+                    
+                </Linker>
+            </Target>
+        </Build>
+        <Compiler>
+            
+            <Add option="-Wextra" />
+            <Add option="-fexceptions" />
+            <Add option="-Wall" />
+            <Add option="-I/opt/prokee/system/inc/" />
+            <Add option="-I../../../../source/" />
+            <Add option="-D OS_WIN " />
+            
+            <Add directory="../../../../source/" />
+        </Compiler>
+        <Linker>
+            
+            
+        </Linker>
+        
+        <Unit filename="../../../../source/baseman/baseman.cpp" />
+        <Unit filename="../../../../source/baseman/bm/base.cpp" />
+        <Unit filename="../../../../source/baseman/bm/bm.cpp" />
+        <Unit filename="../../../../source/baseman/bm/project.cpp" />
+        <Unit filename="../../../../source/baseman/bm/version.cpp" />
+        <Unit filename="../../../../source/baseman/cli/runclp.cpp" />
+        <Unit filename="../../../../source/baseman/controllers/BmCopyControl.cpp" />
+        <Unit filename="../../../../source/csv/csv.cpp" />
+        <Unit filename="../../../../source/csv/CsvData.cpp" />
+        <Unit filename="../../../../source/csv/CsvRecord.cpp" />
+        <Unit filename="../../../../source/csv/CsvField.cpp" />
+        <Unit filename="../../../../source/settings/settings.cpp" />
+        <Unit filename="../../../../source/reader/reader.cpp" />
+        <Unit filename="../../../../source/reader/ReaderImpl.cpp" />
+        <Unit filename="../../../../source/reader/FileReader.cpp" />
+        <Unit filename="../../../../source/reader/StringReader.cpp" />
+        <Unit filename="../../../../source/reader/StrReader.cpp" />
+        <Unit filename="../../../../source/reader/WcsReader.cpp" />
+        <Unit filename="../../../../source/file/file.cpp" />
+        <Unit filename="../../../../source/dir/dir.cpp" />
+        <Unit filename="../../../../source/path/path.cpp" />
+        <Unit filename="../../../../source/strman/strman.cpp" />
+        <Unit filename="../../../../source/strconv/strconv.cpp" />
+        <Unit filename="../../../../source/label/label.cpp" />
+        <Unit filename="../../../../source/baseman/cli/main.cpp" />
+        
+        <Unit filename="../../../../source/reader/ReaderImpl.hpp" />
+        <Unit filename="../../../../source/reader/FileReader.hpp" />
+        <Unit filename="../../../../source/reader/StringReader.hpp" />
+        <Unit filename="../../../../source/reader/StrReader.hpp" />
+        <Unit filename="../../../../source/reader/WcsReader.hpp" />
+        
+        <Unit filename="../../../../source/baseman/baseman.h" />
+        <Unit filename="../../../../source/baseman/bm/base.h" />
+        <Unit filename="../../../../source/baseman/bm/bm.h" />
+        <Unit filename="../../../../source/baseman/bm/project.h" />
+        <Unit filename="../../../../source/baseman/bm/version.h" />
+        <Unit filename="../../../../source/baseman/cli/runclp.h" />
+        <Unit filename="../../../../source/baseman/controllers/BmCopyControl.h" />
+        <Unit filename="../../../../source/baseman/controllers/MergeControler.h" />
+        <Unit filename="../../../../source/csv/csv.h" />
+        <Unit filename="../../../../source/csv/CsvData.h" />
+        <Unit filename="../../../../source/csv/CsvRecord.h" />
+        <Unit filename="../../../../source/csv/CsvField.h" />
+        <Unit filename="../../../../source/csv/CsvSettings.h" />
+        <Unit filename="../../../../source/settings/settings.h" />
+        <Unit filename="../../../../source/reader/reader.h" />
+        <Unit filename="../../../../source/reader/ReaderImpl.h" />
+        <Unit filename="../../../../source/file/file.h" />
+        <Unit filename="../../../../source/dir/dir.h" />
+        <Unit filename="../../../../source/path/path.h" />
+        <Unit filename="../../../../source/strman/strman.h" />
+        <Unit filename="../../../../source/strconv/strconv.h" />
+        <Unit filename="../../../../source/label/label.h" />
+        <Extensions>
+            <code_completion />
+            <debugger />
+            <envvars />
+            
+        </Extensions>
+    </Project>
+</CodeBlocks_project_file>

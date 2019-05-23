@@ -102,6 +102,59 @@ public:
     }
 };
 
+/**bmc
+lp_baseman_project_path:ccp
+{
+    name="baseman_project_path";
+    desc="A valid path to a module within baseman. This path may differ from the path within the file system.";
+    direction="IN";
+}
+lp_package_path:ccp
+{
+    name="package_path";
+    desc="The path to the directory, where downloaded software packages are stored.";
+    direction="IN";
+}
+lp_run_token:ccp
+{
+    name="run_token";
+    desc
+    {
+        ->
+        Specifies the script to be executed. The function executes the file <b>bmsetup_</b><i>run_token</i><b>.sh</b>.<br>
+        The script files should be placed at <code>/usr/local/bin/</code> or any other directory on the path. Or at the path specified by <code>BMSETUP_INSTALLATION_PATH</code>.
+        <-
+    }
+    direction="IN";
+}
+r_security:REMARK
+{
+    text
+    {
+        ->
+         Mind that there are no security checks, on the content of the parameters.
+         A program must not allow any other (potentially malicious) software or user,
+         to execute this function or alter the strings provided as paramaters.
+        <-
+    }
+}
+*/
+/**bmc
+DEF run_script:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Runs a script.";
+    xinfo="The function runs the following command:<br><br>
+    <nobr><span style='font-size:18pt;padding:10px;background-color:rgb(200,200,200);border-radius:5px;'><code style='font-size:18pt;'>bmsetup_<i style='background-color:rgb(222,222,222);border-radius:5px;'>run_token</i>.sh <i style='background-color:rgb(222,222,222);border-radius:5px;'>package_path</i> <i style='background-color:rgb(222,222,222);border-radius:5px;'>unique_package_name</i></code></span></nobr><br><br>
+    (Where <i>unique_package_name</i> is constructed from the <i>baseman_project_path</i>.)";
+    param:lp_baseman_project_path{};
+    param:lp_package_path{};
+    param:lp_run_token{};
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+    remark:r_security{};
+}
+*/
 int run_script(const char *baseman_project_path,const char *package_path,const char *run_token)
 {
     char *unique_package_name=construct_package_path(baseman_project_path,"","");
@@ -113,6 +166,28 @@ int run_script(const char *baseman_project_path,const char *package_path,const c
     return 0;
 }
 
+/**bmc
+lp_update:b
+{
+    name="update";
+    desc="Specifies, wheter a already downloaded package should be deleted and re-downloaded.";
+    direction="";
+}
+*/
+/**bmc
+DEF download:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Downloads a software package.";
+    xinfo="The function executes the download script <code>bmsetup_download.sh</code>.";
+    param:lp_baseman_project_path{};
+    param:lp_package_path{};
+    param:lp_update{};
+    return:i="Returns 0 if successful and a value other than 0 if not.";
+    docu{THEINTERFACE;};
+    remark:r_security{};
+}
+*/
 int download(const char *baseman_project_path,const char *package_path,bool update)
 {
     int ret=0;
@@ -121,7 +196,7 @@ int download(const char *baseman_project_path,const char *package_path,bool upda
     char *base_path;
     char *project_path;
     char *version_path;
-    char **loc=select_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
+    char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
 
     if(base_path)
     {
@@ -161,6 +236,15 @@ int download(const char *baseman_project_path,const char *package_path,bool upda
     return ret;
 }
 
+/**bmc
+DEF exporter:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Runs <b>cfg-export</b> for the current directory and all subdirectories.";
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+}
+*/
 int exporter()
 {
     TW_export<char> tw;
@@ -170,6 +254,15 @@ int exporter()
     return 0;
 }
 
+/**bmc
+DEF importer:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Runs <b>cfg-import</b> for the current directory and all subdirectories.";
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+}
+*/
 int importer()
 {
     TW_import<char> tw;
@@ -179,6 +272,16 @@ int importer()
     return 0;
 }
 
+/**bmc
+DEF exporter2:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Runs <b>cfg-export</b> for the project given by <i>baseman_project_path</i>.";
+    param:lp_baseman_project_path{};
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+}
+*/
 int exporter2(const char *baseman_project_path)
 {
     TW_export<char> tw;
@@ -186,7 +289,7 @@ int exporter2(const char *baseman_project_path)
     char *base_path;
     char *project_path;
     char *version_path;
-    char **loc=select_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
+    char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
 
     if(base_path)
     {
@@ -202,6 +305,16 @@ int exporter2(const char *baseman_project_path)
     return 0;
 }
 
+/**bmc
+DEF importer2:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Runs <b>cfg-import</b> for the project given by <i>baseman_project_path</i>.";
+    param:lp_baseman_project_path{};
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+}
+*/
 int importer2(const char *baseman_project_path)
 {
     TW_import<char> tw;
@@ -209,7 +322,7 @@ int importer2(const char *baseman_project_path)
     char *base_path;
     char *project_path;
     char *version_path;
-    char **loc=select_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
+    char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
 
     if(base_path)
     {
@@ -225,6 +338,24 @@ int importer2(const char *baseman_project_path)
     return 0;
 }
 
+/**bmc
+lp_infopath:ccp
+{
+    name="infopath";
+    desc="The path to the <i>.info</i> file.";
+    direction="IN";
+}
+*/
+/**bmc
+DEF import_info:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Reads settings from the file given by <i>infopath</i> and updates the related <i>.csv</i> files.";
+    param:lp_infopath{};
+    return:i="Returns 0 if successful and a value other than 0 if not.";
+    docu{THEINTERFACE;};
+}
+*/
 int import_info(const char *infopath)
 {
     AbsSettings *s=AbsSettingsInterface::createSettings();
@@ -271,7 +402,7 @@ int import_info(const char *infopath)
 
             if(rec)
             {
-                if(strman::explode_count(rec)==1)
+                if(csv::record_count(rec)==1)
                 {
                     rec[0]->setField(name_id,name.c_str());
                     rec[0]->setField(path_id,path.c_str());
@@ -281,7 +412,7 @@ int import_info(const char *infopath)
                     rec[0]->setField(desc_id,desc.c_str());
                     record_set=true;
                 }
-                else if(strman::explode_count(rec)>1)
+                else if(csv::record_count(rec)>1)
                 {
                     printf("ERROR: check %s, see %s\n",csvpath,infopath);
                 }
@@ -334,7 +465,7 @@ int import_info(const char *infopath)
 
             if(rec)
             {
-                if(strman::explode_count(rec)==1)
+                if(csv::record_count(rec)==1)
                 {
                     rec[0]->setField(vers_id,vers.c_str());
                     rec[0]->setField(path_id,path.c_str());
@@ -343,7 +474,7 @@ int import_info(const char *infopath)
                     rec[0]->setField(desc_id,desc.c_str());
                     record_set=true;
                 }
-                else if(strman::explode_count(rec)>1)
+                else if(csv::record_count(rec)>1)
                 {
                     printf("ERROR: check %s, see %s\n",csvpath,infopath);
                 }
@@ -374,6 +505,24 @@ int import_info(const char *infopath)
     return 0;
 }
 
+/**bmc
+lp_csvpath_p:ccp
+{
+    name="csvpath";
+    desc="The path to a <i>projects.csv</i> file.";
+    direction="IN";
+}
+*/
+/**bmc
+DEF export_projects:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Reads the records from the projects.csv file given by <i>csvpath</i> and creates the <i>.info</i> files.";
+    param:lp_csvpath_p{};
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+}
+*/
 int export_projects(const char *csvpath)
 {
     AbsCsvData *data=AbsCsvDataInterface::createCsvData();
@@ -391,7 +540,7 @@ int export_projects(const char *csvpath)
     AbsCsvRecord **rec=data->getAllRecords();
     if(rec)
     {
-        int rec_count=strman::explode_count(rec);
+        int rec_count=csv::record_count(rec);
         for(int i=0;i<rec_count;i++)
         {
             const char *name=rec[i]->getField_f(name_id);
@@ -428,6 +577,24 @@ int export_projects(const char *csvpath)
     return 0;
 }
 
+/**bmc
+lp_csvpath_v:ccp
+{
+    name="csvpath";
+    desc="The path to a <i>versions.csv</i> file.";
+    direction="IN";
+}
+*/
+/**bmc
+DEF export_versions:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Reads the records from the versions.csv file given by <i>csvpath</i> and creates the <i>.info</i> files.";
+    param:lp_csvpath_v{};
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+}
+*/
 int export_versions(const char *csvpath)
 {
     AbsCsvData *data=AbsCsvDataInterface::createCsvData();
@@ -444,7 +611,7 @@ int export_versions(const char *csvpath)
     AbsCsvRecord **rec=data->getAllRecords();
     if(rec)
     {
-        int rec_count=strman::explode_count(rec);
+        int rec_count=csv::record_count(rec);
         for(int i=0;i<rec_count;i++)
         {
             const char *vers=rec[i]->getField_f(vers_id);
@@ -479,41 +646,100 @@ int export_versions(const char *csvpath)
     return 0;
 }
 
-char **select_all_paths(const char *baseman_project_path,char **base_path,char **project_path,char **version_path)
+/**bmc
+lp_base_path_pp:cpp
+{
+    name="base_path";
+    desc="Receives a pointer to the null-terminated file system path to the baseman base. (If the function fails, <i>*base_path</i> may be set to @kw.null\.)";
+    direction="OUT";
+}
+lp_project_path_pp:cpp
+{
+    name="project_path";
+    desc="Receives a pointer to the null-terminated file system path to the baseman project. (If the function fails, <i>*project_path</i> may be set to @kw.null\.)";
+    direction="OUT";
+}
+lp_version_path_pp:cpp
+{
+    name="version_path";
+    desc="Receives a pointer to the null-terminated file system path to the baseman version. (If the function fails, <i>*version_path</i> may be set to @kw.null\.)";
+    direction="OUT";
+}
+r_retfree_buffers:REMARK
+{
+    text="The application has to free the buffers <i>*base_path</i>, <i>*project_path</i> and <i>*version_path</i>.";
+}
+r_retfree_explode:REMARK
+{
+    text="The application also has to free buffers associated to the return value. Use strman::explode_free() to free this buffers.";
+}
+*/
+/**bmc
+DEF get_all_paths:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Determines the file system paths to base, project and version of the baseman project given by <i>baseman_project_path</i>.";
+    xinfo
+    {
+        ->
+        <ol style="margin-top:0px;margin-bottom:-16px;">
+            <li>The function determines the path to the base (<i>base_path</i>). If the base does not exist, than <i>*base_path</i>, <i>*project_path</i> and <i>*version_path</i> are set to @kw.null and the function returns.</li>
+            <li>To construct the project path (<i>project_path</i>), the function searches for the project and subsequently for all sub-projects within <code>project.csv</code> files. The construction of the path ends as soon as a name within <i>baseman_project_path</i> does not match with an existing project (at a given location). In this case the name is considered to be the name of a version. If the first project name does not exist, <i>project_path</i> is set to the empty string.</li>
+            <li>The path to the version is constructed the same way as the path to the project (by searching versions within <code>versions.csv</code> files). If any version or sub-version cannot be found within baseman, the function sets <i>*version_path</i> to @kw.null\. If no version is given in <i>baseman_project_path</i>, <i>*version_path</i> is set to the empty string.</li>
+        </ol>
+        <-
+    };
+    param:lp_baseman_project_path{};
+    param:lp_base_path_pp{};
+    param:lp_project_path_pp{};
+    param:lp_version_path_pp{};
+    return:i="Returns the <i>baseman_project_path</i> exploded by \"/\".";
+    docu{THEINTERFACE;};
+    remark:r_retfree_buffers{};
+    remark:r_retfree_explode{};
+}
+*/
+char **get_all_paths(const char *baseman_project_path,char **base_path,char **project_path,char **version_path)
 {
     char **loc=strman::explode("/",baseman_project_path);
     int pos=1;
 
-    *base_path=0;
-    *project_path=0;
-    *version_path=0;
+    if(base_path)*base_path=0;
+    if(project_path)*project_path=0;
+    if(version_path)*version_path=0;
 
-    if(loc[0])
+    if(loc[0] && base_path)
     {
-        *base_path=select_base_path(loc[0]);
+        *base_path=get_base_path(loc[0]);
         if(*base_path)
         {
             printf("file system paths:\n");
             printf("-->    base = %s\n",*base_path);
 
-            *project_path=select_project_path(*base_path,loc,&pos);
-            if(*project_path)
+            if(project_path)
             {
-                printf("--> project = %s\n",*project_path);
-            }
-            else
-            {
-                printf("project not found\n");
+                *project_path=get_project_path(*base_path,loc,&pos);
+                if(*project_path)
+                {
+                    printf("--> project = %s\n",*project_path);
+                }
+                else
+                {
+                    printf("project not found\n");
+                }
             }
 
-            *version_path=select_version_path(*project_path,loc,&pos);
-            if(*version_path)
+            if(*project_path && version_path)
             {
-                printf("--> version = %s\n",*version_path);
-            }
-            else
-            {
-                printf("version not found\n");
+                *version_path=get_version_path(*project_path,loc,&pos);
+                if(*version_path)
+                {
+                    printf("--> version = %s\n",*version_path);
+                }
+                else
+                {
+                    printf("version not found\n");
+                }
             }
         }
         else
@@ -528,6 +754,38 @@ char **select_all_paths(const char *baseman_project_path,char **base_path,char *
     return loc;
 }
 
+/**bmc
+lp_append:ccp
+{
+    name="append";
+    desc="A null-terminated string that will be appended to the constructed path. This can be used to append appropriate file extensions.";
+    direction="IN";
+}
+r_retfree:REMARK
+{
+    text="The application has to free the returned buffer.";
+}
+*/
+/**bmc
+DEF construct_package_path:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Constructs the path to the package.";
+    xinfo
+    {
+        ->
+        1) Occurrences of "/" within <i>baseman_project_path</i> are replaced by "--" to construct the <i>package_filename</i>.<br>
+        2) The path to the package is constructed as follows: <i>package_path</i> + <i>package_filename</i> + <i>append</i>.
+        <-
+    };
+    param:lp_baseman_project_path{};
+    param:lp_package_path{};
+    param:lp_append{};
+    return:i="Returns the path to the package.";
+    docu{THEINTERFACE;};
+    remark:r_retfree{};
+}
+*/
 char *construct_package_path(const char *baseman_project_path,const char *package_path,const char *append)
 {
     char *pname=(char *)malloc((strlen(baseman_project_path)*2+strlen(package_path)+strlen(append)+20+1)*sizeof(char));
@@ -552,6 +810,27 @@ char *construct_package_path(const char *baseman_project_path,const char *packag
     return pname;
 }
 
+/**bmc
+lp_dotar:b
+{
+    name="dotar";
+    desc="If <i>dotar</i> is set to @kw.true, the function executes the unpack script <code>bmsetup_unpack.sh</code>.";
+    direction="";
+}
+*/
+/**bmc
+DEF install:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Installs a software package.";
+    param:lp_baseman_project_path{};
+    param:lp_package_path{};
+    param:lp_dotar{};
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+    remark:r_security{};
+}
+*/
 int install(const char *baseman_project_path,const char *package_path,bool dotar)
 {
     printf("installing %s:\n",baseman_project_path);
@@ -571,7 +850,7 @@ int install(const char *baseman_project_path,const char *package_path,bool dotar
         std::string base=s->get("setup","base");// has to exist in baselist.csv
         std::string path=s->get("setup","file-system-path");// path rel. to base path.
 
-        char *base_path=select_base_path(base.c_str());
+        char *base_path=get_base_path(base.c_str());
         if(base_path)
         {
             char *version_path=(char *)malloc((strlen(base_path)+strlen(path.c_str())+1)*sizeof(char));
@@ -622,6 +901,33 @@ int install(const char *baseman_project_path,const char *package_path,bool dotar
     return 0;
 }
 
+/**bmc
+lp_publish_path:ccp
+{
+    name="publish_path";
+    desc="The path to the directory, where downloaded software packages are stored.";
+    direction="IN";
+}
+lp_dotar2:b
+{
+    name="dotar";
+    desc="If <i>dotar</i> is set to @kw.true, the function executes the pack script <code>bmsetup_pack.sh</code>.";
+    direction="";
+}
+*/
+/**bmc
+DEF publish:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Creates a shareable software package.";
+    param:lp_baseman_project_path{};
+    param:lp_publish_path{};
+    param:lp_dotar2{};
+    return:i="Returns 0.";
+    docu{THEINTERFACE;};
+    remark:r_security{};
+}
+*/
 int publish(const char *baseman_project_path,const char *publish_path,bool dotar)
 {
     printf("publishing %s:\n",baseman_project_path);
@@ -629,7 +935,7 @@ int publish(const char *baseman_project_path,const char *publish_path,bool dotar
     char *base_path;
     char *project_path;
     char *version_path;
-    char **loc=select_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
+    char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
 
     if(base_path)
     {
@@ -691,7 +997,31 @@ int publish(const char *baseman_project_path,const char *publish_path,bool dotar
     return 0;
 }
 
-char *select_base_path(const char *base_name)
+/**bmc
+lp_base_name:ccp
+{
+    name="base_name";
+    desc="The null-terminated name of an existing base within baseman.";
+    direction="IN";
+}
+*/
+/**bmc
+DEF get_base_path:FUNCTION
+{
+    function="@this.parent.NAME";
+    brief="Determines the path to the base <i>base_name</i>.";
+    xinfo
+    {
+        ->
+        <-
+    };
+    param:lp_base_name{};
+    return:i="Returns the path to the base or @kw.null, if the base does not exist.";
+    docu{THEINTERFACE;};
+    remark:r_retfree{};
+}
+*/
+char *get_base_path(const char *base_name)
 {
     AbsCsvData *data=AbsCsvDataInterface::createCsvData();
 
@@ -702,7 +1032,7 @@ char *select_base_path(const char *base_name)
     AbsCsvRecord **rec=data->getAllRecords("name",base_name);
     if(rec)
     {
-        int rec_count=strman::explode_count(rec);
+        int rec_count=csv::record_count(rec);
         if(rec_count==1)
         {
             const char *path=rec[0]->getField_f(path_id);
@@ -714,15 +1044,16 @@ char *select_base_path(const char *base_name)
         }
         else
         {
-            printf("ERROR: rec_count=%d\n",rec_count);
+            printf("[ERROR] bmsetup: rec_count=%d\nMultiple occurrences of base '%s' found in " BMSETUP_BASELIST_PATH ".\n",rec_count,base_name);
         }
         free(rec);
     }
+    else printf("[ERROR] bmsetup: Base '%s' not found in " BMSETUP_BASELIST_PATH ".\n",base_name);
     delete data;
     return 0;
 }
 
-char *select_project_path(char *base_path,char **loc,int *pos)
+char *get_project_path(char *base_path,char **loc,int *pos)
 {
     unsigned int current_path_memlen=256+strlen(base_path);
     char *current_path=(char *)malloc((current_path_memlen+1)*sizeof(char));
@@ -732,6 +1063,7 @@ char *select_project_path(char *base_path,char **loc,int *pos)
     {
         AbsCsvData *data=AbsCsvDataInterface::createCsvData();
         bool project_found=false;
+        bool error_status=false;
 
         char *project_file_path=(char *)malloc((current_path_memlen+12+1)*sizeof(char));
         strcpy(project_file_path,current_path);
@@ -744,7 +1076,7 @@ char *select_project_path(char *base_path,char **loc,int *pos)
         AbsCsvRecord **rec=data->getAllRecords("name",loc[*pos]);
         if(rec)
         {
-            int rec_count=strman::explode_count(rec);
+            int rec_count=csv::record_count(rec);
             if(rec_count==1)
             {
                 const char *path=rec[0]->getField_f(path_id);
@@ -753,34 +1085,45 @@ char *select_project_path(char *base_path,char **loc,int *pos)
                     current_path_memlen=strlen(current_path)+strlen(path)+256;
                     current_path=(char *)realloc(current_path,(current_path_memlen+1)*sizeof(char));
                 }
-                strcat(current_path,path);
+                if(path::pathtype(path) & 1)
+                {
+                    strcpy(current_path,path);
+                }
+                else
+                {
+                    strcat(current_path,path);
+                }
                 project_found=true;
             }
             else
             {
-                printf("ERROR: rec_count=%d for %s\n",rec_count,loc[*pos]);
+                printf("[ERROR] bmsetup: rec_count=%d for %s.\n[ERROR] bmsetup: More than one records found for this project.\n",rec_count,loc[*pos]);
+                error_status=true;
             }
             free(rec);
         }
         else
         {
-            //printf("ERROR: while selecting records for name='%s'\n",loc[*pos]);
+            //Else branch not required here, assuming loc[*pos] names a version.
+            //printf("[ERROR] bmsetup: Error while selecting records for name='%s' from projects.csv.\n[ERROR] bmsetup: Project with this name is missing.\n",loc[*pos]);
+            //error_status=true;
         }
         delete data;
         free(project_file_path);
-        if(project_found)
+        if(!project_found)
         {
-            //printf("--> search=%s\n",current_path);
+            return current_path;
         }
-        else
+        if(error_status)
         {
-            break;
+            free(current_path);
+            return 0;
         }
     }
     return current_path;
 }
 
-char *select_version_path(char *project_path,char **loc,int *pos)
+char *get_version_path(char *project_path,char **loc,int *pos)
 {
     unsigned int current_path_memlen=256+strlen(project_path);
     char *current_path=(char *)malloc((current_path_memlen+1)*sizeof(char));
@@ -789,7 +1132,7 @@ char *select_version_path(char *project_path,char **loc,int *pos)
     for(;*pos<strman::explode_count(loc);(*pos)++)
     {
         AbsCsvData *data=AbsCsvDataInterface::createCsvData();
-        bool project_found=false;
+        bool version_found=false;
 
         char *version_file_path=(char *)malloc((current_path_memlen+12+1)*sizeof(char));
         strcpy(version_file_path,current_path);
@@ -802,7 +1145,7 @@ char *select_version_path(char *project_path,char **loc,int *pos)
         AbsCsvRecord **rec=data->getAllRecords("version",loc[*pos]);
         if(rec)
         {
-            int rec_count=strman::explode_count(rec);
+            int rec_count=csv::record_count(rec);
             if(rec_count==1)
             {
                 const char *path=rec[0]->getField_f(path_id);
@@ -811,29 +1154,275 @@ char *select_version_path(char *project_path,char **loc,int *pos)
                     current_path_memlen=strlen(current_path)+strlen(path)+256;
                     current_path=(char *)realloc(current_path,(current_path_memlen+1)*sizeof(char));
                 }
-                strcat(current_path,path);
-                project_found=true;
+                if(path::pathtype(path) & 1)
+                {
+                    strcpy(current_path,path);
+                }
+                else
+                {
+                    strcat(current_path,path);
+                }
+                version_found=true;
             }
             else
             {
-                printf("ERROR: rec_count=%d for %s\n",rec_count,loc[*pos]);
+                printf("[ERROR] bmsetup: rec_count=%d for %s.\n[ERROR] bmsetup: More than one records found for this version.\n",rec_count,loc[*pos]);
             }
             free(rec);
         }
         else
         {
-            //printf("ERROR: while selecting records for version='%s'\n",loc[*pos]);
+            printf("[ERROR] bmsetup: Error while selecting records for version='%s' from versions.csv.\n[ERROR] bmsetup: The version with this name is missing.\n",loc[*pos]);
         }
         delete data;
         free(version_file_path);
-        if(project_found)
+        if(!version_found)
         {
-            //printf("--> search=%s\n",current_path);
-        }
-        else
-        {
-            break;
+            free(current_path);
+            return 0;
         }
     }
     return current_path;
+}
+
+void bmsetup::print_usage()
+{
+    printf(BMSETUP_USAGE);
+}
+
+void bmsetup::patch_basemanpath_parameter(char *path)
+{
+    if(path[strlen(path)-1]=='/')path[strlen(path)-1]=0;
+    if(path[0]=='@' && path[1] && path[2]==':' && path[3]=='/')
+    {
+        int i=4;
+        while(path[i])
+        {
+            path[i-4]=path[i];
+            i++;
+        }
+        path[i-4]=0;
+    }
+    if(path[0]=='@' && path[1] && path[2] && path[3]==':' && path[4]=='/')
+    {
+        int i=5;
+        while(path[i])
+        {
+            path[i-5]=path[i];
+            i++;
+        }
+        path[i-5]=0;
+    }
+    if(path[0]=='/')
+    {
+        int i=1;
+        while(path[i])
+        {
+            path[i-1]=path[i];
+            i++;
+        }
+        path[i-1]=0;
+    }
+}
+
+void bmsetup::print_error_line(const char *msg)
+{
+    bool instr=true;
+    for(int i=0;i<60;i++)
+    {
+        int r=130+i*2;
+        int g=i*2;
+        int b=i;
+        printf("%c[%d;2;%d;%d;%dm",27,38,r,r,r);
+        printf("%c[%d;2;%d;%d;%dm",27,48,r,g,b);
+        if(i-2>=0 && msg[i-2]==0)
+        {
+            instr=false;
+        }
+        if(i-2>=0 && instr)
+        {
+            printf("%c",msg[i-2]);
+        }
+        else
+        {
+            printf(" ");
+        }
+    }
+    printf("\n");
+}
+
+void bmsetup::print_error(const char *msg)
+{
+    print_error_line("");
+    print_error_line("");
+    printf("%c[%dA",27,1);
+    print_error_line(msg);
+    print_error_line("");
+    printf("%c[%dD",27,2);
+    printf("%c[%dm",27,0);
+    printf("Use 'bmsetup help' for more information.\n");
+}
+
+/**bmc
+lp_argc:i
+{
+    name="argc";
+    desc="The number of command-line parameters.";
+}
+lp_argv:cpp
+{
+    name="argv";
+    desc="The command-line parameters.";
+    direction="IN";
+}
+*/
+/**bmc
+DEF main:POINTER
+{
+    class="bmsetup";
+    function="@this.parent.NAME";
+    brief="Runs <code>bmsetup</code> as if it would be called from the command-line.";
+    param:lp_argc{};
+    param:lp_argv{};
+    return:i="Exit status. <b>bmsetup</b> always returns EXIT_SUCCESS(0).";
+    docu{THEINTERFACE;};
+}
+*/
+int bmsetup::main(int argc,char **argv)
+{
+    if(argc==1)
+    {
+        //no command
+        print_error("--- no command given ---");
+    }
+    else if(argc==2)
+    {
+        //param 1: command
+        //----------------------------------------------------------------------
+        if(strcmp(argv[1],"import-cfg")==0)
+        {
+            importer();
+        }
+        else if(strcmp(argv[1],"export-cfg")==0)
+        {
+            exporter();
+        }
+        //----------------------------------------------------------------------
+        else if(strcmp(argv[1],"check")==0)
+        {
+            print_error("--- not jet implemented ---");
+        }
+        else if(strcmp(argv[1],"help")==0)
+        {
+            print_usage();
+        }
+        else
+        {
+            //unknown command
+            print_error("--- unknown command ---");
+        }
+    }
+    else if(argc==3)
+    {
+        //param 1: command
+        //param 2: path
+        //----------------------------------------------------------------------
+        patch_basemanpath_parameter(argv[2]);
+        //----------------------------------------------------------------------
+        if(strcmp(argv[1],"download")==0)
+        {
+            if(download(argv[2],".baseman/packages/",true)==1)
+            {
+                print_error("[ERROR] bmsetup: Download failed.");
+            }
+        }
+        else if(strcmp(argv[1],"install")==0)
+        {
+            if(download(argv[2],".baseman/packages/",false)==1)
+            {
+                print_error("[ERROR] bmsetup: Download failed.");
+            }
+            else install(argv[2],".baseman/packages/",true);
+        }
+        //----------------------------------------------------------------------
+        else if(strcmp(argv[1],"publish")==0)
+        {
+            publish(argv[2],"packages/",true);
+        }
+        //----------------------------------------------------------------------
+        else if(strcmp(argv[1],"pull")==0)
+        {
+            install(argv[2],"packages/",false);
+        }
+        else if(strcmp(argv[1],"push")==0)
+        {
+            publish(argv[2],"packages/",false);
+        }
+        //----------------------------------------------------------------------
+        else if(strcmp(argv[1],"import-cfg")==0)
+        {
+            importer2(argv[2]);
+        }
+        else if(strcmp(argv[1],"export-cfg")==0)
+        {
+            exporter2(argv[2]);
+        }
+        //----------------------------------------------------------------------
+        else
+        {
+            //unknown command
+            print_error("--- unknown command ---");
+        }
+    }
+    else if(argc==4)
+    {
+        //param 1: command
+        //param 2: target
+        //param 3: path
+        //----------------------------------------------------------------------
+        patch_basemanpath_parameter(argv[3]);
+        //----------------------------------------------------------------------
+        if(strcmp(argv[1],"download")==0)
+        {
+            if(download(argv[3],argv[2],true)==1)
+            {
+                print_error("[ERROR] bmsetup: Download failed.");
+            }
+        }
+        else if(strcmp(argv[1],"install")==0)
+        {
+            if(download(argv[3],argv[2],false)==1)
+            {
+                print_error("[ERROR] bmsetup: Download failed.");
+            }
+            else install(argv[3],argv[2],true);
+        }
+        //----------------------------------------------------------------------
+        else if(strcmp(argv[1],"publish")==0)
+        {
+            publish(argv[3],argv[2],true);
+        }
+        //----------------------------------------------------------------------
+        else if(strcmp(argv[1],"pull")==0)
+        {
+            install(argv[3],argv[2],false);
+        }
+        else if(strcmp(argv[1],"push")==0)
+        {
+            publish(argv[3],argv[2],false);
+        }
+        //----------------------------------------------------------------------
+        else
+        {
+            //unknown command
+            print_error("--- unknown command ---");
+        }
+    }
+    else
+    {
+        //wrong command line parameter
+        print_error("--- wrong command line parameter ---");
+    }
+
+    return EXIT_SUCCESS;
 }

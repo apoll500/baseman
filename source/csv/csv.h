@@ -49,11 +49,11 @@
 #include "csv/import/prokee.h"
 //#include "csv.fw"
 
-/*
 class csv
 {
+public:
+    static int record_count(AbsCsvRecord **a);
 };
-*/
 
 #include "csv.hh"
 
@@ -65,7 +65,6 @@ class csv
 #include "csv/import/modules.h"
 
 #include "csv.hh2"
-
 
 int cmpi(const void *a,const void *b);
 int iln(int *row);

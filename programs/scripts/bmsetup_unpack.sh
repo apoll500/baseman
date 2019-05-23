@@ -17,7 +17,7 @@ if ! echo "$out" | grep -qs "^\[GNUPG:\] VALIDSIG $gpg_fingerprint "; then
   echo "  +------------------------------------+                 "
   echo "  | PGP-Signature missing or invalid ! |                 "
   echo "  +------------------------------------+                 "
-  echo "  Installation cancled for                               "
+  echo "  Installation canceled for                              "
   echo "  package                                                "
   echo "                                                         "
   printf "\033[1A"

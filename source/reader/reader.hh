@@ -75,7 +75,7 @@ public:
     virtual void set_line_break_char(int value)=0;
     virtual void set_compatibility_mode(int value)=0;
 };
-class Reader2:virtual public Reader
+class Reader2:public Reader
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------
@@ -197,7 +197,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
-class AbsUniFileReader2:virtual public Reader2,virtual public AbsUniFileReader
+class AbsUniFileReader2:virtual public Reader2,public AbsUniFileReader
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------

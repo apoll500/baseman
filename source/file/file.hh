@@ -52,7 +52,7 @@ public:
     //SETTER METHODS----------------------------------------------------
     
 };
-template< class T > class CondCopyControl2:virtual public CondCopyControl< T >
+template< class T > class CondCopyControl2:public CondCopyControl< T >
 {
 private:
     //PRIVATE MEMBERS---------------------------------------------------
