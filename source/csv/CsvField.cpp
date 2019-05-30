@@ -2,7 +2,7 @@
 *                                                                              *
 *  CsvField.cpp                                                                *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -40,47 +40,6 @@
 #include "CsvField.h"
 #include "csv.h"
 
-//#include "reader/reader.h"
-
-//#include "CsvSettings.h"
-
-/**bmc
-DEF param_CsvSettings:manu
-{
-    name="s";
-    desc="Pointer to an instance of an implementation of AbsCsvSettings.<br>See <a href='@param_classinfo[]_@version[]_AbsCsvSettings\.php'>@param_classinfo\:AbsCsvSettings</a>.";
-    param_classname="AbsCsvSettings";
-    param_classinfo="csv";
-}
-DEF param_file:FILEp
-{
-    name="f";
-    desc="Handle auf eine zum Schreiben geöffnete Datei.";
-}
-*/
-//------------------------------------------------------------------------------
-// Constructors
-//------------------------------------------------------------------------------
-/**bmc
-DEF inc_CsvField
-{
-    iclass="AbsCsvField";
-    class="CsvField";
-    function="create@class";
-}
-DEF CsvField:CONSTRUCTOR,inc_CsvField
-{
-    AbsCsvField="TRUE";
-    CsvField="TRUE";
-    brief="Der Konstruktor setzt den Wert des Feldes auf <span style='padding:3px;background-color:#DDDDDD;border:solid 1px &num;AAAAAA;'>\"\"</span> (Leerstring). Rufen Sie die Methode <a href='&num;load'>load()</a> auf um das nächste Feld aus der csv-Datei einzulesen. (Der eingelesene Wert wird in diesem Objekt als Wert des Feldes gespeichert.)";
-    param:param_CsvSettings{};
-    return:vp="Returns an instance of <code>@class</code>\.";
-    docu
-    {
-        AbsCsvField_INTERFACE;
-    }
-}
-*/
 CsvField::CsvField(AbsCsvSettings *s)
 {
     settings=s;
@@ -88,60 +47,12 @@ CsvField::CsvField(AbsCsvSettings *s)
     value=(char *)malloc((value_ln+1)*sizeof(char));
     value[0]=0;
 }
-/**bmc
-DEF destroyCsvField:DESTRUCTOR
-{
-    CsvField="TRUE";
-    class="CsvField";
-    function="@this.parent.NAME";
-    return:v="";
-}
-*/
+
 CsvField::~CsvField()
 {
     free(value);
 }
-/**bmc
-DEF loadF:ABSTRACT_METHOD
-{
-    function="load";
-    brief="Liest das nächste Feld aus der csv-Datei. Der eingelesene Wert (String) wird in diesem Objekt als Wert des Feldes gespeichert. Diese Methode sollte nur einmal aufgerufen werden.";
-    param:param_Reader{};
-    return:i
-    {
-        ->
-        <table>
-            <tr>
-                <td>1</td>
-                <td>Es folgen weitere Felder.</td>
-            </tr>
-            <tr>
-                <td>0</td>
-                <td>Zeilenende erreicht. Es folgen weitere Zeilen.</td>
-            </tr>
-            <tr>
-                <td>-1</td>
-                <td>Dateiende erreicht</td>
-            </tr>
-        </table>
-        <-
-    };
-}
-DEF x:METHOD,loadF
-{
-    CsvField="TRUE";
-    class="CsvField";
-}
-DEF x:loadF,AbsCsvField,IMETHOD
-{
-    AbsCsvField="TRUE";
-    memclass="virtual";
-    docu
-    {
-        AbsCsvField_INTERFACE;
-    }
-}
-*/
+
 int CsvField::load(Reader *r)
 {
     int ch;
@@ -210,63 +121,12 @@ bool CsvField::match(const char *val)
     //printf("match %s with %s\n",value,val);
     return strcmp(value,val)==0;
 }
-/**bmc
-DEF get:ABSTRACT_METHOD
-{
-    function="get";
-    brief="Returns a pointer to the buffer which holds the value of the field.<br>The value is represented as null-terminated string.<br>Do not free the returned buffer.";
-    return:cp="The value of the field.";
-}
-DEF x:METHOD,get
-{
-    CsvField="TRUE";
-    class="CsvField";
-}
-DEF x:get,AbsCsvField,IMETHOD
-{
-    AbsCsvField="TRUE";
-    memclass="virtual";
-    docu
-    {
-        AbsCsvField_INTERFACE;
-    }
-}
-*/
+
 char *CsvField::get()
 {
     return value;
 }
-/**bmc
-DEF param_field_val:ccp
-{
-    name="val";
-    direction="IN";
-    desc="The null-terminated string, that should be stored as the new value of this field.<br>The method copies this string into the buffer of this field.";
-}
-*/
-/**bmc
-DEF set:ABSTRACT_METHOD
-{
-    function="set";
-    brief="Sets the value of the field.";
-    param:param_field_val{};
-    return:v="";
-}
-DEF x:METHOD,set
-{
-    CsvField="TRUE";
-    class="CsvField";
-}
-DEF x:set,AbsCsvField,IMETHOD
-{
-    AbsCsvField="TRUE";
-    memclass="virtual";
-    docu
-    {
-        AbsCsvField_INTERFACE;
-    }
-}
-*/
+
 void CsvField::set(const char *v)
 {
     //value=(char *)realloc(value,(strlen(v)+1)*sizeof(char));
@@ -289,75 +149,12 @@ void CsvField::set(const char *v)
     }
     value[i]=0;
 }
-/**bmc
-DEF printF1:ABSTRACT_METHOD
-{
-    function="print";
-    suffix="1";
-    brief="Schreibt das Feld in die Datei <code class='name'>f</code>.";
-    xinfo="Diese Methode ruft die Methode <a href='#print2'>print (version 2)</a> auf.";
-    param:param_file{};
-    return:v="";
-}
-DEF x:METHOD,printF1
-{
-    CsvField="TRUE";
-    class="CsvField";
-}
-DEF x:printF1,AbsCsvField,IMETHOD
-{
-    AbsCsvField="TRUE";
-    memclass="virtual";
-    docu
-    {
-        AbsCsvField_INTERFACE;
-    }
-}
-*/
+
 void CsvField::print(FILE *f)
 {
     print(f,value);
 }
-/**bmc
-DEF param_field_val_print:ccp
-{
-    name="val";
-    direction="IN";
-    desc="The null-terminated string, that should be printed as the value of the field. (The string currently stored as the value of this field is ignored.)";
-}
-*/
-/**bmc
-DEF printF2:ABSTRACT_METHOD
-{
-    function="print";
-    suffix="2";
-    brief="This method writes value <code class='name'>val</code> formatted as a csv value to file <code class='name'>f</code>.";
-    xinfo="Es wird <code class='name'>val</code> entweder unverändert ausgegeben, oder falls erforderlich unter Anführungszeichen (bzw. mit String-Markierngs-Symbolen versehen, wie durch <a href='@modname[]_AbsCsvSettings.php&num;string_marker_out'>string_marker_out</a> festgelegt).
-    <br><br>
-    Beispiele:
-    <br>a) <code class='name'>Hello Wolrd!</code> wird unverändert ausgegeben als <code class='name'>Hello Wolrd!</code>.
-    <br>b) <code class='name'>red, green and blue</code> wird ausgegeben als <code class='name'>\"red, green and blue\"</code>.
-    <br>c) <code class='name'>\"Hallo\"</code> wird ausgegeben als <code class='name'>\"\"\"Hallo\"\"\"</code>.
-    ";
-    param:param_file{};
-    param:param_field_val_print{};
-    return:v="";
-}
-DEF x:METHOD,printF2
-{
-    CsvField="TRUE";
-    class="CsvField";
-}
-DEF x:printF2,AbsCsvField,IMETHOD
-{
-    AbsCsvField="TRUE";
-    memclass="virtual";
-    docu
-    {
-        AbsCsvField_INTERFACE;
-    }
-}
-*/
+
 void CsvField::print(FILE *f,const char *val)
 {
     int i=0;

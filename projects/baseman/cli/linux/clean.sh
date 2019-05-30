@@ -1,6 +1,5 @@
 #!/bin/sh
 #-------------------------------------------------------------------------------
-echo 'deleting...'
 rm -f ../../../../source/csv/csv.o
 rm -f ../../../../source/csv/CsvData.o
 rm -f ../../../../source/csv/CsvRecord.o

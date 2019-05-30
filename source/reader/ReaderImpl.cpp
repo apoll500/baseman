@@ -2,7 +2,7 @@
 *                                                                              *
 *  ReaderImpl.cpp                                                              *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -38,7 +38,6 @@
 *                                                                              *
 *******************************************************************************/
 #include "ReaderImpl.hpp"
-
 ReaderImpl::ReaderImpl()
 {
     ahead=0;
@@ -94,7 +93,6 @@ int ReaderImpl::getNext()
 void ReaderImpl::getNext_ahead()
 {
     int n;
-
     if((currentChar=='\n' || currentChar==0x0a00 || currentChar==0x0a000000) && compatibility_mode==READER_COMPMODE_OFF)
     {
         charType=1;
@@ -156,7 +154,6 @@ void ReaderImpl::moveCursorPos()
 {
     lastline=currline;
     lastcolumn=currcolumn;
-
     currcolumn++;
     if(charType!=0)
     {
@@ -180,108 +177,13 @@ void ReaderImpl::setCurrColumn(int n)
 {
     currcolumn=n;
 }
-/**bmc
-DEF getLine:ABSTRACT_METHOD
-{
-    function="@this.parent.NAME";
-    brief="Gibt die Zeilennummer der Position des zuletzt eingelesenen Zeichens zurück.";
-    return:i="Die Zeilennummer des zuletzt eingelesenen Zeichens. (Zählung beginnt mit 1.)";
-}
-DEF _getLine:getLine,Reader,IMETHOD
-{
-    Reader="TRUE";
-    overloaded="FALSE";
-    memclass="virtual";
-    docu
-    {
-        Reader_INTERFACE;
-    }
-}
-DEF x:METHOD,getLine
-{
-    UniFileReader="TRUE";
-    class="UniFileReader";
-}
-DEF x:METHOD,getLine
-{
-    WcsReader="TRUE";
-    class="WcsReader";
-}
-DEF x:METHOD,getLine
-{
-    FileReader="TRUE";
-    class="FileReader";
-}
-DEF x:METHOD,getLine
-{
-    WcsFileReader="TRUE";
-    class="WcsFileReader";
-}
-DEF x:METHOD,getLine
-{
-    Char16FileReader="TRUE";
-    class="Char16FileReader";
-}
-DEF x:METHOD,getLine
-{
-    Char32FileReader="TRUE";
-    class="Char32FileReader";
-}
-*/
+
 int ReaderImpl::getLine()
 {
     return lastline;
 }
-/**bmc
-DEF getColumn:ABSTRACT_METHOD
-{
-    function="@this.parent.NAME";
-    brief="Gibt die Spaltennummer der Position des zuletzt eingelesenen Zeichens zurück.";
-    return:i="Die Spaltennummer des zuletzt eingelesenen Zeichens. (Zählung beginnt mit 1.)";
-}
-DEF _getColumn:getColumn,Reader,IMETHOD
-{
-    Reader="TRUE";
-    overloaded="FALSE";
-    memclass="virtual";
-    docu
-    {
-        Reader_INTERFACE;
-    }
-}
-DEF x:METHOD,getColumn
-{
-    UniFileReader="TRUE";
-    class="UniFileReader";
-}
-DEF x:METHOD,getColumn
-{
-    WcsReader="TRUE";
-    class="WcsReader";
-}
-DEF x:METHOD,getColumn
-{
-    FileReader="TRUE";
-    class="FileReader";
-}
-DEF x:METHOD,getColumn
-{
-    WcsFileReader="TRUE";
-    class="WcsFileReader";
-}
-DEF x:METHOD,getColumn
-{
-    Char16FileReader="TRUE";
-    class="Char16FileReader";
-}
-DEF x:METHOD,getColumn
-{
-    Char32FileReader="TRUE";
-    class="Char32FileReader";
-}
-*/
+
 int ReaderImpl::getColumn()
 {
     return lastcolumn;
 }
-

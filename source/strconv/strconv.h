@@ -2,7 +2,7 @@
 *                                                                              *
 *  strconv.h                                                                   *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,20 +37,14 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-// strconv.h
 #ifndef MOD_strconv_H
 #define MOD_strconv_H
-
 #include "macros/macros.h"
-
 #include <stdlib.h>
-
 #ifdef OS_WIN
 #include <windows.h>
 #endif
-
 #define INI_STRING_LENGTH 256
-
 class strconv
 {
 public:
@@ -66,13 +60,11 @@ private:
     template<class T> static void memory_alloc(T **str_out,unsigned int *str_out_ln,unsigned int initial_ln);
     template<class T> static void memory_check(T **str_out,unsigned int *str_out_ln,unsigned int pos);
 };
-
 template<class T> T *strconv::strcopy(T **str_out,unsigned int *str_out_ln,const T *str_in)
 {
     unsigned int str_out_ln_2;
     if(str_out_ln==0)str_out_ln_2=0;
     else str_out_ln_2=*str_out_ln;
-
     unsigned int pos=0;
     memory_alloc(str_out,&str_out_ln_2);
     while(str_in[pos]!=0)
@@ -82,17 +74,13 @@ template<class T> T *strconv::strcopy(T **str_out,unsigned int *str_out_ln,const
         pos++;
     }
     (*str_out)[pos]=0;
-
     if(str_out_ln!=0)*str_out_ln=str_out_ln_2;
-
     return *str_out;
 }
-
 template<class T> void strconv::memory_alloc(T **str_out,unsigned int *str_out_ln)
 {
     memory_alloc(str_out,str_out_ln,INI_STRING_LENGTH);
 }
-
 template<class T> void strconv::memory_alloc(T **str_out,unsigned int *str_out_ln,unsigned int initial_ln)
 {
     if(*str_out==0)
@@ -109,7 +97,6 @@ template<class T> void strconv::memory_alloc(T **str_out,unsigned int *str_out_l
         *str_out=(T *)realloc(*str_out,(*str_out_ln+1)*sizeof(T));
     }
 }
-
 template<class T> void strconv::memory_check(T **str_out,unsigned int *str_out_ln,unsigned int pos)
 {
     if(pos==*str_out_ln)
@@ -118,5 +105,4 @@ template<class T> void strconv::memory_check(T **str_out,unsigned int *str_out_l
         *str_out=(T *)realloc(*str_out,(*str_out_ln+1)*sizeof(T));
     }
 }
-
 #endif

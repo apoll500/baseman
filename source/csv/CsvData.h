@@ -2,7 +2,7 @@
 *                                                                              *
 *  CsvData.h                                                                   *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,84 +39,17 @@
 *******************************************************************************/
 #ifndef CsvData_H
 #define CsvData_H
-
 #include <stdio.h>
-
 #include <vector>
-
 #include "csv/import/prokee.h"
 #include "csv.hh"
-
 //#include "CsvRecord.h"
-
 #define CSV_INI_DAT_LENGTH 32
 
-//==============================================================================
-// CsvData
-//==============================================================================
-/**bmc
-DEF AbsCsvData_INTERFACE:INTERFACE
-{
-    class="AbsCsvData";
-    no_interface_superclass="TRUE";
-    implclass="CsvData";
-    headers
-    {
-        ->
-        class Reader;
-        <--
-    }
-    DEF docu
-    {
-        title="AbsCsvData";
-        //text="<pre>@parent.parent.code</pre>";
-        section:func.LSECTION
-        {
-            title="Motivation";
-            text
-            {
-                ->
-                <-
-            }
-        }
-    }
-}
-DEF PAGE_02:FILE,WEBP1
-{
-    THE_INTERFACE="AbsCsvData_INTERFACE";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
-}
-DEF AbsCsvData
-{
-    class="AbsCsvData";
-}
-DEF X:WRAPPER
-{
-    class="CsvData";
-    baseclass="AbsCsvData";
-}
-*/
 class CsvData:public AbsCsvData2
 {
 public:
-    /**bmc
-    DEF settings:AbsCsvData,PUBLIC_MEMBER
-    {
-        CsvData="TRUE";
-        AbsCsvData="TRUE";
-        variable_name="@this.parent.NAME";
-        variable_type:manu
-        {
-            param_classname="AbsCsvSettings";
-        };
-        brief="Provides settings for reading and writing csv files. (see <a href='@modname[]_@version[]_AbsCsvSettings.php'>AbsCsvSettings</a>)";
-        docu
-        {
-            AbsCsvData_INTERFACE;
-        }
-    }
-    */
+    
     //CsvSettings *settings;//specification of csv input and output format
 private:
     //std::vector<CsvRecord> data;
@@ -176,11 +109,5 @@ public:
     //copy
     //void copy(Reader *r,FILE *f,int *row,int *col);
 };
-
-////#include "CsvData.h"
-//#include "CsvField.h"
-//#include "CsvSettings.h"
-
-//#include "csv.hh2"
 
 #endif

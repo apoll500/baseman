@@ -2,7 +2,7 @@
 *                                                                              *
 *  base64.h                                                                    *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,27 +39,15 @@
 *******************************************************************************/
 #ifndef H_BASE64
 #define H_BASE64
-
 #include "wwrap/str.h"
 
 #include <stdlib.h>
 #include <math.h>
 
-#include "base64/import/prokee.h"
-
-/*******************************************************************************
-*                                                                              *
-*  base64-Functions                                                            *
-*                                                                              *
-*******************************************************************************/
 class base64
 {
 public:
-    /*****************************************************************
-    *                                                                *
-    *  encode()                                                      *
-    *                                                                *
-    *****************************************************************/
+    
     //--------------------------------------------------------------------------
     //the encoder
     //--------------------------------------------------------------------------
@@ -90,11 +78,7 @@ public:
     static int encode(void *data,unsigned int length,char **bstr,unsigned int *bln,bool padding);
     static int encode(void *data,unsigned int length,char **bstr,unsigned int *bln,bool padding,const char *sym,char pad);
     static int encode_url(void *data,unsigned int length,char **bstr,unsigned int *bln,bool padding);
-    /*****************************************************************
-    *                                                                *
-    *  decode()                                                      *
-    *                                                                *
-    *****************************************************************/
+    
     //--------------------------------------------------------------------------
     //the decoder
     //--------------------------------------------------------------------------
@@ -118,270 +102,14 @@ public:
     static int decode(const char *bstr,void **data,unsigned int *dataln);
     static int decode(const char *bstr,void **data,unsigned int *dataln,const char *sym,char pad);
     static int decode_url(const char *bstr,void **data,unsigned int *dataln);
-    /*****************************************************************
-    *                                                                *
-    *  length()                                                      *
-    *                                                                *
-    *****************************************************************/
+    
     static unsigned int encode_length(unsigned int length);
     static unsigned int encode_length(unsigned int length,bool padding);
     static unsigned int decode_length(unsigned int length);
     static unsigned int decode_length(const char *bstr);
+    
 };
 
-#include "base64/import/modules.h"
-
-//------------------------------------------------------------------------------
-//
-//  #begin encode -- str versions
-//
-//------------------------------------------------------------------------------
-/**bmc
-DEF encode:POINTER,inc_base64
-{
-    sep_bevore="0px";
-    txt_bevore="These methods can be used, if the input for the encoder is a null-terminated string.";
-    base64="TRUE";
-    function="@this.parent.NAME";
-    suffix="_str1";
-    brief="Returns the base64 encoded representation of the input string <code>in_str</code>.";
-    param:lp_str{};
-    return:cp="The base64 encoded representation of the input string <code>in_str</code>.";
-    remark:remark_stdenc{};
-    remark:remark_stdenc1{};
-    remark:remark_free_retval{};
-    docu
-    {
-        THEINTERFACE;
-    }
-    test:CTEST
-    {
-        name="test1";
-        desc="Encode/Decode-Test.";
-        followup
-        {
-            ->
-                void *temp=base64::decode(retv);
-                if(temp)
-                {
-                    free(retv);
-                    retv=(char *)temp;
-                }
-            <-
-        }
-        retv="in_str";
-        test_cleanup
-        {
-            ->
-            // ---> whatever
-            <-
-        }
-    }
-}
-DEF encode:POINTER,inc_base64
-{
-    base64="TRUE";
-    function="@this.parent.NAME";
-    suffix="_str2";
-    brief="Returns the base64 encoded representation of the input string <code>in_str</code>.";
-    param:lp_str{};
-    param:lp_padding{};
-    return:cp="The base64 encoded representation of the input string <code>in_str</code>.";
-    remark:remark_stdenc0{};
-    remark:remark_stdenc1{};
-    remark:remark_free_retval{};
-    docu
-    {
-        THEINTERFACE;
-    }
-    test:CTEST
-    {
-        name="test1";
-        desc="Encode/Decode-Test.";
-        followup
-        {
-            ->
-                void *temp=base64::decode(retv);
-                if(temp)
-                {
-                    free(retv);
-                    retv=(char *)temp;
-                }
-            <-
-        }
-        retv="in_str";
-        test_cleanup
-        {
-            ->
-            // ---> whatever
-            <-
-        }
-    }
-}
-DEF encode:POINTER,inc_base64
-{
-    base64="TRUE";
-    function="@this.parent.NAME";
-    suffix="_str3";
-    brief="Returns the base64 encoded representation of the input string <code>in_str</code>.";
-    param:lp_str{};
-    param:lp_padding{};
-    param:lp_sym{};
-    param:lp_pad{};
-    return:cp="The base64 encoded representation of the input string <code>in_str</code>.";
-    remark:remark_free_retval{};
-    docu
-    {
-        THEINTERFACE;
-    }
-    test:CTEST
-    {
-        name="test1";
-        desc="Encode/Decode-Test.";
-        followup
-        {
-            ->
-                void *temp=base64::decode(retv,sym,pad);
-                if(temp)
-                {
-                    free(retv);
-                    retv=(char *)temp;
-                }
-            <-
-        }
-        retv="in_str";
-    }
-}
-*/
-//------------------------------------------------------------------------------
-//  #end
-//  #begin encode -- str versions
-//
-//------------------------------------------------------------------------------
-/**bmc
-DEF encode:POINTER,inc_base64
-{
-    base64="TRUE";
-    function="@this.parent.NAME";
-    suffix="_wcs1";
-    brief="Returns the base64 encoded representation of the input string <code>in_str</code>.";
-    param:lp_wcs{};
-    return:cp="The base64 encoded representation of the input string <code>in_str</code>.";
-    remark:remark_stdenc{};
-    remark:remark_stdenc1{};
-    remark:remark_free_retval{};
-    docu
-    {
-        THEINTERFACE;
-    }
-    test:CTEST
-    {
-        name="test1";
-        desc="Encode/Decode-Test.";
-        testcode
-        {
-            ->
-                wchar_t *temp=(wchar_t *)base64::decode(retv);
-                if(temp)
-                {
-                    if(str::cmp(temp,in_str)!=0)
-                    {
-                        test_successful=TEST_FAIL;
-                    }
-                    free(temp);
-                }
-                else
-                {
-                    test_successful=TEST_FAIL;
-                }
-            <-
-        }
-    }
-}
-DEF encode:POINTER,inc_base64
-{
-    base64="TRUE";
-    function="@this.parent.NAME";
-    suffix="_wcs2";
-    brief="Returns the base64 encoded representation of the input string <code>in_str</code>.";
-    param:lp_wcs{};
-    param:lp_padding{};
-    return:cp="The base64 encoded representation of the input string <code>in_str</code>.";
-    remark:remark_stdenc0{};
-    remark:remark_stdenc1{};
-    remark:remark_free_retval{};
-    docu
-    {
-        THEINTERFACE;
-    }
-    test:CTEST
-    {
-        name="test1";
-        desc="Encode/Decode-Test.";
-        testcode
-        {
-            ->
-                wchar_t *temp=(wchar_t *)base64::decode(retv);
-                if(temp)
-                {
-                    if(str::cmp(temp,in_str)!=0)
-                    {
-                        test_successful=TEST_FAIL;
-                    }
-                    free(temp);
-                }
-                else
-                {
-                    test_successful=TEST_FAIL;
-                }
-            <-
-        }
-    }
-}
-DEF encode:POINTER,inc_base64
-{
-    base64="TRUE";
-    function="@this.parent.NAME";
-    suffix="_wcs3";
-    brief="Returns the base64 encoded representation of the input string <code>in_str</code>.";
-    param:lp_wcs{};
-    param:lp_padding{};
-    param:lp_sym{};
-    param:lp_pad{};
-    return:cp="The base64 encoded representation of the input string <code>in_str</code>.";
-    remark:remark_free_retval{};
-    docu
-    {
-        THEINTERFACE;
-    }
-    test:CTEST
-    {
-        name="test1";
-        desc="Encode/Decode-Test.";
-        testcode
-        {
-            ->
-                wchar_t *temp=(wchar_t *)base64::decode(retv,sym,pad);
-                if(temp)
-                {
-                    if(str::cmp(temp,in_str)!=0)
-                    {
-                        test_successful=TEST_FAIL;
-                    }
-                    free(temp);
-                }
-                else
-                {
-                    test_successful=TEST_FAIL;
-                }
-            <-
-        }
-    }
-}
-*/
-//------------------------------------------------------------------------------
-// #end
-//------------------------------------------------------------------------------
 template<class T> char *base64::encode(const T *s)
 {
     return encode(s,(str::len(s)+1)*sizeof(T));
@@ -394,5 +122,4 @@ template<class T> char *base64::encode(const T *s,bool padding,const char *sym,c
 {
     return encode((void *)s,(str::len(s)+1)*sizeof(T),padding,sym,pad);
 }
-
 #endif

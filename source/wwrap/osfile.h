@@ -2,7 +2,7 @@
 *                                                                              *
 *  osfile.h                                                                    *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,9 +39,7 @@
 *******************************************************************************/
 #ifndef H_WWRAP_FILE
 #define H_WWRAP_FILE
-
 #include "macros/macros.h"
-
 #ifdef OS_WIN
 #ifdef OS_WIN_WCS
 #include "osfile_wwin.h"
@@ -51,5 +49,4 @@
 #elif defined OS_LIN
 #include "osfile_lin.h"
 #endif
-
 #endif

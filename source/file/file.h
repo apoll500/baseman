@@ -2,7 +2,7 @@
 *                                                                              *
 *  file.h                                                                      *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -40,15 +40,12 @@
 // file.h
 #ifndef MOD_file_H
 #define MOD_file_H
-
 #include <stdlib.h>
-
 #include "wwrap/osfile.h"
 #include "wwrap/osdir.h"
 #include "wwrap/str.h"
 #include "wwrap/conststr.h"
 #include "wwrap/osio.h"
-
 #ifdef OS_WIN
 #include <windows.h>
 #include <stdio.h>
@@ -61,8 +58,6 @@
 //für _getdrives()
 #include<direct.h>
 #endif
-
-//Pointers to other modules
 #define PROKEE_USE_INTERFACE
 #define PROKEE_USE_WRAPPER
 #include "file/file.hh"
@@ -70,78 +65,29 @@ template<class T> class DIRECTORY;
 template<class T> class TreeWalkCallback;
 #include "file/import/prokee.h"
 
-/*
-template<class T> class CondCopyControl
-{
-public:
-    virtual ~CondCopyControl(){}
-    virtual bool doCopyFile(const T *targetpath,const T *sourcepath)=0;
-    virtual void filecopied(const T *targetpath,const T *sourcepath,size_t bytes)=0;
-    virtual bool ignoreEmptyDir(const T *path)=0;
-    virtual void feedback()=0;
-    virtual size_t feedback_bytes()=0;
-    virtual time_t feedback_time()=0;
-};
-*/
-
-/*********************************************************************
-*                                                                    *
-*  File-Functions                                                    *
-*                                                                    *
-*********************************************************************/
 class file
 {
 public:
-    /*****************************************************************
-    *                                                                *
-    *  openfile()                                                    *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static FILE *openfile(const T *path,const T *name,const T *mode);
     template<class T> static FILE *openfile(const T *filename,const T *mode);
     template<class T> static FILE *openfile(const T *filename);
-    /*****************************************************************
-    *                                                                *
-    *  readfile()                                                    *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static void *readfile(const T *filename,unsigned int *length);
     template<class T> static void *readfile(const T *filename,char *data);
     static void *readfile(FILE *f,char *data);
-    /*****************************************************************
-    *                                                                *
-    *  read_bytes()                                                  *
-    *                                                                *
-    *****************************************************************/
-    //static int read_bytes(FILE *f,char *data,unsigned int length);
-    /*****************************************************************
-    *                                                                *
-    *  writefile()                                                   *
-    *                                                                *
-    *****************************************************************/
+    
+    
     template<class T> static bool writefile(const T *filename,void *data,unsigned int length);
     template<class T> static bool appendfile(const T *filename,void *data,unsigned int length);
     static int writefile(FILE *file,void *data,unsigned int length);
     static int writefile(int file,void *data,unsigned int length);
     template<class T> static T *write_newfile(const T *filename,void *data,unsigned int length);
-    /*****************************************************************
-    *                                                                *
-    *  rwfile()                                                      *
-    *                                                                *
-    *****************************************************************/
-    template<class T> static bool rwfile(const T *filename,unsigned int rep,bool dodelete);
-    /*****************************************************************
-    *                                                                *
-    *  testfile()                                                    *
-    *                                                                *
-    *****************************************************************/
+    
+    
     template<class T> static bool testfile(const T *path);
     template<class T> static bool testfile_open(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  copyfile()                                                    *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool copyfile(const T *targetpath,const T *sourcepath);
     template<class T> static bool copyfile(const T *targetpath,const T *sourcepath,const T *filename);
     static bool copyfile(FILE *targetfile,FILE *sourcefile);
@@ -150,47 +96,23 @@ public:
     template<class T> static bool copyfile(const T *targetpath,const T *sourcepath,const T *filename,CondCopyControl<T> *cc);
     template<class T> static size_t copyfile(FILE *targetfile,FILE *sourcefile,CondCopyControl<T> *cc);
     template<class T> static size_t copyfile(int targetfile,int sourcefile,CondCopyControl<T> *cc);
-    /*****************************************************************
-    *                                                                *
-    *  cmp()                                                         *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool compare(const T *patha,const T *pathb);
-    /*****************************************************************
-    *                                                                *
-    *  info()                                                        *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static time_t get_time_write(const T *filename);
     template<class T> static unsigned long get_size(const T *filename);
-    /*****************************************************************
-    *                                                                *
-    *  info()                                                        *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool remove(const T *filename);
     template<class T> static bool remove_clean(const T *filename);
 };
-
-//#include "path.h"
-//#include "dir.h"
 #include "file/import/modules.h"
-
-/*****************************************************************
-*                                                                *
-*  openfile()                                                    *
-*                                                                *
-*****************************************************************/
 template<class T> FILE *file::openfile(const T *path,const T *name,const T *mode)
 {
     T *filename=(T *)malloc((str::len(path)+str::len(name)+1)*sizeof(T));
     str::cpy(filename,path);
     str::cat(filename,name);
-
     FILE *f=file::openfile(filename,mode);
-
     free(filename);
-
     return f;
 }
 template<class T> FILE *file::openfile(const T *filename,const T *mode)
@@ -201,7 +123,6 @@ template<class T> FILE *file::openfile(const T *filename,const T *mode)
     {
         dir::createdir(filename);
     }
-
     return osfile::open(filename,mode);
 }
 template<class T> FILE *file::openfile(const T *filename)
@@ -209,20 +130,12 @@ template<class T> FILE *file::openfile(const T *filename)
     T a[3];
     return file::openfile(filename,conststr::cast(a,"rb"));
 }
-/*****************************************************************
-*                                                                *
-*  readfile()                                                    *
-*                                                                *
-*****************************************************************/
 template<class T> void *file::readfile(const T *filename,unsigned int *length)
 {
     unsigned int file_length=osfile::get_size(filename);
     if(length)*length=file_length;
-
     char *data=(char *)malloc((file_length+1)*sizeof(char));
-
     if(file::readfile(filename,data))return data;
-
     free(data);
     if(length)*length=0;
     return 0;
@@ -231,17 +144,10 @@ template<class T> void *file::readfile(const T *filename,char *data)
 {
     FILE *f=file::openfile(filename);
     if(!f)return 0;
-
     file::readfile(f,data);
-
     fclose(f);
     return data;
 }
-/*****************************************************************
-*                                                                *
-*  writefile()                                                   *
-*                                                                *
-*****************************************************************/
 template<class T> bool file::writefile(const T *filename,void *data,unsigned int length)
 {
     T a[3];
@@ -272,10 +178,8 @@ template<class T> T *file::write_newfile(const T *filename,void *data,unsigned i
 {
     T a[6];
     conststr::cast(a,".()0_");
-
     T *newfilename=(T *)malloc((str::len(filename)+100)*sizeof(T));
     str::cpy(newfilename,filename);
-
     if(testfile(newfilename))
     {
         unsigned int pos;
@@ -318,10 +222,8 @@ template<class T> T *file::write_newfile(const T *filename,void *data,unsigned i
                 newfilename[pos+4]=a[3];
                 newfilename[pos+5]=0;
             }
-
             //--TODO--
             //osio::sprint(&newfilename[str::len(newfilename)],"%d",counter);
-
             pos=str::len(newfilename);
             newfilename[pos]=a[2];
             newfilename[pos+1]=a[0];
@@ -335,63 +237,13 @@ template<class T> T *file::write_newfile(const T *filename,void *data,unsigned i
         }
         free(name);
     }
-
     if(writefile(newfilename,data,length))
     {
         return newfilename;
     }
     return 0;
 }
-/*****************************************************************
-*                                                                *
-*  rwfile()                                                      *
-*                                                                *
-*****************************************************************/
-template<class T> bool file::rwfile(const T *filename,unsigned int rep,bool dodelete)
-{
-    unsigned long length=osfile::get_size(filename);
 
-    T a[3];
-    FILE *f=openfile(filename,conststr::cast(a,"r+b"));
-
-    if(!f)return false;
-
-    unsigned long i,j,pos=0;
-    char bu[BUFSIZ];
-
-    srand(time(0));
-
-    // RAND_MAX my be not more than 32767 (depending on implementation of the library)
-    // Therefor taking only 8 bits of every random pseudo value.
-
-    for(i=0;i<rep;i++)
-    {
-        fseek(f,0,SEEK_SET);
-        while(pos<length)
-        {
-            for(j=0;j<BUFSIZ;j++)
-            {
-                bu[j]=(char)rand();
-            }
-            fwrite(bu,1,pos+BUFSIZ<length?BUFSIZ:length-pos,f);
-            pos+=BUFSIZ;
-        }
-        fflush(f);
-    }
-
-    fclose(f);
-
-    if(dodelete)
-    {
-        return remove_clean(filename);
-    }
-    return true;
-}
-/*****************************************************************
-*                                                                *
-*  testfile()                                                    *
-*                                                                *
-*****************************************************************/
 template<class T> bool file::testfile_open(const T *path)
 {
     //Testet ob die angegebene Datei geoeffnet werden kann.
@@ -408,18 +260,12 @@ template<class T> bool file::testfile(const T *path)
 {
     return osfile::testfile(path);
 }
-/*****************************************************************
-*                                                                *
-*  copyfile()                                                    *
-*                                                                *
-*****************************************************************/
 template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath)
 {
     FILE *targetfile;
     FILE *sourcefile;
     bool retVal=false;
     T a[3];
-
     if(path::pathtype(sourcepath) & PATH_DIR)
     {
         return false;
@@ -429,7 +275,6 @@ template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath)
         sourcefile=file::openfile(sourcepath,conststr::cast(a,"rb"));
         if(!sourcefile)return false;
     }
-
     if(path::pathtype(targetpath) & PATH_DIR)
     {
         targetfile=file::openfile(targetpath,path::fnopath(sourcepath),conststr::cast(a,"wb"));
@@ -438,33 +283,25 @@ template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath)
     {
         targetfile=file::openfile(targetpath,conststr::cast(a,"wb"));
     }
-
     if(targetfile)
     {
         retVal=file::copyfile(targetfile,sourcefile);
-
         fclose(targetfile);
     }
-
     fclose(sourcefile);
-
     return retVal;
 }
 template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath,const T *filename)
 {
     T *a=(T *)malloc((str::len(sourcepath)+str::len(filename)+2)*sizeof(T));
     T *b=(T *)malloc((str::len(targetpath)+str::len(filename)+2)*sizeof(T));
-
     str::cpy(a,sourcepath);
     str::cat(a,filename);
     str::cpy(b,targetpath);
     str::cat(b,filename);
-
     bool retVal=file::copyfile(b,a);
-
     free(a);
     free(b);
-
     return retVal;
 }
 template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath,CondCopyControl<T> *cc)
@@ -473,20 +310,17 @@ template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath,Co
     FILE *sourcefile;
     bool retVal=false;
     T a[3];
-
     T *tp=(T *)malloc((str::len(targetpath)+str::len(sourcepath)+2)*sizeof(T));
     str::cpy(tp,targetpath);
     if(path::pathtype(targetpath) & PATH_DIR)
     {
         str::cat(tp,path::fnopath(sourcepath));
     }
-
     if(!cc->doCopyFile(tp,sourcepath))
     {
         free(tp);
         return true;
     }
-
     if(path::pathtype(sourcepath) & PATH_DIR)
     {
         free(tp);
@@ -501,9 +335,7 @@ template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath,Co
             return false;
         }
     }
-
     targetfile=file::openfile(tp,conststr::cast(a,"wb"));
-
     if(targetfile)
     {
         int ln=file::copyfile(targetfile,sourcefile,cc);
@@ -514,7 +346,6 @@ template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath,Co
             retVal=true;
         }
     }
-
     fclose(sourcefile);
     free(tp);
     return retVal;
@@ -523,17 +354,13 @@ template<class T> bool file::copyfile(const T *targetpath,const T *sourcepath,co
 {
     T *a=(T *)malloc((str::len(sourcepath)+str::len(filename)+2)*sizeof(T));
     T *b=(T *)malloc((str::len(targetpath)+str::len(filename)+2)*sizeof(T));
-
     str::cpy(a,sourcepath);
     str::cat(a,filename);
     str::cpy(b,targetpath);
     str::cat(b,filename);
-
     bool retVal=file::copyfile(b,a,cc);
-
     free(a);
     free(b);
-
     return retVal;
 }
 template<class T> size_t file::copyfile(FILE *targetfile,FILE *sourcefile,CondCopyControl<T> *cc)
@@ -542,7 +369,6 @@ template<class T> size_t file::copyfile(FILE *targetfile,FILE *sourcefile,CondCo
     size_t ln=1;
     size_t fbytes=cc->feedback_bytes();
     size_t bytecount=0;
-
     while(ln)
     {
         ln=fread(a,1,BUFSIZ,sourcefile);
@@ -558,7 +384,6 @@ template<class T> size_t file::copyfile(int targetfile,int sourcefile,CondCopyCo
     size_t ln=1;
     size_t fbytes=cc->feedback_bytes();
     size_t bytecount=0;
-
     while(ln>0)
     {
         ln=read(sourcefile,a,BUFSIZ);
@@ -568,24 +393,17 @@ template<class T> size_t file::copyfile(int targetfile,int sourcefile,CondCopyCo
     }
     return bytecount;
 }
-/*****************************************************************
-*                                                                *
-*  info()                                                        *
-*                                                                *
-*****************************************************************/
 template<class T> bool file::compare(const T *patha,const T *pathb)
 {
     unsigned long al=osfile::get_size(patha);
     unsigned long bl=osfile::get_size(pathb);
     if(al!=bl)return false;
-
     T m[3];
     conststr::cast(m,"rb");
     FILE *fa=osfile::open(patha,m);
     if(!fa)return false;
     FILE *fb=osfile::open(pathb,m);
     if(!fb){fclose(fa);return false;}
-
     char a[BUFSIZ];
     char b[BUFSIZ];
     size_t lna=1,lnb=1;
@@ -604,11 +422,6 @@ template<class T> bool file::compare(const T *patha,const T *pathb)
     fclose(fb);
     return true;
 }
-/*****************************************************************
-*                                                                *
-*  info()                                                        *
-*                                                                *
-*****************************************************************/
 template<class T> time_t file::get_time_write(const T *filename)
 {
     return osfile::get_time_write(filename);
@@ -617,11 +430,6 @@ template<class T> unsigned long file::get_size(const T *filename)
 {
     return osfile::get_size(filename);
 }
-/*****************************************************************
-*                                                                *
-*  info()                                                        *
-*                                                                *
-*****************************************************************/
 template<class T> bool file::remove(const T *filename)
 {
     return osfile::rm(filename);
@@ -645,5 +453,4 @@ template<class T> bool file::remove_clean(const T *filename)
     }
     return retval;
 }
-
 #endif

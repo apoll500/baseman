@@ -2,7 +2,7 @@
 *                                                                              *
 *  osfile_lin.h                                                                *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,13 +39,11 @@
 *******************************************************************************/
 #ifndef H_WWRAP_FILE_LIN
 #define H_WWRAP_FILE_LIN
-
 #include <stdio.h>
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 class osfile
 {
 public:
@@ -102,5 +100,4 @@ public:
         return 0;
     }
 };
-
 #endif

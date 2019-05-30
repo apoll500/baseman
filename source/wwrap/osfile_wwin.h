@@ -2,7 +2,7 @@
 *                                                                              *
 *  osfile_wwin.h                                                               *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,20 +39,9 @@
 *******************************************************************************/
 #ifndef H_WWRAP_FILE_WWIN
 #define H_WWRAP_FILE_WWIN
-
 #include "macros/macros.h"
-
 //------------------------------------------------------------------------------
-/*
-#ifdef COMPILE_PROKEE_MODULE
-#define PROKEE_USE_WRAPPER
-#include "strconv/v01/module.h"
-#else
-#include "strconv/strconv.h"
-#endif
-*/
 //------------------------------------------------------------------------------
-
 //------------------------------------------------------------------------------
 #ifdef COMPILE_PROKEE_MODULE
 #ifndef COMPILE_PROKEE_MODULE_NO_STRCONV
@@ -65,11 +54,9 @@
 #include "strconv/strconv.h"
 #endif
 //------------------------------------------------------------------------------
-
 #include <windows.h>
 #include <stdio.h>
 #include <io.h>
-
 class osfile
 {
 public:
@@ -145,11 +132,9 @@ public:
         long r;
         time_t rtime;
         _wfinddata_t d;
-
         r=_wfindfirst(filename,&d);
         rtime=d.time_write;
         _findclose(r);
-
         return rtime;
     }
     static unsigned long get_size(const char *filename)
@@ -169,11 +154,9 @@ public:
         long r;
         _fsize_t rsize;
         _wfinddata_t d;
-
         r=_wfindfirst(filename,&d);
         rsize=d.size;
         _findclose(r);
-
         return rsize;
     }
     static bool testfile(const char *path)
@@ -192,12 +175,9 @@ public:
     {
         long r;
         _wfinddata_t d;
-
         r=_wfindfirst(path,&d);
         _findclose(r);
-
         return r!=-1;
     }
 };
-
 #endif

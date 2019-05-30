@@ -1,3 +1,5 @@
+//inc/interface/import/all.fw../../../bmsetup/bmsetup.fw
+
 #ifndef PLIB_FUNCTION_bmsetup_iface_all_fw
 #define PLIB_FUNCTION_bmsetup_iface_all_fw
 

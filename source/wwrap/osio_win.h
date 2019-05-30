@@ -2,7 +2,7 @@
 *                                                                              *
 *  osio_win.h                                                                  *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,14 +39,11 @@
 *******************************************************************************/
 #ifndef H_WWRAP_OSIO_WIN
 #define H_WWRAP_OSIO_WIN
-
 #include <stdio.h>
 #include <windows.h>
 #include <wchar.h>
 #include <io.h>
-
 typedef int(*external_print_t)(const char *);
-
 class osio
 {
 public:
@@ -109,19 +106,14 @@ public:
         va_list args;
         va_start(args,format);
         char *buffer;
-
         i=vsnprintf(buffer,0,format,args);
         buffer=(char *)malloc((i+1)*sizeof(char));
         i=vsnprintf(buffer,i+1,format,args);
-
         if(external_print)i=external_print(buffer);
         else printf(buffer);
-
         free(buffer);
         va_end(args);
-
         return i;
     }
 };
-
 #endif

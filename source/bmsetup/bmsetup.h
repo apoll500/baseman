@@ -2,7 +2,7 @@
 *                                                                              *
 *  bmsetup.h                                                                   *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,18 +37,13 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-//bmsetup/code/v01/files/source/bmsetup/bmsetup.h
-
 #ifndef MOD_bmsetup_H
 #define MOD_bmsetup_H
-
 #include "macros/macros.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "wwrap/str.h"
-
 #include "bmsetup/import/prokee.h"
 
 #define BMSETUP_USAGE "\n\
@@ -93,33 +88,24 @@ pull [<target> ]<path>:\n\
 help:\n\
     Displays this information.\n\
 \n"
-
 #define BMSETUP_INSTALLATION_PATH "/usr/local/bin/"
 #define BMSETUP_BASELIST_PATH ".baseman/baselist.csv"
-
 DLL int run_script(const char *baseman_project_path,const char *package_path,const char *run_token);
-
 DLL int download(const char *baseman_project_path,const char *package_path,bool update);
-
 DLL int exporter();
 DLL int exporter2(const char *baseman_project_path);
 DLL int export_projects(const char *csvpath);
 DLL int export_versions(const char *csvpath);
-
 DLL int importer();
 DLL int importer2(const char *baseman_project_path);
 DLL int import_info(const char *infopath);
-
 DLL int publish(const char *baseman_project_path,const char *publish_path,bool dotar);
 DLL int install(const char *baseman_project_path,const char *package_path,bool dotar);
-
 DLL char **get_all_paths(const char *baseman_project_path,char **base_path,char **project_path,char **version_path);
 DLL char *construct_package_path(const char *baseman_project_path,const char *package_path,const char *append);
-
 DLL char *get_base_path(const char *base_name);
 DLL char *get_project_path(char *base_path,char **loc,int *pos);
 DLL char *get_version_path(char *project_path,char **loc,int *pos);
-
 class bmsetup
 {
 public:
@@ -129,7 +115,6 @@ public:
     static void print_error_line(const char *msg);
     static void print_error(const char *msg);
 };
-
 #include "bmsetup/import/modules.h"
 
 

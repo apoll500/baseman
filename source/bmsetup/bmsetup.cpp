@@ -2,7 +2,7 @@
 *                                                                              *
 *  bmsetup.cpp                                                                 *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,10 +37,7 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-//bmsetup/code/v01/files/source/bmsetup/bmsetup.cpp
-
 #include "bmsetup.h"
-
 template<class T> class TW_export:public TreeWalkCallback<T>
 {
 public:
@@ -71,7 +68,6 @@ public:
         return true;
     }
 };
-
 template<class T> class TW_import:public TreeWalkCallback<T>
 {
 public:
@@ -101,60 +97,6 @@ public:
         return true;
     }
 };
-
-/**bmc
-lp_baseman_project_path:ccp
-{
-    name="baseman_project_path";
-    desc="A valid path to a module within baseman. This path may differ from the path within the file system.";
-    direction="IN";
-}
-lp_package_path:ccp
-{
-    name="package_path";
-    desc="The path to the directory, where downloaded software packages are stored.";
-    direction="IN";
-}
-lp_run_token:ccp
-{
-    name="run_token";
-    desc
-    {
-        ->
-        Specifies the script to be executed. The function executes the file <b>bmsetup_</b><i>run_token</i><b>.sh</b>.<br>
-        The script files should be placed at <code>/usr/local/bin/</code> or any other directory on the path. Or at the path specified by <code>BMSETUP_INSTALLATION_PATH</code>.
-        <-
-    }
-    direction="IN";
-}
-r_security:REMARK
-{
-    text
-    {
-        ->
-         Mind that there are no security checks, on the content of the parameters.
-         A program must not allow any other (potentially malicious) software or user,
-         to execute this function or alter the strings provided as paramaters.
-        <-
-    }
-}
-*/
-/**bmc
-DEF run_script:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Runs a script.";
-    xinfo="The function runs the following command:<br><br>
-    <nobr><span style='font-size:18pt;padding:10px;background-color:rgb(200,200,200);border-radius:5px;'><code style='font-size:18pt;'>bmsetup_<i style='background-color:rgb(222,222,222);border-radius:5px;'>run_token</i>.sh <i style='background-color:rgb(222,222,222);border-radius:5px;'>package_path</i> <i style='background-color:rgb(222,222,222);border-radius:5px;'>unique_package_name</i></code></span></nobr><br><br>
-    (Where <i>unique_package_name</i> is constructed from the <i>baseman_project_path</i>.)";
-    param:lp_baseman_project_path{};
-    param:lp_package_path{};
-    param:lp_run_token{};
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-    remark:r_security{};
-}
-*/
 int run_script(const char *baseman_project_path,const char *package_path,const char *run_token)
 {
     char *unique_package_name=construct_package_path(baseman_project_path,"","");
@@ -165,39 +107,14 @@ int run_script(const char *baseman_project_path,const char *package_path,const c
     free(unique_package_name);
     return 0;
 }
-
-/**bmc
-lp_update:b
-{
-    name="update";
-    desc="Specifies, wheter a already downloaded package should be deleted and re-downloaded.";
-    direction="";
-}
-*/
-/**bmc
-DEF download:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Downloads a software package.";
-    xinfo="The function executes the download script <code>bmsetup_download.sh</code>.";
-    param:lp_baseman_project_path{};
-    param:lp_package_path{};
-    param:lp_update{};
-    return:i="Returns 0 if successful and a value other than 0 if not.";
-    docu{THEINTERFACE;};
-    remark:r_security{};
-}
-*/
 int download(const char *baseman_project_path,const char *package_path,bool update)
 {
     int ret=0;
     printf("downloading %s:\n",baseman_project_path);
-
     char *base_path;
     char *project_path;
     char *version_path;
     char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
-
     if(base_path)
     {
         char *plocal=construct_package_path(baseman_project_path,package_path,".tar.gz");
@@ -210,152 +127,70 @@ int download(const char *baseman_project_path,const char *package_path,bool upda
             if(update)
             {
                 file::remove(plocal);
-
                 char *filename=construct_package_path(baseman_project_path,package_path,".tar.gz.sig");
                 file::remove(filename);
                 free(filename);
-
                 run_script(baseman_project_path,package_path,"download");
             }
         }
-
         if(!file::testfile(plocal))
         {
             ret=1;
         }
-
         free(plocal);
     }
-
     if(version_path)free(version_path);
     if(project_path)free(project_path);
     if(base_path)free(base_path);
-
     strman::explode_free(loc);
-
     return ret;
 }
-
-/**bmc
-DEF exporter:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Runs <b>cfg-export</b> for the current directory and all subdirectories.";
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-}
-*/
 int exporter()
 {
     TW_export<char> tw;
-
     dir::walktree("./",&tw);
-
     return 0;
 }
-
-/**bmc
-DEF importer:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Runs <b>cfg-import</b> for the current directory and all subdirectories.";
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-}
-*/
 int importer()
 {
     TW_import<char> tw;
-
     dir::walktree("./",&tw);
-
     return 0;
 }
-
-/**bmc
-DEF exporter2:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Runs <b>cfg-export</b> for the project given by <i>baseman_project_path</i>.";
-    param:lp_baseman_project_path{};
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-}
-*/
 int exporter2(const char *baseman_project_path)
 {
     TW_export<char> tw;
-
     char *base_path;
     char *project_path;
     char *version_path;
     char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
-
     if(base_path)
     {
         dir::walktree(version_path,&tw);
     }
-
     if(version_path)free(version_path);
     if(project_path)free(project_path);
     if(base_path)free(base_path);
-
     strman::explode_free(loc);
-
     return 0;
 }
-
-/**bmc
-DEF importer2:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Runs <b>cfg-import</b> for the project given by <i>baseman_project_path</i>.";
-    param:lp_baseman_project_path{};
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-}
-*/
 int importer2(const char *baseman_project_path)
 {
     TW_import<char> tw;
-
     char *base_path;
     char *project_path;
     char *version_path;
     char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
-
     if(base_path)
     {
         dir::walktree(version_path,&tw);
     }
-
     if(version_path)free(version_path);
     if(project_path)free(project_path);
     if(base_path)free(base_path);
-
     strman::explode_free(loc);
-
     return 0;
 }
-
-/**bmc
-lp_infopath:ccp
-{
-    name="infopath";
-    desc="The path to the <i>.info</i> file.";
-    direction="IN";
-}
-*/
-/**bmc
-DEF import_info:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Reads settings from the file given by <i>infopath</i> and updates the related <i>.csv</i> files.";
-    param:lp_infopath{};
-    return:i="Returns 0 if successful and a value other than 0 if not.";
-    docu{THEINTERFACE;};
-}
-*/
 int import_info(const char *infopath)
 {
     AbsSettings *s=AbsSettingsInterface::createSettings();
@@ -364,42 +199,33 @@ int import_info(const char *infopath)
         delete s;
         return 1;
     }
-
     int n=s->getDefBlockCount();
     for(int i=0;i<n;i++)
     {
         std::string blockname=s->getNextDefBlockName();
         const char *b=blockname.c_str();
-
         if(strcmp(b,"project")==0)
         {
             AbsCsvData *data=AbsCsvDataInterface::createCsvData();
-
             char *csvpath=path::dnopath(infopath);
             csvpath=(char *)realloc(csvpath,(strlen(csvpath)+16)*sizeof(char));
             strcat(csvpath,"projects.csv");
-
             data->load(csvpath,"name,path,flag,target,run,description");
             data->useHeader(true);
-
             int name_id=data->getHeaderId("name");
             int path_id=data->getHeaderId("path");
             int flag_id=data->getHeaderId("flag");
             int targ_id=data->getHeaderId("target");
             int rrun_id=data->getHeaderId("run");
             int desc_id=data->getHeaderId("description");
-
             std::string name=s->get("project","name");
             std::string path=s->get("project","path");
             std::string flag=s->get("project","flag");
             std::string targ=s->get("project","target");
             std::string rrun=s->get("project","run");
             std::string desc=s->get("project","description");
-
             AbsCsvRecord **rec=data->getAllRecords("name",name.c_str());
-
             bool record_set=false;
-
             if(rec)
             {
                 if(csv::record_count(rec)==1)
@@ -417,9 +243,7 @@ int import_info(const char *infopath)
                     printf("ERROR: check %s, see %s\n",csvpath,infopath);
                 }
             }
-
             free(rec);
-
             if(!record_set)
             {
                 int row=data->addRecord(6);
@@ -430,39 +254,30 @@ int import_info(const char *infopath)
                 data->setField(row,rrun_id,rrun.c_str());
                 data->setField(row,desc_id,desc.c_str());
             }
-
             data->save(csvpath);
-
             free(csvpath);
             delete data;
         }
         else if(strcmp(b,"version")==0)
         {
             AbsCsvData *data=AbsCsvDataInterface::createCsvData();
-
             char *csvpath=path::dnopath(infopath);
             csvpath=(char *)realloc(csvpath,(strlen(csvpath)+16)*sizeof(char));
             strcat(csvpath,"versions.csv");
-
             data->load(csvpath,"version,path,flag,date,description");
             data->useHeader(true);
-
             int vers_id=data->getHeaderId("version");
             int path_id=data->getHeaderId("path");
             int flag_id=data->getHeaderId("flag");
             int date_id=data->getHeaderId("date");
             int desc_id=data->getHeaderId("description");
-
             std::string vers=s->get("version","version");
             std::string path=s->get("version","path");
             std::string flag=s->get("version","flag");
             std::string date=s->get("version","date");
             std::string desc=s->get("version","description");
-
             AbsCsvRecord **rec=data->getAllRecords("version",vers.c_str());
-
             bool record_set=false;
-
             if(rec)
             {
                 if(csv::record_count(rec)==1)
@@ -479,9 +294,7 @@ int import_info(const char *infopath)
                     printf("ERROR: check %s, see %s\n",csvpath,infopath);
                 }
             }
-
             free(rec);
-
             if(!record_set)
             {
                 int row=data->addRecord(5);
@@ -492,51 +305,25 @@ int import_info(const char *infopath)
                 data->setField(row,desc_id,desc.c_str());
                 printf("version=%s\n",vers.c_str());
             }
-
             data->save(csvpath);
-
             free(csvpath);
             delete data;
         }
     }
-
     delete s;
-
     return 0;
 }
-
-/**bmc
-lp_csvpath_p:ccp
-{
-    name="csvpath";
-    desc="The path to a <i>projects.csv</i> file.";
-    direction="IN";
-}
-*/
-/**bmc
-DEF export_projects:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Reads the records from the projects.csv file given by <i>csvpath</i> and creates the <i>.info</i> files.";
-    param:lp_csvpath_p{};
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-}
-*/
 int export_projects(const char *csvpath)
 {
     AbsCsvData *data=AbsCsvDataInterface::createCsvData();
-
     data->load(csvpath);
     data->useHeader(true);
-
     int name_id=data->getHeaderId("name");
     int path_id=data->getHeaderId("path");
     int flag_id=data->getHeaderId("flag");
     int targ_id=data->getHeaderId("target");
     int rrun_id=data->getHeaderId("run");
     int desc_id=data->getHeaderId("description");
-
     AbsCsvRecord **rec=data->getAllRecords();
     if(rec)
     {
@@ -549,7 +336,6 @@ int export_projects(const char *csvpath)
             const char *targ=rec[i]->getField_f(targ_id);
             const char *rrun=rec[i]->getField_f(rrun_id);
             const char *desc=rec[i]->getField_f(desc_id);
-
             if(name[0])
             {
                 AbsSettings *s=AbsSettingsInterface::createSettings();
@@ -559,7 +345,6 @@ int export_projects(const char *csvpath)
                 s->set("project","target",targ);
                 s->set("project","run",rrun);
                 s->set("project","description",desc);
-
                 char *a=path::dnopath(csvpath);
                 a=(char *)realloc(a,(strlen(a)+strlen(name)+10)*sizeof(char));
                 strcat(a,name);
@@ -570,44 +355,20 @@ int export_projects(const char *csvpath)
             }
         }
     }
-
     free(rec);
     delete data;
-
     return 0;
 }
-
-/**bmc
-lp_csvpath_v:ccp
-{
-    name="csvpath";
-    desc="The path to a <i>versions.csv</i> file.";
-    direction="IN";
-}
-*/
-/**bmc
-DEF export_versions:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Reads the records from the versions.csv file given by <i>csvpath</i> and creates the <i>.info</i> files.";
-    param:lp_csvpath_v{};
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-}
-*/
 int export_versions(const char *csvpath)
 {
     AbsCsvData *data=AbsCsvDataInterface::createCsvData();
-
     data->load(csvpath);
     data->useHeader(true);
-
     int vers_id=data->getHeaderId("version");
     int path_id=data->getHeaderId("path");
     int flag_id=data->getHeaderId("flag");
     int date_id=data->getHeaderId("date");
     int desc_id=data->getHeaderId("description");
-
     AbsCsvRecord **rec=data->getAllRecords();
     if(rec)
     {
@@ -619,7 +380,6 @@ int export_versions(const char *csvpath)
             const char *flag=rec[i]->getField_f(flag_id);
             const char *date=rec[i]->getField_f(date_id);
             const char *desc=rec[i]->getField_f(desc_id);
-
             if(vers[0])
             {
                 AbsSettings *s=AbsSettingsInterface::createSettings();
@@ -628,7 +388,6 @@ int export_versions(const char *csvpath)
                 s->set("version","flag",flag);
                 s->set("version","date",date);
                 s->set("version","description",desc);
-
                 char *a=path::dnopath(csvpath);
                 a=(char *)realloc(a,(strlen(a)+strlen(vers)+10)*sizeof(char));
                 strcat(a,vers);
@@ -639,75 +398,17 @@ int export_versions(const char *csvpath)
             }
         }
     }
-
     free(rec);
     delete data;
-
     return 0;
 }
-
-/**bmc
-lp_base_path_pp:cpp
-{
-    name="base_path";
-    desc="Receives a pointer to the null-terminated file system path to the baseman base. (If the function fails, <i>*base_path</i> may be set to @kw.null\.)";
-    direction="OUT";
-}
-lp_project_path_pp:cpp
-{
-    name="project_path";
-    desc="Receives a pointer to the null-terminated file system path to the baseman project. (If the function fails, <i>*project_path</i> may be set to @kw.null\.)";
-    direction="OUT";
-}
-lp_version_path_pp:cpp
-{
-    name="version_path";
-    desc="Receives a pointer to the null-terminated file system path to the baseman version. (If the function fails, <i>*version_path</i> may be set to @kw.null\.)";
-    direction="OUT";
-}
-r_retfree_buffers:REMARK
-{
-    text="The application has to free the buffers <i>*base_path</i>, <i>*project_path</i> and <i>*version_path</i>.";
-}
-r_retfree_explode:REMARK
-{
-    text="The application also has to free buffers associated to the return value. Use strman::explode_free() to free this buffers.";
-}
-*/
-/**bmc
-DEF get_all_paths:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Determines the file system paths to base, project and version of the baseman project given by <i>baseman_project_path</i>.";
-    xinfo
-    {
-        ->
-        <ol style="margin-top:0px;margin-bottom:-16px;">
-            <li>The function determines the path to the base (<i>base_path</i>). If the base does not exist, than <i>*base_path</i>, <i>*project_path</i> and <i>*version_path</i> are set to @kw.null and the function returns.</li>
-            <li>To construct the project path (<i>project_path</i>), the function searches for the project and subsequently for all sub-projects within <code>project.csv</code> files. The construction of the path ends as soon as a name within <i>baseman_project_path</i> does not match with an existing project (at a given location). In this case the name is considered to be the name of a version. If the first project name does not exist, <i>project_path</i> is set to the empty string.</li>
-            <li>The path to the version is constructed the same way as the path to the project (by searching versions within <code>versions.csv</code> files). If any version or sub-version cannot be found within baseman, the function sets <i>*version_path</i> to @kw.null\. If no version is given in <i>baseman_project_path</i>, <i>*version_path</i> is set to the empty string.</li>
-        </ol>
-        <-
-    };
-    param:lp_baseman_project_path{};
-    param:lp_base_path_pp{};
-    param:lp_project_path_pp{};
-    param:lp_version_path_pp{};
-    return:i="Returns the <i>baseman_project_path</i> exploded by \"/\".";
-    docu{THEINTERFACE;};
-    remark:r_retfree_buffers{};
-    remark:r_retfree_explode{};
-}
-*/
 char **get_all_paths(const char *baseman_project_path,char **base_path,char **project_path,char **version_path)
 {
     char **loc=strman::explode("/",baseman_project_path);
     int pos=1;
-
     if(base_path)*base_path=0;
     if(project_path)*project_path=0;
     if(version_path)*version_path=0;
-
     if(loc[0] && base_path)
     {
         *base_path=get_base_path(loc[0]);
@@ -715,7 +416,6 @@ char **get_all_paths(const char *baseman_project_path,char **base_path,char **pr
         {
             printf("file system paths:\n");
             printf("-->    base = %s\n",*base_path);
-
             if(project_path)
             {
                 *project_path=get_project_path(*base_path,loc,&pos);
@@ -728,7 +428,6 @@ char **get_all_paths(const char *baseman_project_path,char **base_path,char **pr
                     printf("project not found\n");
                 }
             }
-
             if(*project_path && version_path)
             {
                 *version_path=get_version_path(*project_path,loc,&pos);
@@ -753,45 +452,11 @@ char **get_all_paths(const char *baseman_project_path,char **base_path,char **pr
     }
     return loc;
 }
-
-/**bmc
-lp_append:ccp
-{
-    name="append";
-    desc="A null-terminated string that will be appended to the constructed path. This can be used to append appropriate file extensions.";
-    direction="IN";
-}
-r_retfree:REMARK
-{
-    text="The application has to free the returned buffer.";
-}
-*/
-/**bmc
-DEF construct_package_path:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Constructs the path to the package.";
-    xinfo
-    {
-        ->
-        1) Occurrences of "/" within <i>baseman_project_path</i> are replaced by "--" to construct the <i>package_filename</i>.<br>
-        2) The path to the package is constructed as follows: <i>package_path</i> + <i>package_filename</i> + <i>append</i>.
-        <-
-    };
-    param:lp_baseman_project_path{};
-    param:lp_package_path{};
-    param:lp_append{};
-    return:i="Returns the path to the package.";
-    docu{THEINTERFACE;};
-    remark:r_retfree{};
-}
-*/
 char *construct_package_path(const char *baseman_project_path,const char *package_path,const char *append)
 {
     char *pname=(char *)malloc((strlen(baseman_project_path)*2+strlen(package_path)+strlen(append)+20+1)*sizeof(char));
     strcpy(pname,package_path);
     int p=strlen(pname);
-
     for(unsigned int i=0;i<strlen(baseman_project_path);i++)
     {
         if(baseman_project_path[i]=='/')
@@ -806,81 +471,48 @@ char *construct_package_path(const char *baseman_project_path,const char *packag
     }
     pname[p]=0;
     strcat(pname,append);
-
     return pname;
 }
-
-/**bmc
-lp_dotar:b
-{
-    name="dotar";
-    desc="If <i>dotar</i> is set to @kw.true, the function executes the unpack script <code>bmsetup_unpack.sh</code>.";
-    direction="";
-}
-*/
-/**bmc
-DEF install:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Installs a software package.";
-    param:lp_baseman_project_path{};
-    param:lp_package_path{};
-    param:lp_dotar{};
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-    remark:r_security{};
-}
-*/
 int install(const char *baseman_project_path,const char *package_path,bool dotar)
 {
     printf("installing %s:\n",baseman_project_path);
-
     char *pname=construct_package_path(baseman_project_path,package_path,"/");
-
     if(dotar)
     {
         //unpack tar
         run_script(baseman_project_path,package_path,"unpack");
     }
-
     strcat(pname,"setup.info");
     AbsSettings *s=AbsSettingsInterface::createSettings();
     if(s->loadfile(pname))
     {
         std::string base=s->get("setup","base");// has to exist in baselist.csv
         std::string path=s->get("setup","file-system-path");// path rel. to base path.
-
         char *base_path=get_base_path(base.c_str());
         if(base_path)
         {
             char *version_path=(char *)malloc((strlen(base_path)+strlen(path.c_str())+1)*sizeof(char));
             strcpy(version_path,base_path);
             strcat(version_path,path.c_str());
-
             //copy project files
             pname[strlen(pname)-10]=0;
             dir::copydir(version_path,pname);
-
             int n=s->getNameCount("info-files");
             for(int i=0;i<n;i++)
             {
                 std::string info_filename=s->getNextName("info-files");
                 std::string info_contents=s->get("info-files",info_filename);
-
                 std::string info_filepath=base_path;
                 info_filepath=info_filepath+info_filename;
-
                 unsigned int content_length=base64::decode_length(info_contents.c_str());
                 void *content=base64::decode(info_contents.c_str());
                 // content ist not null-terminated!
                 printf("create file %s ... ",info_filepath.c_str());
                 file::writefile(info_filepath.c_str(),content,content_length);
                 free(content);
-
                 //import
                 import_info(info_filepath.c_str());
             }
-
             free(version_path);
             free(base_path);
         }
@@ -893,64 +525,28 @@ int install(const char *baseman_project_path,const char *package_path,bool dotar
     {
         printf("Setup file is missing. Cannot find %s.\n",pname);
     }
-
     delete s;
-
     free(pname);
-
     return 0;
 }
-
-/**bmc
-lp_publish_path:ccp
-{
-    name="publish_path";
-    desc="The path to the directory, where downloaded software packages are stored.";
-    direction="IN";
-}
-lp_dotar2:b
-{
-    name="dotar";
-    desc="If <i>dotar</i> is set to @kw.true, the function executes the pack script <code>bmsetup_pack.sh</code>.";
-    direction="";
-}
-*/
-/**bmc
-DEF publish:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Creates a shareable software package.";
-    param:lp_baseman_project_path{};
-    param:lp_publish_path{};
-    param:lp_dotar2{};
-    return:i="Returns 0.";
-    docu{THEINTERFACE;};
-    remark:r_security{};
-}
-*/
 int publish(const char *baseman_project_path,const char *publish_path,bool dotar)
 {
     printf("publishing %s:\n",baseman_project_path);
-
     char *base_path;
     char *project_path;
     char *version_path;
     char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
-
     if(base_path)
     {
         char *pname=construct_package_path(baseman_project_path,publish_path,"/");
-
         //copy project files
         dir::copydir(pname,version_path);
-
         //copy .info files
         AbsSettings *s=AbsSettingsInterface::createSettings();
         s->set("setup","base",loc[0]);
         s->set("setup","baseman-location",baseman_project_path);
         s->set("setup","file-system-path",&version_path[strlen(base_path)]);
         s->set("setup","package-path",pname);
-
         unsigned int len;
         char **v=strman::explode("/",&version_path[strlen(base_path)]);
         char *currpath=(char *)malloc((strlen(version_path)*2+1)*sizeof(char));
@@ -973,62 +569,29 @@ int publish(const char *baseman_project_path,const char *publish_path,bool dotar
         }
         strman::explode_free(v);
         free(currpath);
-
         strcat(pname,"setup.info");
         s->save2(pname);
         delete s;
         pname[strlen(pname)-10]=0;
-
         if(dotar)
         {
             //create tar
             run_script(baseman_project_path,publish_path,"pack");
         }
-
         free(pname);
     }
-
     if(version_path)free(version_path);
     if(project_path)free(project_path);
     if(base_path)free(base_path);
-
     strman::explode_free(loc);
-
     return 0;
 }
-
-/**bmc
-lp_base_name:ccp
-{
-    name="base_name";
-    desc="The null-terminated name of an existing base within baseman.";
-    direction="IN";
-}
-*/
-/**bmc
-DEF get_base_path:FUNCTION
-{
-    function="@this.parent.NAME";
-    brief="Determines the path to the base <i>base_name</i>.";
-    xinfo
-    {
-        ->
-        <-
-    };
-    param:lp_base_name{};
-    return:i="Returns the path to the base or @kw.null, if the base does not exist.";
-    docu{THEINTERFACE;};
-    remark:r_retfree{};
-}
-*/
 char *get_base_path(const char *base_name)
 {
     AbsCsvData *data=AbsCsvDataInterface::createCsvData();
-
     data->load(BMSETUP_BASELIST_PATH);
     data->useHeader(true);
     int path_id=data->getHeaderId("path");
-
     AbsCsvRecord **rec=data->getAllRecords("name",base_name);
     if(rec)
     {
@@ -1052,27 +615,22 @@ char *get_base_path(const char *base_name)
     delete data;
     return 0;
 }
-
 char *get_project_path(char *base_path,char **loc,int *pos)
 {
     unsigned int current_path_memlen=256+strlen(base_path);
     char *current_path=(char *)malloc((current_path_memlen+1)*sizeof(char));
     strcpy(current_path,base_path);
-
     for(;*pos<strman::explode_count(loc);(*pos)++)
     {
         AbsCsvData *data=AbsCsvDataInterface::createCsvData();
         bool project_found=false;
         bool error_status=false;
-
         char *project_file_path=(char *)malloc((current_path_memlen+12+1)*sizeof(char));
         strcpy(project_file_path,current_path);
         strcat(project_file_path,"projects.csv");
-
         data->load(project_file_path);
         data->useHeader(true);
         int path_id=data->getHeaderId("path");
-
         AbsCsvRecord **rec=data->getAllRecords("name",loc[*pos]);
         if(rec)
         {
@@ -1122,26 +680,21 @@ char *get_project_path(char *base_path,char **loc,int *pos)
     }
     return current_path;
 }
-
 char *get_version_path(char *project_path,char **loc,int *pos)
 {
     unsigned int current_path_memlen=256+strlen(project_path);
     char *current_path=(char *)malloc((current_path_memlen+1)*sizeof(char));
     strcpy(current_path,project_path);
-
     for(;*pos<strman::explode_count(loc);(*pos)++)
     {
         AbsCsvData *data=AbsCsvDataInterface::createCsvData();
         bool version_found=false;
-
         char *version_file_path=(char *)malloc((current_path_memlen+12+1)*sizeof(char));
         strcpy(version_file_path,current_path);
         strcat(version_file_path,"versions.csv");
-
         data->load(version_file_path);
         data->useHeader(true);
         int path_id=data->getHeaderId("path");
-
         AbsCsvRecord **rec=data->getAllRecords("version",loc[*pos]);
         if(rec)
         {
@@ -1184,12 +737,10 @@ char *get_version_path(char *project_path,char **loc,int *pos)
     }
     return current_path;
 }
-
 void bmsetup::print_usage()
 {
     printf(BMSETUP_USAGE);
 }
-
 void bmsetup::patch_basemanpath_parameter(char *path)
 {
     if(path[strlen(path)-1]=='/')path[strlen(path)-1]=0;
@@ -1224,7 +775,6 @@ void bmsetup::patch_basemanpath_parameter(char *path)
         path[i-1]=0;
     }
 }
-
 void bmsetup::print_error_line(const char *msg)
 {
     bool instr=true;
@@ -1250,7 +800,6 @@ void bmsetup::print_error_line(const char *msg)
     }
     printf("\n");
 }
-
 void bmsetup::print_error(const char *msg)
 {
     print_error_line("");
@@ -1262,32 +811,6 @@ void bmsetup::print_error(const char *msg)
     printf("%c[%dm",27,0);
     printf("Use 'bmsetup help' for more information.\n");
 }
-
-/**bmc
-lp_argc:i
-{
-    name="argc";
-    desc="The number of command-line parameters.";
-}
-lp_argv:cpp
-{
-    name="argv";
-    desc="The command-line parameters.";
-    direction="IN";
-}
-*/
-/**bmc
-DEF main:POINTER
-{
-    class="bmsetup";
-    function="@this.parent.NAME";
-    brief="Runs <code>bmsetup</code> as if it would be called from the command-line.";
-    param:lp_argc{};
-    param:lp_argv{};
-    return:i="Exit status. <b>bmsetup</b> always returns EXIT_SUCCESS(0).";
-    docu{THEINTERFACE;};
-}
-*/
 int bmsetup::main(int argc,char **argv)
 {
     if(argc==1)
@@ -1423,6 +946,5 @@ int bmsetup::main(int argc,char **argv)
         //wrong command line parameter
         print_error("--- wrong command line parameter ---");
     }
-
     return EXIT_SUCCESS;
 }

@@ -2,7 +2,7 @@
 *                                                                              *
 *  osfile_win.h                                                                *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,12 +39,10 @@
 *******************************************************************************/
 #ifndef H_WWRAP_FILE_WIN
 #define H_WWRAP_FILE_WIN
-
 #include <windows.h>
 #include <stdio.h>
 #include <io.h>
 #include <wchar.h>
-
 class osfile
 {
 public:
@@ -78,11 +76,9 @@ public:
         long r;
         time_t rtime;
         _finddata_t d;
-
         r=_findfirst(filename,&d);
         rtime=d.time_write;
         _findclose(r);
-
         return rtime;
     }
     static time_t get_time_write(const wchar_t *filename)
@@ -90,11 +86,9 @@ public:
         long r;
         time_t rtime;
         _wfinddata_t d;
-
         r=_wfindfirst(filename,&d);
         rtime=d.time_write;
         _findclose(r);
-
         return rtime;
     }
     static unsigned long get_size(const char *filename)
@@ -102,11 +96,9 @@ public:
         long r;
         _fsize_t rsize;
         _finddata_t d;
-
         r=_findfirst(filename,&d);
         rsize=d.size;
         _findclose(r);
-
         return rsize;
     }
     static unsigned long get_size(const wchar_t *filename)
@@ -114,33 +106,26 @@ public:
         long r;
         _fsize_t rsize;
         _wfinddata_t d;
-
         r=_wfindfirst(filename,&d);
         rsize=d.size;
         _findclose(r);
-
         return rsize;
     }
     static bool testfile(const char *path)
     {
         long r;
         _finddata_t d;
-
         r=_findfirst(path,&d);
         _findclose(r);
-
         return r!=-1;
     }
     static bool testfile(const wchar_t *path)
     {
         long r;
         _wfinddata_t d;
-
         r=_wfindfirst(path,&d);
         _findclose(r);
-
         return r!=-1;
     }
 };
-
 #endif

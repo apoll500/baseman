@@ -2,7 +2,7 @@
 *                                                                              *
 *  dir.h                                                                       *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,48 +37,21 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-// dir.h
 #ifndef MOD_dir_H
 #define MOD_dir_H
-
-/*
-#include <windows.h>
-#include <stdio.h>
-#include <tchar.h>
-#include <io.h>
-
-#include <math.h>
-#include <time.h>
-#include <limits.h>
-
-//für _getdrives()
-#include<direct.h>
-*/
-
 #include <stdlib.h>
-
 #include "wwrap/str.h"
 #include "wwrap/osio.h"
 #include "wwrap/osdir.h"
 #include "wwrap/conststr.h"
-
 #ifdef OS_LIN
 #include <dirent.h>
-//#include <stdio.h>
-//#include <sys/types.h>
-//#include <sys/stat.h>
-//#include <unistd.h>
-
 #endif
-
 #define PROKEE_USE_INTERFACE
 #define PROKEE_USE_WRAPPER
 #include "dir/dir.hh"
-
 #include "file/file.hh"
-
 #include "dir/import/prokee.h"
-
 #ifdef OS_WIN
 template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
 {
@@ -92,7 +65,6 @@ public:
         dirpath=(T *)malloc((str::len(path)+5)*sizeof(T));
         str::cpy(dirpath,path);
         hfind=0;
-
         readdir_setup();
     }
     ~DIRECTORY_Impl()
@@ -230,244 +202,44 @@ public:
         }
     }
 };
-/*
-class DIRECTORY_Impl:public DIRECTORY<wchar_t>
-{
-public:
-    DIRECTORY_Impl(const wchar_t *)
-    {
-    }
-    ~DIRECTORY_Impl()
-    {
-    }
-    T *read()
-    {
-        return 0;
-    }
-    bool item_isdir()
-    {
-        return false;
-    }
-    void dirsep()
-    {
-    }
-};
-*/
-/*
-template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
-{
-    struct dirent *diritem;
-    DIR *ddir;
-    T *dirpath;
-    T currentItemName[1024];
-public:
-    DIRECTORY_Impl(const char *path)
-    {
-        dirpath=(T *)malloc((str::len(path)+1)*sizeof(T));
-        str::cpy(dirpath,path);
-        ddir=opendir(path);
-    }
-    DIRECTORY_Impl(const wchar_t *)
-    {
-        // --TODO--
-    }
-    ~DIRECTORY_Impl()
-    {
-        if(ddir)closedir(ddir);
-        free(dirpath);
-    }
-    T *read()
-    {
-        if(ddir)
-        {
-            diritem=readdir(ddir);
-            if(!diritem)
-            {
-                currentItemName[0]=0;
-                return currentItemName;
-            }
-            dirsep();
-        }
-        else
-        {
-            currentItemName[0]=0;
-        }
-        return currentItemName;
-    }
-    bool item_isdir()
-    {
-        struct stat sb;
-        T *a=(T *)malloc((str::len(dirpath)+str::len(diritem->d_name)+1)*sizeof(T));
-        str::cpy(a,dirpath);
-        str::cat(a,diritem->d_name);
-        if(lstat(a,&sb)==-1)
-        {
-            free(a);
-            perror("stat");
-            return false;
-        }
-        free(a);
-        if((sb.st_mode & S_IFMT)==S_IFDIR)
-        {
-            return true;
-        }
-        return false;
-    }
-    void dirsep()
-    {
-        str::cpy(currentItemName,diritem->d_name);
-        if(item_isdir())
-        {
-            T a[2];
-            str::cat(currentItemName,conststr::dirsep1(a));
-        }
-    }
-};
-*/
-#endif
 
-/*********************************************************************
-*                                                                    *
-*  Directory-Functions                                               *
-*                                                                    *
-*********************************************************************/
+#endif
 class dir
 {
 public:
-    /*****************************************************************
-    *                                                                *
-    *  getProgramDirectory()                                         *
-    *                                                                *
-    *****************************************************************/
-    template<class T> static T *getProgramDirectory(const T *param);
-    /*****************************************************************
-    *                                                                *
-    *  createdir()                                                   *
-    *                                                                *
-    *****************************************************************/
+    
+    
     template<class T> static int createdir(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  testdir()                                                     *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool testdir(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  deletedir()                                                   *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool deletedir(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  listdir()                                                     *
-    *                                                                *
-    *****************************************************************/
-    /*****************************************************************
-    *                                                                *
-    *  opendir()                                                     *
-    *                                                                *
-    *****************************************************************/
+    
+    
     template<class T> static DIRECTORY<T> *opendir(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  getNextItem()                                                 *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static T *getNextItem(DIRECTORY<T> *d);
-    /*****************************************************************
-    *                                                                *
-    *  getItemCount()                                                *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static int getItemCount(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  inEmpty()                                                     *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool isEmpty(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  resetdir()                                                    *
-    *                                                                *
-    *****************************************************************/
-    /*****************************************************************
-    *                                                                *
-    *  getAllItems()                                                 *
-    *                                                                *
-    *****************************************************************/
-    /*****************************************************************
-    *                                                                *
-    *  closedir()                                                    *
-    *                                                                *
-    *****************************************************************/
+    
+    
     template<class T> static bool closedir(DIRECTORY<T> *d);
-    /*****************************************************************
-    *                                                                *
-    *  renamedir()                                                   *
-    *                                                                *
-    *****************************************************************/
-    /*****************************************************************
-    *                                                                *
-    *  movedir()                                                     *
-    *                                                                *
-    *****************************************************************/
-    /*****************************************************************
-    *                                                                *
-    *  tree()                                                        *
-    *                                                                *
-    *****************************************************************/
+    
+    
     template<class T> static bool printtree(const T *path,int depth);
     template<class T> static bool walktree(const T *path,TreeWalkCallback<T> *cb);
     template<class T> static bool walktree(const T *path,TreeWalkCallback<T> *cb,int level,int maxlevel);
     template<class T> static bool walkflat(const T *path,TreeWalkCallback<T> *cb);
-    /*****************************************************************
-    *                                                                *
-    *  copydir()                                                     *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool copydir(const T *targetpath,const T *sourcepath);
     template<class T> static bool copydir(const T *targetpath,const T *sourcepath,const T *directory);
     template<class T> static bool copydir(const T *targetpath,const T *sourcepath,CondCopyControl<T> *cc);
     template<class T> static bool copydir(const T *targetpath,const T *sourcepath,const T *directory,CondCopyControl<T> *cc);
 };
-
 #include "dir/import/modules.h"
 
-/*****************************************************************
-*                                                                *
-*  getProgramDirectory()                                         *
-*                                                                *
-*****************************************************************/
-template<class T> T *dir::getProgramDirectory(const T *param)
-{
-    T *path=path::pnopath(param);
-    //In case, if a relative path is given. (prepend current working directory)
-    if(!(path::pathtype(path) & PATH_ABS))
-    {
-        //finding out current directory:
-        //  POSIX:   getcwd()
-        //  ISO:     _getcwd() and _wgetcwd() ... (Not included in C-Runtime Library?)
-        //  WINDOWS: GetCurrentDirectory()
-        T *cwd=osdir::oscwd((T *)0,0);//Argument 0 lets the Funktion allocate the required memory.
-        if(cwd!=0)
-        {
-            T a[CONSTSTR_MAXSEPS];
-            cwd=(T *)realloc(cwd,(str::len(cwd)+str::len(path)+2)*sizeof(T));
-            str::cat(cwd,conststr::dirsep1(a));
-            str::cat(cwd,path);
-            free(path);
-            path=cwd;
-        }
-    }
-    return path;
-}
-/*****************************************************************
-*                                                                *
-*  createdir()                                                   *
-*                                                                *
-*****************************************************************/
 template<class T> int dir::createdir(const T *path)
 {
     int retval=0;
@@ -492,41 +264,11 @@ template<class T> int dir::createdir(const T *path)
     free(directory);
     return retval;
 }
-/*****************************************************************
-*                                                                *
-*  testdir()                                                     *
-*                                                                *
-*****************************************************************/
 template<class T> bool dir::testdir(const T *path)
 {
     //Testet ob das angegebene Verzeichnis existiert.
 #ifdef OS_WIN
-    /*
-    //-------------------------------------------------
-    //VERSION A:
-    //  Suche nach /"*". (Problem mit Ext2Fsd)
-    //-------------------------------------------------
-    bool h=false;
-    HANDLE hfind=0;
-    myWIN32_FIND_DATA filedata((T *)0);
-    T *directory=(T *)malloc((str::len(path)+5)*sizeof(T));
-    //Suchpfad
-    str::cpy(directory,path);
-    // * für Suchpfad anhängen
-    T a[3];
-    str::cat(directory,conststr::cast(a,"*"));
-    //Verzeichnis einlesen
-    filedata.get((T *)0)->cFileName[0]=0;
-    hfind=osdir::myFindFirstFile(directory,filedata.get((T *)0));
-    //ersten Eintrag einlesen
-    if(hfind!=INVALID_HANDLE_VALUE)// && filedata.cFileName[0]!=0)
-    {
-        h=true;
-    }
-    if(hfind!=0)FindClose(hfind);
-    free(directory);
-    return h;
-    */
+    
     //-------------------------------------------------
     //VERSION B:
     //  Notwendig fuer Ext2Fsd.
@@ -568,11 +310,6 @@ template<class T> bool dir::testdir(const T *path)
     return true;
 #endif
 }
-/*****************************************************************
-*                                                                *
-*  deletedir()                                                   *
-*                                                                *
-*****************************************************************/
 template<class T> bool dir::deletedir(const T *path)
 {
     //OS_WIN
@@ -580,13 +317,11 @@ template<class T> bool dir::deletedir(const T *path)
     {
         return false;
     }
-
     //OS_LIN
     if(path[0]==0)
     {
         return false;
     }
-
     if(dir::isEmpty(path))
     {
         //osio::print("%s EMPTY\n",path);
@@ -627,22 +362,12 @@ template<class T> bool dir::deletedir(const T *path)
         return false;
     }
 }
-/*****************************************************************
-*                                                                *
-*  listdir()                                                     *
-*                                                                *
-*****************************************************************/
 template<class T> DIRECTORY<T> *dir::opendir(const T *path)
 {
     DIRECTORY<T> *d=new DIRECTORY_Impl<T>(path);
     //d->readdir_setup();
     return d;
 }
-/*****************************************************************
-*                                                                *
-*  getNextItem()                                                 *
-*                                                                *
-*****************************************************************/
 template<class T> T *dir::getNextItem(DIRECTORY<T> *d)
 {
     T a[4];
@@ -654,17 +379,10 @@ template<class T> T *dir::getNextItem(DIRECTORY<T> *d)
     }
     return item;
 }
-/*****************************************************************
-*                                                                *
-*  getItemCount()                                                *
-*                                                                *
-*****************************************************************/
 template<class T> int dir::getItemCount(const T *path)
 {
     int cnt=0;
-
     DIRECTORY<T> *d=new DIRECTORY_Impl<T>(path);
-
     T *a=0;
     while(a==0 || a[0]!=0)
     {
@@ -674,73 +392,33 @@ template<class T> int dir::getItemCount(const T *path)
             cnt++;
         }
     }
-
     delete d;
-
     return cnt;
 }
-/*****************************************************************
-*                                                                *
-*  inEmpty()                                                     *
-*                                                                *
-*****************************************************************/
 template<class T> bool dir::isEmpty(const T *path)
 {
     bool retVal=true;
-
     DIRECTORY<T> *d=new DIRECTORY_Impl<T>(path);
-
     T *a=dir::getNextItem(d);
     if(a[0]!=0)
     {
         retVal=false;
     }
-
     delete d;
-
     return retVal;
 }
-/*****************************************************************
-*                                                                *
-*  resetdir()                                                    *
-*                                                                *
-*****************************************************************/
-/*****************************************************************
-*                                                                *
-*  getAllItems()                                                 *
-*                                                                *
-*****************************************************************/
-/*****************************************************************
-*                                                                *
-*  closedir()                                                    *
-*                                                                *
-*****************************************************************/
+
 template<class T> bool dir::closedir(DIRECTORY<T> *d)
 {
     delete d;
     return true;
 }
-/*****************************************************************
-*                                                                *
-*  renamedir()                                                   *
-*                                                                *
-*****************************************************************/
-/*****************************************************************
-*                                                                *
-*  movedir()                                                     *
-*                                                                *
-*****************************************************************/
-/*****************************************************************
-*                                                                *
-*  tree()                                                        *
-*                                                                *
-*****************************************************************/
+
 template<class T> bool dir::printtree(const T *path,int depth)
 {
     if(path::pathtype(path) & PATH_DIR)
     {
         DIRECTORY<T> *sd=dir::opendir(path);
-
         T *a=0;
         while(a==0 || a[0]!=0)
         {
@@ -756,7 +434,6 @@ template<class T> bool dir::printtree(const T *path,int depth)
                 }
             }
         }
-
         dir::closedir(sd);
         return true;
     }
@@ -771,7 +448,6 @@ template<class T> bool dir::walktree(const T *path,TreeWalkCallback<T> *cb)
     if(path::pathtype(path) & PATH_DIR)
     {
         DIRECTORY<T> *sd=dir::opendir(path);
-
         T *a=0;
         while(a==0 || a[0]!=0)
         {
@@ -795,7 +471,6 @@ template<class T> bool dir::walktree(const T *path,TreeWalkCallback<T> *cb)
                 free(np);
             }
         }
-
         dir::closedir(sd);
         return true;
     }
@@ -811,7 +486,6 @@ template<class T> bool dir::walktree(const T *path,TreeWalkCallback<T> *cb,int l
     if(path::pathtype(path) & PATH_DIR)
     {
         DIRECTORY<T> *sd=dir::opendir(path);
-
         T *a=0;
         while(a==0 || a[0]!=0)
         {
@@ -835,7 +509,6 @@ template<class T> bool dir::walktree(const T *path,TreeWalkCallback<T> *cb,int l
                 free(np);
             }
         }
-
         dir::closedir(sd);
         return true;
     }
@@ -851,7 +524,6 @@ template<class T> bool dir::walkflat(const T *path,TreeWalkCallback<T> *cb)
     if(path::pathtype(path) & PATH_DIR)
     {
         DIRECTORY<T> *sd=dir::opendir(path);
-
         T *a=0;
         while(a==0 || a[0]!=0)
         {
@@ -871,7 +543,6 @@ template<class T> bool dir::walkflat(const T *path,TreeWalkCallback<T> *cb)
                 free(np);
             }
         }
-
         dir::closedir(sd);
         return true;
     }
@@ -882,20 +553,13 @@ template<class T> bool dir::walkflat(const T *path,TreeWalkCallback<T> *cb)
         return false;
     }
 }
-/*****************************************************************
-*                                                                *
-*  copydir()                                                     *
-*                                                                *
-*****************************************************************/
 template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath)
 {
     if((path::pathtype(sourcepath) & PATH_DIR) && (path::pathtype(targetpath) & PATH_DIR))
     {
         //in case of empty directories.
         dir::createdir(targetpath);
-
         DIRECTORY<T> *sd=dir::opendir(sourcepath);
-
         T *a=0;
         while(a==0 || a[0]!=0)
         {
@@ -906,9 +570,7 @@ template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath)
                 return false;
             }
         }
-
         dir::closedir(sd);
-
         return true;
     }
     else
@@ -920,17 +582,13 @@ template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath,cons
 {
     T *a=(T *)malloc((str::len(sourcepath)+str::len(directory)+2)*sizeof(T));
     T *b=(T *)malloc((str::len(targetpath)+str::len(directory)+2)*sizeof(T));
-
     str::cpy(a,sourcepath);
     str::cat(a,directory);
     str::cpy(b,targetpath);
     str::cat(b,directory);
-
     bool retVal=dir::copydir(b,a);
-
     free(a);
     free(b);
-
     return retVal;
 }
 template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath,CondCopyControl<T> *cc)
@@ -939,9 +597,7 @@ template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath,Cond
     {
         if(!cc->ignoreEmptyDir(targetpath))
             dir::createdir(targetpath);
-
         DIRECTORY<T> *sd=dir::opendir(sourcepath);
-
         T *a=0;
         while(a==0 || a[0]!=0)
         {
@@ -952,9 +608,7 @@ template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath,Cond
                 return false;
             }
         }
-
         dir::closedir(sd);
-
         return true;
     }
     else
@@ -966,18 +620,13 @@ template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath,cons
 {
     T *a=(T *)malloc((str::len(sourcepath)+str::len(directory)+2)*sizeof(T));
     T *b=(T *)malloc((str::len(targetpath)+str::len(directory)+2)*sizeof(T));
-
     str::cpy(a,sourcepath);
     str::cat(a,directory);
     str::cpy(b,targetpath);
     str::cat(b,directory);
-
     bool retVal=dir::copydir(b,a,cc);
-
     free(a);
     free(b);
-
     return retVal;
 }
-
 #endif

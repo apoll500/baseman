@@ -2,7 +2,7 @@
 *                                                                              *
 *  CsvField.h                                                                  *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,64 +39,14 @@
 *******************************************************************************/
 #ifndef CsvField_H
 #define CsvField_H
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "csv/import/prokee.h"
 #include "csv.hh"
-//#include "CsvSettings.h"
 
 #define CSV_INI_FLD_LENGTH 128
 
-//==============================================================================
-// CsvField
-//==============================================================================
-/**bmc
-DEF AbsCsvField_INTERFACE:INTERFACE
-{
-    class="AbsCsvField";
-    no_interface_superclass="TRUE";
-    implclass="CsvField";
-    headers
-    {
-        ->
-        \#include <stdio.h>
-        class Reader;
-        <--
-    }
-    DEF docu
-    {
-        title="AbsCsvField";
-        //text="<pre>@parent.parent.code</pre>";
-        section:func.LSECTION
-        {
-            title="Motivation";
-            text
-            {
-                ->
-                <-
-            }
-        }
-    }
-}
-DEF PAGE_02:FILE,WEBP1
-{
-    THE_INTERFACE="AbsCsvField_INTERFACE";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
-}
-DEF AbsCsvField
-{
-    class="AbsCsvField";
-}
-DEF X:WRAPPER
-{
-    class="CsvField";
-    baseclass="AbsCsvField";
-}
-*/
 class CsvField:public AbsCsvField2
 {
 private:
@@ -117,5 +67,4 @@ public:
 //intern:
     bool match(const char *val);
 };
-
 #endif

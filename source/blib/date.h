@@ -2,7 +2,7 @@
 *                                                                              *
 *  date.h                                                                      *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,23 +39,18 @@
 *******************************************************************************/
 #ifndef H_BLIB_DATE
 #define H_BLIB_DATE
-
 #include "wwrap/osio.h"
 #include "wwrap/str.h"
-
 #include <stdlib.h>
 #include <time.h>
-
 class date
 {
 public:
     template<class T> static T *get_bdn(T *str);
 };
-
 template<class T> T *date::get_bdn(T *str)
 {
     const time_t t=time(0);
-
     struct tm *ti=gmtime(&t);
     osio::sprint(str,"%d",ti->tm_year+1900);
     int mon=ti->tm_mon+1;
@@ -66,8 +61,6 @@ template<class T> T *date::get_bdn(T *str)
     osio::sprint(&str[str::len(str)],"%d",day);
     str::cat(str,"_");
     osio::sprint(&str[str::len(str)],"%lu",t);
-
     return str;
 }
-
 #endif

@@ -1,3 +1,5 @@
+//../../../bmsetup/bmsetup.hh
+
 #ifndef PLIB_CLASS_bmsetup_all_hh
 #define PLIB_CLASS_bmsetup_all_hh
 

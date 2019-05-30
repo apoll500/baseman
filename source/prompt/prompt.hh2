@@ -1,0 +1,11 @@
+//../../../prompt/prompt.hh2
+
+#ifndef PLIB_CLASS_prompt_all_interface_factory
+#define PLIB_CLASS_prompt_all_interface_factory
+
+#ifdef PROKEE_USE_INTERFACE
+
+
+
+#endif
+#endif

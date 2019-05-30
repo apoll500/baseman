@@ -2,7 +2,7 @@
 *                                                                              *
 *  license_GPL3.h                                                              *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,7 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-#define LICENSE_GPL3 "\\n\
+#define LICENSE_GPL3 "\
+\n\
                     GNU GENERAL PUBLIC LICENSE\n\
                        Version 3, 29 June 2007\n\
 \n\

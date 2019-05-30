@@ -2,7 +2,7 @@
 *                                                                              *
 *  osdir_lin.h                                                                 *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,12 +39,10 @@
 *******************************************************************************/
 #ifndef H_WWRAP_DIR_LIN
 #define H_WWRAP_DIR_LIN
-
 #include <stdio.h>
 #include <dlfcn.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 class osdir
 {
 public:
@@ -91,5 +89,4 @@ public:
         return 0;
     }
 };
-
 #endif

@@ -2,7 +2,7 @@
 *                                                                              *
 *  file.cpp                                                                    *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,20 +37,11 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-// file.cpp
-
 #include "file.h"
-
-/*****************************************************************
-*                                                                *
-*  copyfile()                                                    *
-*                                                                *
-*****************************************************************/
 bool file::copyfile(FILE *targetfile,FILE *sourcefile)
 {
     char a[BUFSIZ];
     size_t ln=1;
-
     while(ln)
     {
         ln=fread(a,1,BUFSIZ,sourcefile);
@@ -62,7 +53,6 @@ bool file::copyfile(int targetfile,int sourcefile)
 {
     char a[BUFSIZ];
     size_t ln=1;
-
     while(ln>0)
     {
         ln=read(sourcefile,a,BUFSIZ);
@@ -70,16 +60,10 @@ bool file::copyfile(int targetfile,int sourcefile)
     }
     return true;
 }
-/*****************************************************************
-*                                                                *
-*  readfile()                                                    *
-*                                                                *
-*****************************************************************/
 void *file::readfile(FILE *f,char *data)
 {
     size_t ln=1;
     size_t bytecount=0;
-
     while(ln)
     {
         ln=fread(&data[bytecount],1,BUFSIZ,f);
@@ -87,15 +71,7 @@ void *file::readfile(FILE *f,char *data)
     }
     return data;
 }
-//int file::read_bytes(FILE *f,char *data,unsigned int length)
-//{
-//    return fread(data,1,length,f);
-//}
-/*****************************************************************
-*                                                                *
-*  writefile()                                                   *
-*                                                                *
-*****************************************************************/
+
 int file::writefile(FILE *file,void *data,unsigned int length)
 {
     return fwrite(data,1,length,file);

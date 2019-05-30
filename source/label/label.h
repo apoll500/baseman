@@ -2,7 +2,7 @@
 *                                                                              *
 *  label.h                                                                     *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,45 +37,23 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-// label.h
 #ifndef MOD_label_H
 #define MOD_label_H
-
 #ifdef OS_WIN
-//_getdrives()
 #include<direct.h>
 #endif
-
 #ifdef OS_LIN
 #include <stdlib.h>
 #endif
-
 #include "label/import/prokee.h"
-
 class label
 {
 public:
-    /*****************************************************************
-    *                                                                *
-    *  createlabel()                                                 *
-    *                                                                *
-    *****************************************************************/
-    //template<class T> static int createlabel(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  testlabel()                                                   *
-    *                                                                *
-    *****************************************************************/
+    
     template<class T> static bool testlabel(const T *path);
-    /*****************************************************************
-    *                                                                *
-    *  getlabels()                                                   *
-    *                                                                *
-    *****************************************************************/
+    
 };
-
 #include "label/import/modules.h"
-
 #ifdef OS_WIN
 template<class T> bool label::testlabel(const T *path)
 {
@@ -86,11 +64,11 @@ template<class T> bool label::testlabel(const T *path)
     }
     return false;
 }
-#elif defined OS_LIN
+#endif
+#ifdef OS_LIN
 template<class T> bool label::testlabel(const T *)
 {
     return false;
 }
 #endif
-
 #endif

@@ -2,7 +2,7 @@
 *                                                                              *
 *  CsvRecord.h                                                                 *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,62 +39,13 @@
 *******************************************************************************/
 #ifndef CsvRecord_H
 #define CsvRecord_H
-
 #include <stdio.h>
-
 #include "csv/import/prokee.h"
 #include "csv.hh"
-
 #define CSV_INI_REC_LENGTH 16
-
 class CsvData;
 class CsvField;
 
-//==============================================================================
-// CsvRecord
-//==============================================================================
-/**bmc
-DEF AbsCsvRecord_INTERFACE:INTERFACE
-{
-    class="AbsCsvRecord";
-    no_interface_superclass="TRUE";
-    implclass="CsvRecord";
-    headers
-    {
-        ->
-        <--
-    }
-    DEF docu
-    {
-        title="AbsCsvRecord";
-        //text="<pre>@parent.parent.code</pre>";
-        section:func.LSECTION
-        {
-            title="Motivation";
-            text
-            {
-                ->
-                <-
-            }
-        }
-    }
-}
-DEF PAGE_02:FILE,WEBP1
-{
-    THE_INTERFACE="AbsCsvRecord_INTERFACE";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
-}
-DEF AbsCsvRecord
-{
-    class="AbsCsvRecord";
-}
-DEF X:WRAPPER
-{
-    class="CsvRecord";
-    baseclass="AbsCsvRecord";
-}
-*/
 class CsvRecord:public AbsCsvRecord2
 {
 private:
@@ -125,10 +76,5 @@ public:
     void print_ln(FILE *f);
     void print_ln(FILE *f,int *col);
 };
-
-//#include "CsvData.h"
-////#include "CsvRecord.h"
-//#include "CsvField.h"
-//#include "CsvSettings.h"
 
 #endif

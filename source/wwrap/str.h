@@ -2,7 +2,7 @@
 *                                                                              *
 *  str.h                                                                       *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -38,13 +38,10 @@
 *                                                                              *
 *******************************************************************************/
 //str/code/v01/files/source/wwrap/str.h
-
 #ifndef MOD_str_H
 #define MOD_str_H
-
 #include <wchar.h>
 #include <string.h>
-
 class str
 {
 public:
@@ -117,5 +114,4 @@ public:
         return a[i]-b[i];
     }
 };
-
 #endif

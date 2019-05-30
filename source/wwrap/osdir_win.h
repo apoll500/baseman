@@ -2,7 +2,7 @@
 *                                                                              *
 *  osdir_win.h                                                                 *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,7 +39,6 @@
 *******************************************************************************/
 #ifndef H_WWRAP_DIR_WIN
 #define H_WWRAP_DIR_WIN
-
 #ifdef OS_WIN
 #include <windows.h>
 #include <wchar.h>
@@ -51,7 +50,6 @@
 //getcwd
 #include <unistd.h>
 #endif
-
 class myWIN32_FIND_DATA
 {
 public:
@@ -66,7 +64,6 @@ public:
     {
         isw=true;
     }
-
     wchar_t *get_cFileName(const wchar_t *a)
     {
         return dataW.cFileName;
@@ -75,7 +72,6 @@ public:
     {
         return dataA.cFileName;
     }
-
     WIN32_FIND_DATAW *get(const wchar_t *a)
     {
         return &dataW;
@@ -89,7 +85,6 @@ public:
         if(isw)return &dataW;
         return &dataA;
     }
-
     void setnull_cFileName()
     {
         dataA.cFileName[0]=0;
@@ -104,11 +99,9 @@ public:
         str::cat(dataW.cFileName,a);
     }
 };
-
 class osdir
 {
 public:
-
     static int mk(const char *a)
     {
         return _mkdir(a);//mkdir() ist depricated.
@@ -117,7 +110,6 @@ public:
     {
         return _wmkdir(a);
     }
-
     static int rm(const char *a)
     {
         return !RemoveDirectoryA(a);
@@ -126,7 +118,6 @@ public:
     {
         return !RemoveDirectoryW(a);
     }
-
     static wchar_t *oscwd()
     {
         return _wgetcwd(0,0);//Argument 0,0 lets the Funktion allocate the required memory.
@@ -139,7 +130,6 @@ public:
     {
         return _wgetcwd(a,n);
     }
-
     static HANDLE myFindFirstFile(char *directory,myWIN32_FIND_DATA *fdata)
     {
         return myFindFirstFile(directory,fdata->get(directory));
@@ -152,7 +142,6 @@ public:
     {
         return FindFirstFileW(directory,fdata);
     }
-
     static bool myFindNextFile(HANDLE hfind,myWIN32_FIND_DATA *fdata)
     {
         if(fdata->isw)return FindNextFileA(hfind,&fdata->dataA);
@@ -167,5 +156,4 @@ public:
         return FindNextFileW(hfind,fdata);
     }
 };
-
 #endif

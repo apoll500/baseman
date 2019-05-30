@@ -2,7 +2,7 @@
 *                                                                              *
 *  osdir_wwin.h                                                                *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,21 +39,8 @@
 *******************************************************************************/
 #ifndef H_WWRAP_DIR_WWIN
 #define H_WWRAP_DIR_WWIN
-
 //------------------------------------------------------------------------------
-/*
-#ifdef COMPILE_PROKEE_MODULE
-#define PROKEE_USE_WRAPPER
-//#include "strconv/functions/all.hfunc"
-//#include "strconv/functions/all.h"
-//#include "strconv/functions/all.hwrap0"
-#include "strconv/v01/module.h"
-#else
-#include "strconv/strconv.h"
-#endif
-*/
 //------------------------------------------------------------------------------
-
 //------------------------------------------------------------------------------
 #ifdef COMPILE_PROKEE_MODULE
 #ifndef COMPILE_PROKEE_MODULE_NO_STRCONV
@@ -66,11 +53,9 @@
 #include "strconv/strconv.h"
 #endif
 //------------------------------------------------------------------------------
-
 //------------------------------------------------------------------------------
 #include "wwrap/str.h"
 //------------------------------------------------------------------------------
-
 #ifdef OS_WIN
 #include <windows.h>
 #include <wchar.h>
@@ -82,7 +67,6 @@
 //getcwd
 #include <unistd.h>
 #endif
-
 class myWIN32_FIND_DATA
 {
 private:
@@ -99,7 +83,6 @@ public:
     {
         if(cFileName)free(cFileName);
     }
-
     wchar_t *get_cFileName(const wchar_t *)
     {
         return dataW.cFileName;
@@ -112,7 +95,6 @@ public:
         }
         return cFileName;
     }
-
     WIN32_FIND_DATAW *get(const void *)
     {
         return &dataW;
@@ -121,7 +103,6 @@ public:
     {
         return &dataW;
     }
-
     void setnull_cFileName()
     {
         dataW.cFileName[0]=0;
@@ -140,11 +121,9 @@ public:
         str::cat(dataW.cFileName,a);
     }
 };
-
 class osdir
 {
 public:
-
     static int mk(const char *a)
     {
         int retv=-1;
@@ -161,7 +140,6 @@ public:
     {
         return _wmkdir(a);
     }
-
     static int rm(const char *a)
     {
         int retv=-1;
@@ -183,7 +161,6 @@ public:
     {
         return !RemoveDirectoryW(a);
     }
-
     static wchar_t *oscwd()
     {
         return _wgetcwd(0,0);//Argument 0,0 lets the Funktion allocate the required memory.
@@ -197,7 +174,6 @@ public:
     {
         return _wgetcwd(a,n);
     }
-
     static HANDLE myFindFirstFile(char *directory,myWIN32_FIND_DATA *fdata)
     {
         HANDLE retv=0;
@@ -214,7 +190,6 @@ public:
     {
         return FindFirstFileW(directory,fdata->get());
     }
-
     static bool myFindNextFile(HANDLE hfind,myWIN32_FIND_DATA *fdata)
     {
         return FindNextFileW(hfind,fdata->get());
@@ -224,5 +199,4 @@ public:
         return FindNextFileW(hfind,fdata);
     }
 };
-
 #endif

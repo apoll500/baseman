@@ -2,7 +2,7 @@
 *                                                                              *
 *  settings.h                                                                  *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -38,10 +38,8 @@
 *                                                                              *
 *******************************************************************************/
 //settings/code/v01/files/source/settings/settings.h
-
 #ifndef MOD_settings_H
 #define MOD_settings_H
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <map>
@@ -49,66 +47,10 @@
 #include <string>
 #include <string.h>
 #include <algorithm>
-
 #include "settings/import/prokee.h"
-#include "settings/settings.hh"
-
 //==============================================================================
 // Settings
 //==============================================================================
-/**bmc
-DEF AbsSettings_INTERFACE:INTERFACE
-{
-    class="AbsSettings";
-    no_interface_superclass="TRUE";
-    implclass="Settings";
-    interface_subclass_show="TRUE";
-    interface_subclass="AbsMultiSettings";
-    //is_virtual="virtual";
-    headers
-    {
-        ->
-        #include <vector>
-        #include <map>
-        #include <string>
-        class Reader;
-        <--
-    }
-    DEF docu
-    {
-        title="AbsSettings";
-        //text="<pre>@parent.parent.code</pre>";
-        section:func.LSECTION
-        {
-            title="Motivation";
-            text
-            {
-                ->
-                <-
-            }
-        }
-    }
-}
-DEF PAGE_02:FILE,WEBP1
-{
-    THE_INTERFACE="AbsSettings_INTERFACE";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
-}
-DEF H3IFACE:FILE,H3INTERFACE
-{
-    THE_INTERFACE="AbsSettings_INTERFACE";
-}
-DEF AbsSettings
-{
-    class="AbsSettings";
-}
-DEF X:WRAPPER
-{
-    class="Settings";
-    baseclass="AbsSettings";
-}
-*/
 #include "h3_AbsSettings.h"
 class Settings:public AbsSettings3
 {
@@ -121,7 +63,6 @@ protected:
 public:
     Settings();
     virtual ~Settings();
-
     bool loadfile(const char *inifilename);
     bool loadfile(const char *inifilename,bool docreate);
     bool loadfile(FILE *f);
@@ -133,7 +74,6 @@ public:
     virtual int getDefBlockCount();
     virtual std::string getNextDefBlockName();
     virtual void updateDefBlockNames();
-
     virtual void insert(std::string defName,std::string name,std::string value);
     virtual void set(std::string defName,std::string name,std::string value);
     virtual void set(std::string defName,std::string name,int i,std::string value);
@@ -151,70 +91,9 @@ public:
     virtual void print_all(FILE *f);
     virtual void print_defBlock(FILE *f,std::string defName);
 };
-
 //==============================================================================
 // MultiSettings
 //==============================================================================
-/**bmc
-DEF AbsMultiSettings_INTERFACE:INTERFACE
-{
-    class="AbsMultiSettings";
-    interface_superclass="AbsSettings";
-    interface_superclass_impl="Settings";
-    implclass="MultiSettings";
-    headers
-    {
-        ->
-        class Reader;
-        <--
-    }
-    __add_mthods
-    {
-        ->
-            using AbsSettings::insert;
-            using AbsSettings::set;
-            using AbsSettings::get;
-            using AbsSettings::exists;
-            using AbsSettings::getNameCount;
-            using AbsSettings::getNextName;
-            using AbsSettings::getNextValue;
-        <-
-    }
-    DEF docu
-    {
-        title="AbsMultiSettings";
-        //text="<pre>@parent.parent.code</pre>";
-        section:func.LSECTION
-        {
-            title="Motivation";
-            text
-            {
-                ->
-                <-
-            }
-        }
-    }
-}
-DEF PAGE_02:FILE,WEBP1
-{
-    THE_INTERFACE="AbsMultiSettings_INTERFACE";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.html";
-    PATH="../../../../docu/html/@modname[]_@version[]@<@THE_INTERFACE>.class[text='_#']\.php";
-}
-DEF H3IFACE:FILE,H3INTERFACE
-{
-    THE_INTERFACE="AbsMultiSettings_INTERFACE";
-}
-DEF AbsMultiSettings
-{
-    class="AbsMultiSettings";
-}
-DEF X:WRAPPER
-{
-    class="MultiSettings";
-    baseclass="AbsMultiSettings";
-}
-*/
 #include "h3_AbsMultiSettings.h"
 class MultiSettings:virtual public Settings,public AbsMultiSettings3
 {
@@ -223,12 +102,10 @@ private:
 public:
     MultiSettings();
     virtual ~MultiSettings();
-
     virtual bool loadfile(const char *inifilename);
     virtual bool loadfile(const char *inifilename,bool);
     virtual void setSelectedDefBlockName(const char *defBlockName);
     virtual std::string getSelectedDefBlockName();
-
     using Settings::insert;
     using Settings::set;
     using Settings::get;
@@ -237,18 +114,7 @@ public:
     using Settings::getNameCount;
     using Settings::getNextName;
     using Settings::getNextValue;
-
-    /*
-    using AbsMultiSettings3::insert;
-    using AbsMultiSettings3::set;
-    using AbsMultiSettings3::get;
-    using AbsMultiSettings3::exists;
-    using AbsMultiSettings3::print_defBlock;
-    using AbsMultiSettings3::getNameCount;
-    using AbsMultiSettings3::getNextName;
-    using AbsMultiSettings3::getNextValue;
-    */
-
+    
     virtual void insert(std::string name,std::string value);
     virtual void set(std::string name,std::string value);
     virtual void set(std::string name,int i,std::string value);
@@ -263,9 +129,6 @@ public:
     virtual std::string getNextValue(std::string name);
     virtual void print_defBlock(FILE *f);
 };
-
 #include "settings/import/modules.h"
-
-#include "settings/settings.hh2"
 
 #endif

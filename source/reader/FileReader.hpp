@@ -2,7 +2,7 @@
 *                                                                              *
 *  FileReader.hpp                                                              *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,15 +39,12 @@
 *******************************************************************************/
 #ifndef FileReader_HPP
 #define FileReader_HPP
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <uchar.h>
-
 #include "macros/macros.h"
 #include "ReaderImpl.hpp"
-
 class FileReader:public ReaderImpl
 {
 protected:
@@ -61,7 +58,6 @@ public:
     virtual ~FileReader();
     virtual int getNextChar();
 };
-
 class WcsFileReader:public ReaderImpl
 {
 protected:
@@ -74,7 +70,6 @@ public:
     virtual ~WcsFileReader();
     virtual int getNextChar();
 };
-
 class Char16FileReader:public FileReader
 {
 public:
@@ -84,7 +79,6 @@ public:
     virtual ~Char16FileReader(){}
     virtual int getNextChar();
 };
-
 class Char32FileReader:public FileReader
 {
 public:
@@ -94,7 +88,6 @@ public:
     virtual ~Char32FileReader(){}
     virtual int getNextChar();
 };
-
 #include "h3_AbsUniFileReader.h"
 class UniFileReader:virtual public FileReader,public AbsUniFileReader3
 {
@@ -109,5 +102,4 @@ public:
     virtual int getCharSize();
     virtual void setCharSize(int csize);
 };
-
 #endif

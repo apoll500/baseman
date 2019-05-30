@@ -2,7 +2,7 @@
 *                                                                              *
 *  osio_lin.h                                                                  *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,15 +39,12 @@
 *******************************************************************************/
 #ifndef H_WWRAP_OSIO_LIN
 #define H_WWRAP_OSIO_LIN
-
 #include <stdio.h>
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 typedef int(*external_print_t)(const char *);
-
 class osio
 {
 public:
@@ -84,13 +81,10 @@ public:
         int i;
         va_list args;
         va_start(args,format);
-
         i=vsnprintf(*buffer,0,format,args);
         *buffer=(char *)realloc(*buffer,(i+1)*sizeof(char));
         i=vsnprintf(*buffer,i+1,format,args);
-
         va_end(args);
-
         return i;
     }
     static int sprint(char **buffer,int buffer_ln,const char *format,...)
@@ -98,13 +92,10 @@ public:
         int i;
         va_list args;
         va_start(args,format);
-
         i=vsnprintf(*buffer,0,format,args);
         if(i>=buffer_ln)*buffer=(char *)realloc(*buffer,(i+1)*sizeof(char));
         i=vsnprintf(*buffer,i+1,format,args);
-
         va_end(args);
-
         return i;
     }
     static void set_xprint(int(*exprint)(const char *))
@@ -117,17 +108,13 @@ public:
         va_list args;
         va_start(args,format);
         char *buffer;
-
         i=vsnprintf(buffer,0,format,args);
         buffer=(char *)malloc((i+1)*sizeof(char));
         i=vsnprintf(buffer,i+1,format,args);
-
         if(external_print)i=external_print(buffer);
         else printf(buffer);
-
         free(buffer);
         va_end(args);
-
         return i;
     }
     //--------------------------------------------------------------------------
@@ -146,7 +133,5 @@ public:
         return 0;
     }
 };
-
 //external_print_t osio::external_print=0;
-
 #endif

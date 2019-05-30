@@ -2,7 +2,7 @@
 *                                                                              *
 *  osio.h                                                                      *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,13 +39,10 @@
 *******************************************************************************/
 #ifndef H_WWRAP_OSIO
 #define H_WWRAP_OSIO
-
 #include "macros/macros.h"
-
 #ifdef OS_LIN
 #include <stdarg.h>
 #endif
-
 #ifdef OS_WIN
 #ifdef OS_WIN_WCS
 #include "osio_wwin.h"
@@ -55,5 +52,4 @@
 #elif defined OS_LIN
 #include "osio_lin.h"
 #endif
-
 #endif

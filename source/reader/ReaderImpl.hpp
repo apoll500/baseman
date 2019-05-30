@@ -2,7 +2,7 @@
 *                                                                              *
 *  ReaderImpl.hpp                                                              *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,9 +39,7 @@
 *******************************************************************************/
 #ifndef Reader_HPP
 #define Reader_HPP
-
 #include "ReaderImpl.h"
-
 #include "h3_Reader.h"
 class ReaderImpl:public Reader3
 {
@@ -82,5 +80,4 @@ public:
     //virtual int getCharSize(){return 0;}
     //virtual void setCharSize(int){}
  };
-
 #endif

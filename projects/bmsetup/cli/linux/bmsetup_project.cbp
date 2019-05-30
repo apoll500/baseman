@@ -63,6 +63,7 @@
         <Unit filename="../../../../source/base64/base64.cpp" />
         <Unit filename="../../../../source/strman/strman.cpp" />
         <Unit filename="../../../../source/strconv/strconv.cpp" />
+        <Unit filename="../../../../source/prompt/prompt.cpp" />
         <Unit filename="../../../../source/reader/reader.cpp" />
         <Unit filename="../../../../source/reader/ReaderImpl.cpp" />
         <Unit filename="../../../../source/reader/FileReader.cpp" />
@@ -91,6 +92,7 @@
         <Unit filename="../../../../source/base64/base64.h" />
         <Unit filename="../../../../source/strman/strman.h" />
         <Unit filename="../../../../source/strconv/strconv.h" />
+        <Unit filename="../../../../source/prompt/prompt.h" />
         <Unit filename="../../../../source/reader/reader.h" />
         <Unit filename="../../../../source/reader/ReaderImpl.h" />
         <Unit filename="../../../../source/label/label.h" />

@@ -2,7 +2,7 @@
 *                                                                              *
 *  macros.h                                                                    *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -38,17 +38,11 @@
 *                                                                              *
 *******************************************************************************/
 //#include <stdlib.h>
-/*******************************************************************************
-*                                                                              *
-*                                                                              *
-*                                                                              *
-*******************************************************************************/
 //------------------------------------------------------------------------------
 // For specifying the target os, define one of the following:
 //    OS_LIN ... Linux
 //    OS_WIN ... Windows
 //------------------------------------------------------------------------------
-
 //------------------------------------------------------------------------------
 // Using wide characters
 //------------------------------------------------------------------------------
@@ -57,26 +51,8 @@
 #define UNICODE
 #define _UNICODE
 #endif
-
-/*******************************************************************************
-*  Macros specifying operating systems:                                        *
-*  __linux__    Linux                                                          *
-*  __sun        Solaris                                                        *
-*  __FreeBSD__  FreeBSD                                                        *
-*  __NetBSD__   NetBSD                                                         *
-*  __OpenBSD__  OpenBSD                                                        *
-*  __APPLE__    Mac OS X                                                       *
-*  __hpux       HP-UX                                                          *
-*  __osf__      Tru64 UNIX / DEC OSF1                                          *
-*  __sgi        Irix                                                           *
-*  _AIX         AIX                                                            *
-*  _WIN32                                                                      *
-*  _WIN64                                                                      *
-*******************************************************************************/
-
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))
-
 #ifdef OS_WIN
 //#ifdef __cplusplus
 #define DLL extern "C"
@@ -84,13 +60,10 @@
 #else
 #define DLL extern "C"
 #endif
-
 #if __cplusplus < 201103L
 #define CPP11
 #endif
-
 //------------------------------------------------------------------------------
 #ifdef OS_LIN
 #define SW_SHOW 5
 #endif
-

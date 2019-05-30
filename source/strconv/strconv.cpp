@@ -2,7 +2,7 @@
 *                                                                              *
 *  strconv.cpp                                                                 *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -37,9 +37,7 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-// strconv.cpp
 #include "strconv.h"
-
 char *strconv::to_str(char **str_out,unsigned int *str_out_ln,const char *str_in)
 {
     char *str_out_i;
@@ -51,25 +49,19 @@ char *strconv::to_str(char **str_out,unsigned int *str_out_ln,const char *str_in
     {
         str_out_i=0;
     }
-
     strcopy(&str_out_i,str_out_ln,str_in);
-
     if(str_out)
     {
         *str_out=str_out_i;
     }
-
     return str_out_i;
 }
-
 #ifdef OS_WIN
-
 char *strconv::to_str(char **str_out,unsigned int *str_out_ln,const wchar_t *str_in)
 {
     unsigned int str_out_ln_2;
     if(str_out_ln==0)str_out_ln_2=0;
     else str_out_ln_2=*str_out_ln;
-
     char *str_out_i;
     if(str_out)
     {
@@ -79,7 +71,6 @@ char *strconv::to_str(char **str_out,unsigned int *str_out_ln,const wchar_t *str
     {
         str_out_i=0;
     }
-
     //WideCharToMultiByte
     //    int WideCharToMultiByte(
     //      _In_      UINT    CodePage,
@@ -99,39 +90,31 @@ char *strconv::to_str(char **str_out,unsigned int *str_out_ln,const wchar_t *str
     //  6: output buffer size (0 for requesting the required size (this is in BYTES))
     //  7: pointer to default character (NULL for System default value)
     //  8: indicates if default character is used, can be set to NULL. (MUST be set to NULL for CP_UTF8)
-
     int length_in_bytes=WideCharToMultiByte(CP_UTF8,0,str_in,-1,str_out_i,0,NULL,NULL);
     if(length_in_bytes==0)
     {
         //WideCharToMultiByte: The function returns 0 if it does not succeed.
         return 0;
     }
-
     memory_alloc(&str_out_i,&str_out_ln_2,length_in_bytes+1);
     memory_check(&str_out_i,&str_out_ln_2,length_in_bytes);
-
     if(!WideCharToMultiByte(CP_UTF8,0,str_in,-1,str_out_i,length_in_bytes,NULL,NULL))
     {
         //WideCharToMultiByte: The function returns 0 if it does not succeed.
         return 0;
     }
-
     if(str_out_ln!=0)*str_out_ln=str_out_ln_2;
-
     if(str_out)
     {
         *str_out=str_out_i;
     }
-
     return str_out_i;
 }
-
 wchar_t *strconv::to_wcs(wchar_t **str_out,unsigned int *str_out_ln,const char *str_in)
 {
     unsigned int str_out_ln_2;
     if(str_out_ln==0)str_out_ln_2=0;
     else str_out_ln_2=*str_out_ln;
-
     wchar_t *str_out_i;
     if(str_out)
     {
@@ -141,7 +124,6 @@ wchar_t *strconv::to_wcs(wchar_t **str_out,unsigned int *str_out_ln,const char *
     {
         str_out_i=0;
     }
-
     //MultiByteToWideChar
     //    int MultiByteToWideChar(
     //      _In_      UINT   CodePage,
@@ -151,35 +133,27 @@ wchar_t *strconv::to_wcs(wchar_t **str_out,unsigned int *str_out_ln,const char *
     //      _Out_opt_ LPWSTR lpWideCharStr,
     //      _In_      int    cchWideChar
     //    );
-
     int length_in_characters=MultiByteToWideChar(CP_UTF8,0,str_in,-1,str_out_i,0);
     if(length_in_characters==0)
     {
         //MultiByteToWideChar: The function returns 0 if it does not succeed.
         return 0;
     }
-
     memory_alloc(&str_out_i,&str_out_ln_2,length_in_characters+1);
     memory_check(&str_out_i,&str_out_ln_2,length_in_characters);
-
     if(!MultiByteToWideChar(CP_UTF8,0,str_in,-1,str_out_i,length_in_characters))
     {
         //MultiByteToWideChar: The function returns 0 if it does not succeed.
         return 0;
     }
-
     if(str_out_ln!=0)*str_out_ln=str_out_ln_2;
-
     if(str_out)
     {
         *str_out=str_out_i;
     }
-
     return str_out_i;
 }
-
 #endif
-
 wchar_t *strconv::to_wcs(wchar_t **str_out,unsigned int *str_out_ln,const wchar_t *str_in)
 {
     wchar_t *str_out_i;
@@ -191,13 +165,10 @@ wchar_t *strconv::to_wcs(wchar_t **str_out,unsigned int *str_out_ln,const wchar_
     {
         str_out_i=0;
     }
-
     strcopy(&str_out_i,str_out_ln,str_in);
-
     if(str_out)
     {
         *str_out=str_out_i;
     }
-
     return str_out_i;
 }

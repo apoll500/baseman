@@ -1,0 +1,16 @@
+//inc/interface/import/all.fw../../../prompt/prompt.fw
+
+#ifndef PLIB_FUNCTION_prompt_iface_all_fw
+#define PLIB_FUNCTION_prompt_iface_all_fw
+
+#ifdef PROKEE_USE_INTERFACE
+
+//Interfaces
+
+
+//Factories
+
+
+#endif
+
+#endif

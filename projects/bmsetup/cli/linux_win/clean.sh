@@ -1,6 +1,5 @@
 #!/bin/sh
 #-------------------------------------------------------------------------------
-echo 'deleting...'
 rm -f ../../../../source/csv/csv.o
 rm -f ../../../../source/csv/CsvData.o
 rm -f ../../../../source/csv/CsvRecord.o
@@ -12,6 +11,7 @@ rm -f ../../../../source/path/path.o
 rm -f ../../../../source/base64/base64.o
 rm -f ../../../../source/strman/strman.o
 rm -f ../../../../source/strconv/strconv.o
+rm -f ../../../../source/prompt/prompt.o
 rm -f ../../../../source/reader/reader.o
 rm -f ../../../../source/reader/ReaderImpl.o
 rm -f ../../../../source/reader/FileReader.o

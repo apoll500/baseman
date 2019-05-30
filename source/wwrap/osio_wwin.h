@@ -2,7 +2,7 @@
 *                                                                              *
 *  osio_wwin.h                                                                 *
 *                                                                              *
-*  This file is part of "mods/baseman/cli". (this program)                     *
+*  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
 *  This source-file is also part of the prokee-module licensed under GPLv3.    *
 *                                                                              *
@@ -39,21 +39,8 @@
 *******************************************************************************/
 #ifndef H_WWRAP_OSIO_WWIN
 #define H_WWRAP_OSIO_WWIN
-
 //------------------------------------------------------------------------------
-/*
-#ifdef COMPILE_PROKEE_MODULE
-#define PROKEE_USE_WRAPPER
-//#include "strconv/functions/all.hfunc"
-//#include "strconv/functions/all.h"
-//#include "strconv/functions/all.hwrap0"
-#include "strconv/v01/module.h"
-#else
-#include "strconv/strconv.h"
-#endif
-*/
 //------------------------------------------------------------------------------
-
 //------------------------------------------------------------------------------
 #ifdef COMPILE_PROKEE_MODULE
 #ifndef COMPILE_PROKEE_MODULE_NO_STRCONV
@@ -66,13 +53,10 @@
 #include "strconv/strconv.h"
 #endif
 //------------------------------------------------------------------------------
-
 #include <stdio.h>
 #include <windows.h>
 #include <io.h>
-
 typedef int(*external_print_t)(const char *);
-
 class osio
 {
 public:
@@ -135,19 +119,14 @@ public:
         va_list args;
         va_start(args,format);
         char *buffer;
-
         i=vsnprintf(buffer,0,format,args);
         buffer=(char *)malloc((i+1)*sizeof(char));
         i=vsnprintf(buffer,i+1,format,args);
-
         if(external_print)i=external_print(buffer);
         else printf(buffer);
-
         free(buffer);
         va_end(args);
-
         return i;
     }
 };
-
 #endif

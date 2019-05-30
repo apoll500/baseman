@@ -33,6 +33,7 @@
 
 # Sonstige
 run.sh
+setup_code.sh
 
 #Code::Blocks
 *.layout
