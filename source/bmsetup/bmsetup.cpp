@@ -107,6 +107,20 @@ int run_script(const char *baseman_project_path,const char *package_path,const c
     free(unique_package_name);
     return 0;
 }
+int run_script2(const char *baseman_project_path,const char *package_path,const char *run_token,const char *username,const char *userpass)
+{
+    char *unique_package_name=construct_package_path(baseman_project_path,"","");
+    char *command=(char *)malloc((strlen(unique_package_name)+strlen(package_path)+strlen(run_token)+32)*sizeof(char));
+    char *un=base64::encode(username);
+    char *up=base64::encode(userpass);
+    sprintf(command,BMSETUP_INSTALLATION_PATH"bmsetup_%s.sh %s %s %s %s",run_token,package_path,unique_package_name,un,up);
+    free(un);
+    free(up);
+    system(command);
+    free(command);
+    free(unique_package_name);
+    return 0;
+}
 int download(const char *baseman_project_path,const char *package_path,bool update)
 {
     int ret=0;
@@ -131,6 +145,40 @@ int download(const char *baseman_project_path,const char *package_path,bool upda
                 file::remove(filename);
                 free(filename);
                 run_script(baseman_project_path,package_path,"download");
+            }
+        }
+        if(!file::testfile(plocal))
+        {
+            ret=1;
+        }
+        free(plocal);
+    }
+    if(version_path)free(version_path);
+    if(project_path)free(project_path);
+    if(base_path)free(base_path);
+    strman::explode_free(loc);
+    return ret;
+}
+int download2(const char *baseman_project_path,const char *package_path,bool update,const char *username,const char *userpass)
+{
+    int ret=0;
+    printf("downloading %s:\n",baseman_project_path);
+    char *base_path;
+    char *project_path;
+    char *version_path;
+    char **loc=get_all_paths(baseman_project_path,&base_path,&project_path,&version_path);
+    if(base_path)
+    {
+        char *plocal=construct_package_path(baseman_project_path,package_path,".tar.gz");
+        if(!file::testfile(plocal))
+        {
+            run_script2(baseman_project_path,package_path,"download",username,userpass);
+        }
+        else
+        {
+            if(update)
+            {
+                run_script2(baseman_project_path,package_path,"download",username,userpass);
             }
         }
         if(!file::testfile(plocal))

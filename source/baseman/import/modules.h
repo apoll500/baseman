@@ -45,6 +45,7 @@
 #ifndef COMPILE_PROKEE_MODULE
 
 //Include required modules
+#include "bmsetup/bmsetup.h"
 #include "csv/csv.h"
 #include "settings/settings.h"
 #include "reader/reader.h"
@@ -62,6 +63,9 @@
 #include "baseman/baseman.hh2"
 #endif
 
+#ifdef PROKEE_USE_INTERFACE
+#include "bmsetup/bmsetup.hh2"
+#endif
 #ifdef PROKEE_USE_INTERFACE
 #include "csv/csv.hh2"
 #endif

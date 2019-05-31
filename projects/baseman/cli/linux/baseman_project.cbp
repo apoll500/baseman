@@ -58,6 +58,7 @@
         <Unit filename="../../../../source/baseman/bm/version.cpp" />
         <Unit filename="../../../../source/baseman/cli/runclp.cpp" />
         <Unit filename="../../../../source/baseman/controllers/BmCopyControl.cpp" />
+        <Unit filename="../../../../source/bmsetup/bmsetup.cpp" />
         <Unit filename="../../../../source/csv/csv.cpp" />
         <Unit filename="../../../../source/csv/CsvData.cpp" />
         <Unit filename="../../../../source/csv/CsvRecord.cpp" />
@@ -74,6 +75,8 @@
         <Unit filename="../../../../source/path/path.cpp" />
         <Unit filename="../../../../source/strman/strman.cpp" />
         <Unit filename="../../../../source/strconv/strconv.cpp" />
+        <Unit filename="../../../../source/base64/base64.cpp" />
+        <Unit filename="../../../../source/prompt/prompt.cpp" />
         <Unit filename="../../../../source/label/label.cpp" />
         <Unit filename="../../../../source/baseman/cli/main.cpp" />
         
@@ -91,6 +94,7 @@
         <Unit filename="../../../../source/baseman/cli/runclp.h" />
         <Unit filename="../../../../source/baseman/controllers/BmCopyControl.h" />
         <Unit filename="../../../../source/baseman/controllers/MergeControler.h" />
+        <Unit filename="../../../../source/bmsetup/bmsetup.h" />
         <Unit filename="../../../../source/csv/csv.h" />
         <Unit filename="../../../../source/csv/CsvData.h" />
         <Unit filename="../../../../source/csv/CsvRecord.h" />
@@ -104,6 +108,8 @@
         <Unit filename="../../../../source/path/path.h" />
         <Unit filename="../../../../source/strman/strman.h" />
         <Unit filename="../../../../source/strconv/strconv.h" />
+        <Unit filename="../../../../source/base64/base64.h" />
+        <Unit filename="../../../../source/prompt/prompt.h" />
         <Unit filename="../../../../source/label/label.h" />
         <Extensions>
             <code_completion />

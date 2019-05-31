@@ -271,7 +271,7 @@ std::string Bm::base_name()
     return key_value;
 }
 
-Bm *Bm::createBm(std::string basename,std::string projname,std::string versname,bool download)
+Bm *Bm::createBm(std::string basename,std::string projname,std::string versname,bool do_download)
 {
     Bm *b=0;
 
@@ -323,7 +323,7 @@ Bm *Bm::createBm(std::string basename,std::string projname,std::string versname,
         //--TODO--
         //Error handling?
 
-        if(download)
+        if(do_download)
         {
             std::string downloads_activated=ini->get("main","downloads");
             printf("downloads_activated=%s\n",downloads_activated.c_str());
@@ -331,9 +331,18 @@ Bm *Bm::createBm(std::string basename,std::string projname,std::string versname,
             {
                 //in case of missing project
                 //run downloader/installer
-                std::string command="bmsetup install "+basename+"/"+projname+"/"+versname;
+                //std::string command="bmsetup install "+basename+"/"+projname+"/"+versname;
                 //printf("> %s\n",command.c_str());
-                system(command.c_str());
+                //system(command.c_str());
+
+                std::string un=ini->get("main","username");
+                std::string up=ini->get("main","password");
+                std::string package=""+basename+"/"+projname+"/"+versname;
+                if(bmsetup_download2(package.c_str(),".baseman/packages/",false,un.c_str(),up.c_str())==1)
+                {
+                    printf("[ERROR] bmsetup: Download failed.");
+                }
+                else bmsetup_install(package.c_str(),".baseman/packages/",true);
 
                 //retry
                 Bm *bb=createBm(basename,projname,versname,false);

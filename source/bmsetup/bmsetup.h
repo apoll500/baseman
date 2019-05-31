@@ -43,7 +43,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define bmsetup_download download
+#define bmsetup_download2 download2
+#define bmsetup_install install
 #include "wwrap/str.h"
+DLL int run_script(const char *baseman_project_path,const char *package_path,const char *run_token);
+DLL int run_script2(const char *baseman_project_path,const char *package_path,const char *run_token,const char *username,const char *userpass);
+DLL int download(const char *baseman_project_path,const char *package_path,bool update);
+DLL int download2(const char *baseman_project_path,const char *package_path,bool update,const char *username,const char *userpass);
+DLL int exporter();
+DLL int exporter2(const char *baseman_project_path);
+DLL int export_projects(const char *csvpath);
+DLL int export_versions(const char *csvpath);
+DLL int importer();
+DLL int importer2(const char *baseman_project_path);
+DLL int import_info(const char *infopath);
+DLL int publish(const char *baseman_project_path,const char *publish_path,bool dotar);
+DLL int install(const char *baseman_project_path,const char *package_path,bool dotar);
+DLL char **get_all_paths(const char *baseman_project_path,char **base_path,char **project_path,char **version_path);
+DLL char *construct_package_path(const char *baseman_project_path,const char *package_path,const char *append);
+DLL char *get_base_path(const char *base_name);
+DLL char *get_project_path(char *base_path,char **loc,int *pos);
+DLL char *get_version_path(char *project_path,char **loc,int *pos);
 #include "bmsetup/import/prokee.h"
 
 #define BMSETUP_USAGE "\n\
@@ -90,22 +111,6 @@ help:\n\
 \n"
 #define BMSETUP_INSTALLATION_PATH "/usr/local/bin/"
 #define BMSETUP_BASELIST_PATH ".baseman/baselist.csv"
-DLL int run_script(const char *baseman_project_path,const char *package_path,const char *run_token);
-DLL int download(const char *baseman_project_path,const char *package_path,bool update);
-DLL int exporter();
-DLL int exporter2(const char *baseman_project_path);
-DLL int export_projects(const char *csvpath);
-DLL int export_versions(const char *csvpath);
-DLL int importer();
-DLL int importer2(const char *baseman_project_path);
-DLL int import_info(const char *infopath);
-DLL int publish(const char *baseman_project_path,const char *publish_path,bool dotar);
-DLL int install(const char *baseman_project_path,const char *package_path,bool dotar);
-DLL char **get_all_paths(const char *baseman_project_path,char **base_path,char **project_path,char **version_path);
-DLL char *construct_package_path(const char *baseman_project_path,const char *package_path,const char *append);
-DLL char *get_base_path(const char *base_name);
-DLL char *get_project_path(char *base_path,char **loc,int *pos);
-DLL char *get_version_path(char *project_path,char **loc,int *pos);
 class bmsetup
 {
 public:
