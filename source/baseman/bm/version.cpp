@@ -125,19 +125,19 @@ void Version::set_values(AbsCsvRecord *r)
     else
     {
         path="";
-        printf("ERROR: Version::set_values() path=0\n");
+        osio::xprint("ERROR: Version::set_values() path=0\n");
     }
     if(description_cstr)desc=description_cstr;
     else
     {
         desc="";
-        printf("ERROR: Version::set_values() desc=0\n");
+        osio::xprint("ERROR: Version::set_values() desc=0\n");
     }
     if(date_cstr)date=date_cstr;
     else
     {
         date="";
-        printf("ERROR: Version::set_values() date=0\n");
+        osio::xprint("ERROR: Version::set_values() date=0\n");
     }
 
     fullpath=abspath();
@@ -148,12 +148,12 @@ void Version::info()
     if(parent)
     {
         parent->info();
-        osio::print("\nSub-Version:");
+        osio::xprint("\nSub-Version:");
     }
     else
     {
         plevelitem->info();
-        osio::print("\nVersion:");
+        osio::xprint("\nVersion:");
     }
-    osio::print("\n----------------------------------------------------------------------\nversion     = %s\npath        = %s\ndate        = %s\ndescription = %s\n",key_value.c_str(),path.c_str(),date.c_str(),desc.c_str());
+    osio::xprint("\n----------------------------------------------------------------------\nversion     = %s\npath        = %s\ndate        = %s\ndescription = %s\n",key_value.c_str(),path.c_str(),date.c_str(),desc.c_str());
 }

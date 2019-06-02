@@ -94,10 +94,10 @@ void print_location(void)
     std::string version_s=ini->get("version");
     const char *version=version_s.c_str();
 
-    osio::print("@%s:/",group);
-    if(base[0]!=0)osio::print("%s/",base);
-    if(project[0]!=0)osio::print("%s/",project);
-    if(version[0]!=0)osio::print("%s/",version);
+    osio::xprint("@%s:/",group);
+    if(base[0]!=0)osio::xprint("%s/",base);
+    if(project[0]!=0)osio::xprint("%s/",project);
+    if(version[0]!=0)osio::xprint("%s/",version);
 }
 /*********************************************************
 *                                                        *
@@ -127,16 +127,16 @@ void create_base(const char *base,const char *path,const char *group)
     {
         if(strcmp(rec[i++]->getField(hid_name),base)==0)
         {
-            osio::print("Can't create base %s in group %s. Base already exists in this group.",base,group);
+            osio::xprint("Can't create base %s in group %s. Base already exists in this group.",base,group);
             delete data;
             return;
         }
     }
 
     int row=data->addRecord();
-    if(!data->setField(row,"name",base))osio::print("!-");
-    if(!data->setField(row,"path",path))osio::print("!-");
-    if(!data->setField(row,"flag",group))osio::print("!-");
+    if(!data->setField(row,"name",base))osio::xprint("!-");
+    if(!data->setField(row,"path",path))osio::xprint("!-");
+    if(!data->setField(row,"flag",group))osio::xprint("!-");
 
     data->save(BASEMAN_BASELISTPATH);
 
@@ -168,13 +168,13 @@ void list_group(const char *group)
     col_list[0]=hid_name;
     col_list[1]=INT_MAX;
 
-    osio::print("\nBases:\n----------------------------------------------------------------------\n");
+    osio::xprint("\nBases:\n----------------------------------------------------------------------\n");
 
     AbsCsvRecord **rec=data->getAllRecords("flag",group);
     int i=0;
     while(rec && rec[i]!=0)
     {
-        osio::print("    ");
+        osio::xprint("    ");
         rec[i++]->print_ln(stdout,col_list);
     }
 
@@ -191,7 +191,7 @@ void reset(void)
     ini->set("project","");
     ini->set("version","");
     ini->save(BASEMAN_INIPATH);
-    osio::print("Location is now at level <group>.\n");
+    osio::xprint("Location is now at level <group>.\n");
 }
 void select_group(const char *group)
 {
@@ -200,8 +200,8 @@ void select_group(const char *group)
     ini->set("project","");
     ini->set("version","");
     ini->save(BASEMAN_INIPATH);
-    osio::print("Group %s selected.\n",group);
-    osio::print("Location is now at level <group>.\n");
+    osio::xprint("Group %s selected.\n",group);
+    osio::xprint("Location is now at level <group>.\n");
 }
 void select_base(const char *base)
 {
@@ -209,8 +209,8 @@ void select_base(const char *base)
     ini->set("project","");
     ini->set("version","");
     ini->save(BASEMAN_INIPATH);
-    osio::print("Base %s selected.\n",base);
-    osio::print("Location is now at level <base>.\n");
+    osio::xprint("Base %s selected.\n",base);
+    osio::xprint("Location is now at level <base>.\n");
 }
 void select_project(const char *project)
 {
@@ -219,8 +219,8 @@ void select_project(const char *project)
     else ini->set("project",project);
     ini->set("version","");
     ini->save(BASEMAN_INIPATH);
-    osio::print("Project %s selected.\n",project);
-    osio::print("Location is now at level <project>.\n");
+    osio::xprint("Project %s selected.\n",project);
+    osio::xprint("Location is now at level <project>.\n");
 }
 void select_version(const char *version)
 {
@@ -228,14 +228,14 @@ void select_version(const char *version)
     if(p!="")ini->set("version",p+"/"+version);
     else ini->set("version",version);
     ini->save(BASEMAN_INIPATH);
-    osio::print("Version %s selected.\n",version);
-    osio::print("Location is now at level <version>.\n");
+    osio::xprint("Version %s selected.\n",version);
+    osio::xprint("Location is now at level <version>.\n");
 }
 void unselect_base(void)
 {
     ini->set("base","");
     ini->save(BASEMAN_INIPATH);
-    osio::print("Location is now at level <group>.\n");
+    osio::xprint("Location is now at level <group>.\n");
 }
 void unselect_project(void)
 {
@@ -273,19 +273,19 @@ void print_level(void)
 {
     if(ini->get("version")!="")
     {
-        osio::print("Location is now at level <version>.\n");
+        osio::xprint("Location is now at level <version>.\n");
     }
     else if(ini->get("project")!="")
     {
-        osio::print("Location is now at level <project>.\n");
+        osio::xprint("Location is now at level <project>.\n");
     }
     else if(ini->get("base")!="")
     {
-        osio::print("Location is now at level <base>.\n");
+        osio::xprint("Location is now at level <base>.\n");
     }
     else
     {
-        osio::print("Location is now at level <group>.\n");
+        osio::xprint("Location is now at level <group>.\n");
     }
 }
 /*********************************************************
@@ -301,7 +301,7 @@ void create_baselist(void)
 
     if(!f)
     {
-        osio::print("Could'nt create the file baselist.csv.\nCheck permissions and availability.");
+        osio::xprint("Could'nt create the file baselist.csv.\nCheck permissions and availability.");
         return;
     }
     osio::print(f,"name,path,target,flag,description\n");

@@ -83,19 +83,19 @@ void Base::set_values(AbsCsvRecord *r)
     else
     {
         path="";
-        printf("ERROR: Base::set_values() path=0\n");
+        osio::xprint("ERROR: Base::set_values() path=0\n");
     }
     if(target_cstr)target=target_cstr;
     else
     {
         target="";
-        printf("ERROR: Base::set_values() target=0\n");
+        osio::xprint("ERROR: Base::set_values() target=0\n");
     }
     if(description_cstr)desc=description_cstr;
     else
     {
         desc="";
-        printf("ERROR: Base::set_values() desc=0\n");
+        osio::xprint("ERROR: Base::set_values() desc=0\n");
     }
 
     fullpath=path;
@@ -103,5 +103,5 @@ void Base::set_values(AbsCsvRecord *r)
 
 void Base::info()
 {
-    osio::print("\nBase:\n----------------------------------------------------------------------\nname        = %s\npath        = %s\ntarget      = %s\ndescription = %s\n",key_value.c_str(),path.c_str(),target.c_str(),desc.c_str());
+    osio::xprint("\nBase:\n----------------------------------------------------------------------\nname        = %s\npath        = %s\ntarget      = %s\ndescription = %s\n",key_value.c_str(),path.c_str(),target.c_str(),desc.c_str());
 }

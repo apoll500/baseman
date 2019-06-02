@@ -42,7 +42,7 @@
 #include "wwrap/str.h"
 #include "wwrap/conststr.h"
 #include <stdlib.h>
-
+#include "strman/import/prokee.h"
 class strman
 {
 public:
@@ -69,7 +69,7 @@ public:
     template<class T> static bool matchsymbol(const T *str,size_t pos_in_str,const T *symbols0,const T *symbols1,const T *symbols2,const T *symbols3);
     
 };
-
+#include "strman/import/modules.h"
 template<class T> T **strman::explode(const T *sep,const T *str)
 {
     int aln=10,acnt=1;

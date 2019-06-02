@@ -40,8 +40,6 @@
 #ifndef BASEMAN_MergeControler_H
 #define BASEMAN_MergeControler_H
 
-#include "../../macros/macros.h"
-
 #include <stdio.h>
 #include <time.h>
 
@@ -142,28 +140,28 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
         case ACTION_DONOTHING:
             return false;
         case ACTION_EXPORT:
-            osio::print("---> %s",targetpath);
+            osio::xprint("---> %s",targetpath);
             return true;
         case ACTION_IMPORT:
-            osio::print("<--- %s",targetpath);
+            osio::xprint("<--- %s",targetpath);
             return swapcopy(targetpath,sourcepath);
         case ACTION_EXPORT_BACKUP:
-            osio::print("---> %s",targetpath);
+            osio::xprint("---> %s",targetpath);
             backupcopy(sourcepath,targetpath);
             return true;
         case ACTION_IMPORT_BACKUP:
-            osio::print("<--- %s",targetpath);
+            osio::xprint("<--- %s",targetpath);
             backupcopy(sourcepath,sourcepath);
             return swapcopy(targetpath,sourcepath);
         case ACTION_CONFLICT_NEW:
         case ACTION_CONFLICT_CHANGED:
-            osio::print("-><- %s\n",targetpath);
-            osio::print("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nCONFLICT (SOURCE AND TARGET CHANGED):\nSOURCE: %s\nTARGET: %s\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n",sourcepath,targetpath);
-            osio::print("comparing...");
+            osio::xprint("-><- %s\n",targetpath);
+            osio::xprint("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nCONFLICT (SOURCE AND TARGET CHANGED):\nSOURCE: %s\nTARGET: %s\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n",sourcepath,targetpath);
+            osio::xprint("comparing...");
             if(file::compare(targetpath,sourcepath))
             {
-                osio::print("...true.\n");
-                osio::print("updating logfile...");
+                osio::xprint("...true.\n");
+                osio::xprint("updating logfile...");
                 filecopied(targetpath,sourcepath,osfile::get_size(sourcepath));
                 std::vector<std::string>::iterator i;
                 for(i=newfiles.begin();i!=newfiles.end();i++)
@@ -174,11 +172,11 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
                         break;
                     }
                 }
-                osio::print("...OK\n");
+                osio::xprint("...OK\n");
             }
             else
             {
-                osio::print("...false.\n");
+                osio::xprint("...false.\n");
             }
             return false;
         case ACTION_INFO_DEL:
@@ -186,39 +184,39 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
         case ACTION_INFO_NEW:
             return false;
         case ACTION_DELETE:
-            osio::print("---- %s\n",targetpath);
+            osio::xprint("---- %s\n",targetpath);
             remove_file(targetpath);
             return false;
         case ACTION_DELETE_BACKUP:
-            osio::print("---- %s\n",targetpath);
+            osio::xprint("---- %s\n",targetpath);
             backupcopy(sourcepath,targetpath);
             remove_file(targetpath);
             return false;
         case ACTION_SOURCE_DELETE:
-            osio::print("---- %s\n",sourcepath);
+            osio::xprint("---- %s\n",sourcepath);
             remove_file(sourcepath);
             return false;
         case ACTION_SOURCE_DELETE_BACKUP:
-            osio::print("---- %s\n",sourcepath);
+            osio::xprint("---- %s\n",sourcepath);
             backupcopy(sourcepath,sourcepath);
             remove_file(sourcepath);
             return false;
         case ACTION_PRINT_TARGET:
-            osio::print("%s\n",targetpath);
+            osio::xprint("%s\n",targetpath);
             return false;
         case ACTION_PRINT_SOURCE:
-            osio::print("%s\n",sourcepath);
+            osio::xprint("%s\n",sourcepath);
             return false;
         case ACTION_PRINT_INFO:
-            osio::print("----------\ncopy file\n");
-            osio::print("from: %s\n",sourcepath);
-            osio::print("to:   %s\n",targetpath);
+            osio::xprint("----------\ncopy file\n");
+            osio::xprint("from: %s\n",sourcepath);
+            osio::xprint("to:   %s\n",targetpath);
             return false;
         case ACTION_PACKAGE:
             std::string ws=ini->get("webspace");
-            osio::print(">>>> %s\n",sourcepath);
+            osio::xprint(">>>> %s\n",sourcepath);
 #ifdef OS_LIN
-            osio::print("++++ %s\n",(ws+"package"+sourcepath).c_str());
+            osio::xprint("++++ %s\n",(ws+"package"+sourcepath).c_str());
             file::copyfile((ws+"package"+sourcepath).c_str(),sourcepath);
 #endif
             return false;
@@ -232,7 +230,7 @@ template<class T> bool MergeControler<T>::remove_file(const T *path)
     {
         if(!file::remove_clean(path))
         {
-            osio::print("     Could not delete this file!\n");
+            osio::xprint("     Could not delete this file!\n");
             return false;
         }
     }
@@ -240,7 +238,7 @@ template<class T> bool MergeControler<T>::remove_file(const T *path)
     {
         if(!osfile::rm(path))
         {
-            osio::print("     Could not delete this file!\n");
+            osio::xprint("     Could not delete this file!\n");
             return false;
         }
     }
@@ -303,8 +301,8 @@ template<class T> void MergeControler<T>::ini_MergeControler(const T *logfile_in
 
     if(log->load(logfile_in))
     {
-        osio::print("Missing file: %s\n",logfile_in);
-        osio::print("Could'nt open log-file %s.\n",logfile_in);
+        osio::xprint("Missing file: %s\n",logfile_in);
+        osio::xprint("Could'nt open log-file %s.\n",logfile_in);
     }
     else
     {
@@ -403,7 +401,7 @@ template<class T> void MergeControler<T>::closeLog()
                     if(file::testfile(targetpath.c_str()))
                     {
                         //(fall Änderung der csv-Tabelle).
-                        osio::print("~~~~ %s\n",targetpath.c_str());
+                        osio::xprint("~~~~ %s\n",targetpath.c_str());
                         backupcopy(sourcepath.c_str(),targetpath.c_str());
                         remove_file(targetpath.c_str());
                     }
@@ -457,16 +455,16 @@ template<class T> void MergeControler<T>::closeLog()
 
     if(obsfiles!="")
     {
-        osio::print("There are (possibly) obsolete files:\n");
-        osio::print("%s",obsfiles.c_str());
-        osio::print("\nUse 'clean' to remove these files from the target directory.\n\n");
+        osio::xprint("There are (possibly) obsolete files:\n");
+        osio::xprint("%s",obsfiles.c_str());
+        osio::xprint("\nUse 'clean' to remove these files from the target directory.\n\n");
     }
 
     if(BmCondCopyControl<T>::getError())
     {
-        osio::print("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-        osio::print("See errors above!\n");
-        osio::print("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+        osio::xprint("See errors above!\n");
+        osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
         return;
     }
 }
@@ -527,13 +525,14 @@ template<class T> bool MergeControler<T>::doCopyFile(const T *targetpath,const T
         if(firstsource[targetpath]!=sourcepath)
         {
             //bereits kopiert.
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-            std::cout << "Ignoring file." << std::endl;
-            std::cout << "target = " << targetpath << std::endl;
-            std::cout << "source = " << sourcepath << std::endl;
-            std::cout << "This file has already been copied from: " << firstsource[targetpath] <<  std::endl;
-            std::cout << "Check your files.csv table(s)." << std::endl;
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            osio::xprint("Ignoring file.\n");
+            osio::xprint("target = %s\n",targetpath);
+            osio::xprint("source = %s\n",sourcepath);
+            std::string ofile=firstsource[targetpath];
+            osio::xprint("This file has already been copied from: %s\n",ofile.c_str());
+            osio::xprint("Check your files.csv table(s).\n");
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
             return false;
         }
         else
@@ -607,7 +606,7 @@ template<class T> bool MergeControler<T>::doCopyFile(const T *targetpath,const T
 
 template<class T> void MergeControler<T>::filecopied(const T *targetpath,const T *sourcepath,size_t bytes)
 {
-    osio::print(" OK\n");
+    osio::xprint(" OK\n");
     if(recs.count(targetpath)!=1)
     {
         AbsCsvSettings *s=AbsCsvSettingsInterface::createCsvSettings(',','\n','\"');
@@ -659,7 +658,7 @@ template<class T> bool MergeControler<T>::swapcopy(const T *targetpath,const T *
         HANDLE hs=osfile::myCreateFile(spcopy,GENERIC_WRITE,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
         if(hs==INVALID_HANDLE_VALUE)
         {
-            osio::print(">>>> Error: (INVALID_HANDLE_VALUE) %s\n",sourcepath);
+            osio::xprint(">>>> Error: (INVALID_HANDLE_VALUE) %s\n",sourcepath);
         }
         else
         {
@@ -667,19 +666,19 @@ template<class T> bool MergeControler<T>::swapcopy(const T *targetpath,const T *
             HANDLE ht=osfile::myCreateFile(tpcopy,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,0,NULL);
             if(hs==INVALID_HANDLE_VALUE)
             {
-                osio::print(">>>> Error: (INVALID_HANDLE_VALUE) %s\n",targetpath);
+                osio::xprint(">>>> Error: (INVALID_HANDLE_VALUE) %s\n",targetpath);
             }
             else
             {
                 if(!GetFileTime(ht,NULL,NULL,&ft))
                 {
-                    osio::print(">>>> Error: GetFileTime() %s\n",targetpath);
+                    osio::xprint(">>>> Error: GetFileTime() %s\n",targetpath);
                 }
                 else
                 {
                     if(!SetFileTime(hs,NULL,NULL,&ft))
                     {
-                        osio::print(">>>> Error: SetFileTime() %s\n",sourcepath);
+                        osio::xprint(">>>> Error: SetFileTime() %s\n",sourcepath);
                     }
                 }
                 CloseHandle(ht);
@@ -699,7 +698,7 @@ template<class T> bool MergeControler<T>::swapcopy(const T *targetpath,const T *
     }
     else
     {
-        osio::print("-><- COPY ERROR %s\n",targetpath);
+        osio::xprint("-><- COPY ERROR %s\n",targetpath);
         return false;
     }
 }
@@ -718,13 +717,13 @@ template<class T> bool MergeControler<T>::backupcopy_sf(const T *sourcepath,cons
         bool b=file::copyfile(backuppath,backup_source_path);
         if(!b)
         {
-            osio::print(">>>> Error: (COPY ERROR) No Backup Copy GENERATED FOR %s\n",backup_source_path);
+            osio::xprint(">>>> Error: (COPY ERROR) No Backup Copy GENERATED FOR %s\n",backup_source_path);
             return false;
         }
     }
     else
     {
-        osio::print(">>>> Error: (OUTSIDE OF BASE) No Backup Copy GENERATED FOR %s\n",backup_source_path);
+        osio::xprint(">>>> Error: (OUTSIDE OF BASE) No Backup Copy GENERATED FOR %s\n",backup_source_path);
     }
     return true;
 }
@@ -749,15 +748,15 @@ template<class T> bool MergeControler<T>::backupcopy(const T *sourcepath,const T
             bool b=file::copyfile(backuppath,backup_source_path);
             if(!b)
             {
-                osio::print(">>>> Error: (COPY ERROR) No Backup Copy GENERATED FOR %s\n",backup_source_path);
+                osio::xprint(">>>> Error: (COPY ERROR) No Backup Copy GENERATED FOR %s\n",backup_source_path);
                 return false;
             }
             return true;
         }
         i++;
     }
-    osio::print(">>>> Error: (OUTSIDE OF BASE) No Backup Copy GENERATED FOR %s\n",backup_source_path);
-    osio::print("(base-path: %s)\n",bpath.c_str());
+    osio::xprint(">>>> Error: (OUTSIDE OF BASE) No Backup Copy GENERATED FOR %s\n",backup_source_path);
+    osio::xprint("(base-path: %s)\n",bpath.c_str());
     return true;
 }
 
@@ -779,12 +778,12 @@ template<class T> void MergeControler<T>::print_newfiles()
 {
     if(newfiles.size()>0)
     {
-        osio::print("There are new files:\n");
+        osio::xprint("There are new files:\n");
         for(std::vector<std::string>::iterator i=newfiles.begin();i!=newfiles.end();i++)
         {
-            std::cout << "++++ " << (*i) << std::endl;
+            osio::xprint("++++ %s\n",(*i).c_str());
         }
-        osio::print("\nUse 'import' to import these files here.\n\n");
+        osio::xprint("\nUse 'import' to import these files here.\n\n");
     }
 }
 
@@ -805,7 +804,7 @@ template<class T> void MergeControler<T>::importfiles(const T *project_path,cons
         }
         else
         {
-            osio::print("ERROR: Wrong target_path?");
+            osio::xprint("ERROR: Wrong target_path?");
         }
     }
     newfiles.clear();
@@ -856,7 +855,7 @@ template<class T> int MergeControler<T>::importfiles_extmode(const T *target_pat
             else if((*i)!="")
             {
                 skipcount++;
-                osio::print("ERROR: Wrong target_path?");
+                osio::xprint("ERROR: Wrong target_path?");
             }
         }
         if(skipcount==0)break;
@@ -894,7 +893,7 @@ template<class T> bool MergeControler<T>::test_match(const T *path,int depth,std
             if(pname[0]!=0 && str::cmp(pname,aaa[k])==0
                 && str::cmp(pname,"api")!=0)//ignore project 'api' ...... --TODO--
             {
-                printf("++++ [%s --> %s --> %s]\n",b,p,v);
+                osio::xprint("++++ [%s --> %s --> %s]\n",b,p,v);
                 rval=true;
                 k=strman::explode_count(aaa);
                 i=-1;//strman::explode_count(aa);

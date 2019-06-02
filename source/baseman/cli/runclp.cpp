@@ -50,15 +50,15 @@ void runargs(int argc,char **argv)
 
     if(strcmp(argv[1],"about")==0)
     {
-        osio::print(BASEMAN_ABOUT);
+        osio::xprint(BASEMAN_ABOUT);
     }
     else if(strcmp(argv[1],"license")==0)
     {
-        osio::print(LICENSE_GPL3);
+        osio::xprint(LICENSE_GPL3);
     }
     else if(strcmp(argv[1],"end")==0 || strcmp(argv[1],"exit")==0)
     {
-        osio::print("Thank's for using baseman!\n");
+        osio::xprint("Thank's for using baseman!\n");
     }
     else if(strcmp(argv[1],"")==0)
     {
@@ -147,7 +147,7 @@ void runargs(int argc,char **argv)
     else if(strcmp(argv[1],"location")==0 || strcmp(argv[1],"loc")==0)
     {
         print_location();
-        osio::print("\n");
+        osio::xprint("\n");
     }
     else if(strcmp(argv[1],"path")==0)
     {
@@ -192,20 +192,20 @@ void runargs(int argc,char **argv)
             all_projects_info a;
             Bm *p=bmObject();
             if(p)a=p->get_all_projects(),delete p;
-            else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
             for(unsigned int i=0;i<a.project.size();i++)
             {
-                printf("%d) %s --> %s --> %s\n",i,a.project[i].base.c_str(),a.project[i].project.c_str(),a.project[i].version.c_str());
+                osio::xprint("%d) %s --> %s --> %s\n",i,a.project[i].base.c_str(),a.project[i].project.c_str(),a.project[i].version.c_str());
             }
         }
         else
         {
-            osio::print("Wrong number of arguments.\n");
+            osio::xprint("Wrong number of arguments.\n");
         }
     }
     else
     {
-        osio::print("Unknown command '%s'.\n",argv[1]);
+        osio::xprint("Unknown command '%s'.\n",argv[1]);
     }
 }
 
@@ -214,16 +214,16 @@ void imode(void)
     char command[1024];command[0]=0;
     int i,j,h;
     char *opt[5];
-    osio::print("baseman  Copyright (C) 2016-2019  Andreas Pollhammer\n");
-    osio::print("This program comes with ABSOLUTELY NO WARRANTY.\n");
-    osio::print("Type 'about' for more details.\n\n");
-    osio::print("Running in interactive mode:\n");
-    osio::print("Type 'end' to quit.\n");
+    osio::xprint("baseman  Copyright (C) 2016-2019  Andreas Pollhammer\n");
+    osio::xprint("This program comes with ABSOLUTELY NO WARRANTY.\n");
+    osio::xprint("Type 'about' for more details.\n\n");
+    osio::xprint("Running in interactive mode:\n");
+    osio::xprint("Type 'end' to quit.\n");
     while(strcmp(command,"end")!=0 && strcmp(command,"exit")!=0)
     {
-        osio::print("\n");
+        osio::xprint("\n");
         print_location();
-        osio::print("> ");
+        osio::xprint("> ");
         fgets(command,1023,stdin);
         i=0;
         j=2;
@@ -244,20 +244,31 @@ void imode(void)
         opt[0]=&command[i];
         opt[1]=&command[0];
         for(h=j;h<5;h++)opt[h]=&command[i];
-        //osio::print("%s(%s,%s)\n",opt[1],opt[2],opt[3]);
+        //osio::xprint("%s(%s,%s)\n",opt[1],opt[2],opt[3]);
         runargs(j,opt);
     }
+}
+
+int print_to_nil(const char *)
+{
+    //osio::xprint("%s",a);
+    return 0;
 }
 
 int cli_main(int argc,char **argv)
 {
     setbuf(stdout,NULL);
 
+    if(argc>1 && strcmp(argv[1],"q")==0)
+    {
+        osio::set_xprint(print_to_nil);
+    }
+
     ini=AbsMultiSettingsInterface::createMultiSettings();
 
     if(!ini->loadfile(BASEMAN_INIPATH))
     {
-        osio::print("[BASEMAN:] File setup.ini not found!\n");
+        osio::xprint("[BASEMAN:] cli_main: File setup.ini not found!\n");
     }
 
     if(argc==1)
@@ -266,7 +277,15 @@ int cli_main(int argc,char **argv)
     }
     else
     {
-        runargs(argc,argv);
+        if(strcmp(argv[1],"q")==0)
+        {
+            if(argc==2)imode();
+            else runargs(argc-1,&argv[1]);
+        }
+        else
+        {
+            runargs(argc,argv);
+        }
     }
 
     if(ini)delete ini;
@@ -280,11 +299,11 @@ void runargs_delete_log(int argc,char **)
     {
         Bm *p=bmObject();
         if(p)p->delete_log_file(),delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -315,11 +334,11 @@ void runargs_export(int argc,char **)
             p->run("",RUN_DIRWALK | RUN_EXPORT | RUN_PRINTNEW | RUN_PRINTOBS,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -350,11 +369,11 @@ void runargs_package(int argc,char **)
             p->run("",RUN_EXPORT,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -385,11 +404,11 @@ void runargs_merge(int argc,char **)
             p->run("",RUN_DIRWALK | RUN_EXPORT | RUN_PRINTNEW | RUN_PRINTOBS,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -420,11 +439,11 @@ void runargs_import(int argc,char **)
             p->run("",RUN_DIRWALK | RUN_IMPORT,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -455,11 +474,11 @@ void runargs_import_p(int argc,char **)
             p->run("",RUN_DIRWALK | RUN_IMPORT | RUN_EXTMODE,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -490,11 +509,11 @@ void runargs_clean(int argc,char **)
             p->run("",RUN_CLEAN | RUN_EXPORT | RUN_DELDIRS,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -525,11 +544,11 @@ void runargs_snapshot(int argc,char **)
             p->run_snap("",RUN_EXPORT,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -560,11 +579,11 @@ void runargs_update(int argc,char **)
             p->run("",RUN_DIRWALK | RUN_EXPORT | RUN_PRINTNEW | RUN_PRINTOBS,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -595,11 +614,11 @@ void runargs_diff(int argc,char **)
             p->run_diff("",RUN_EXPORT,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -630,7 +649,7 @@ void runargs_simu(int argc,char **argv)
             p->run("",RUN_DIRWALK | RUN_EXPORT | RUN_PRINTNEW | RUN_PRINTOBS,actions);
             delete p;
         }
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else if(argc==3)
     {
@@ -659,7 +678,7 @@ void runargs_simu(int argc,char **argv)
                 p->run("",RUN_DIRWALK | RUN_EXPORT | RUN_PRINTNEW | RUN_PRINTOBS,actions);
                 delete p;
             }
-            else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"target")==0)
         {
@@ -686,16 +705,16 @@ void runargs_simu(int argc,char **argv)
                 p->run("",RUN_DIRWALK | RUN_EXPORT | RUN_PRINTNEW | RUN_PRINTOBS,actions);
                 delete p;
             }
-            else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else
         {
-            osio::print("Wrong arguments.\n");
+            osio::xprint("Wrong arguments.\n");
         }
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -711,28 +730,28 @@ void runargs_clear(int argc,char **argv)
         {
             Bm *p=bmObject();
             if(p)p->clear_versions(),delete p;
-            else osio::print("No versions supposed to be created here.");
+            else osio::xprint("No versions supposed to be created here.");
         }
         else if(strcmp(argv[2],"projects")==0)
         {
             Bm *p=bmObject();
             if(p)p->clear_projects(),delete p;
-            else osio::print("No projects supposed to be created here.");
+            else osio::xprint("No projects supposed to be created here.");
         }
         else if(strcmp(argv[2],"files")==0)
         {
             Bm *p=bmObject();
             if(p)p->clear_files(),delete p;
-            else osio::print("No files supposed to be created here.");
+            else osio::xprint("No files supposed to be created here.");
         }
         else
         {
-            osio::print("Wrong parameter.\n");
+            osio::xprint("Wrong parameter.\n");
         }
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -754,12 +773,12 @@ void runargs_goup(int argc,char **)
         }
         else
         {
-            osio::print("Location already at level <group>.\n");
+            osio::xprint("Location already at level <group>.\n");
         }
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -773,7 +792,7 @@ void runargs_list(int argc,char **)
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -783,11 +802,11 @@ void runargs_run(int argc,char **)
     {
         Bm *p=bmObject();
         if(p)p->run_web(),delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -796,12 +815,12 @@ void runargs_base(int argc,char **)
     if(argc==2)
     {
         Bm *p=bmObject();
-        if(p)osio::print("%s\n",p->base_name().c_str()),delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        if(p)osio::xprint("%s\n",p->base_name().c_str()),delete p;
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -810,12 +829,12 @@ void runargs_project(int argc,char **)
     if(argc==2)
     {
         Bm *p=bmObject();
-        if(p)osio::print("%s\n",p->project_name().c_str()),delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        if(p)osio::xprint("%s\n",p->project_name().c_str()),delete p;
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -824,12 +843,12 @@ void runargs_version(int argc,char **)
     if(argc==2)
     {
         Bm *p=bmObject();
-        if(p)osio::print("%s\n",p->version_name().c_str()),delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        if(p)osio::xprint("%s\n",p->version_name().c_str()),delete p;
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -839,11 +858,11 @@ void runargs_info(int argc,char **)
     {
         Bm *p=bmObject();
         if(p)p->info(),delete p;
-        else osio::print("Noting selected to display info for.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected to display info for.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -853,11 +872,11 @@ void runargs_path(int argc,char **)
     {
         Bm *p=bmObject();
         if(p)p->print_path(),delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -867,7 +886,7 @@ void runargs_open(int argc,char **argv)
     {
         Bm *p=bmObject();
         if(p)p->open_folder_os(),delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else if(argc==3)
     {
@@ -875,7 +894,7 @@ void runargs_open(int argc,char **argv)
         {
             Bm *p=bmObject();
             if(p)p->open_csv(),delete p;
-            else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"baselist")==0)
         {
@@ -883,12 +902,12 @@ void runargs_open(int argc,char **argv)
         }
         else
         {
-            osio::print("Wrong parameter.\n");
+            osio::xprint("Wrong parameter.\n");
         }
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -900,7 +919,7 @@ void runargs_setgroup(int argc,char **argv)
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -927,7 +946,7 @@ bool select_element(Bm *p,const char *arg)
     }
     if(!b)
     {
-        osio::print("No element with name '%s' found.\n",arg);
+        osio::xprint("No element with name '%s' found.\n",arg);
     }
     return b;
 }
@@ -956,7 +975,7 @@ void select_line(Bm *p,const char *arg)
     }
     if(!b)
     {
-        osio::print("could'nt select line %d.\n",i);
+        osio::xprint("could'nt select line %d.\n",i);
     }
 }
 
@@ -965,7 +984,7 @@ bool select_element_project(Bm *p,const char *arg)
     bool b=true;
     if(ini->get("version")!="")
     {
-        osio::print("No project supposed to be here.\n");
+        osio::xprint("No project supposed to be here.\n");
         return false;
     }
     else if(ini->get("project")!="")
@@ -978,12 +997,12 @@ bool select_element_project(Bm *p,const char *arg)
     }
     else
     {
-        osio::print("No project supposed to be here.\n");
+        osio::xprint("No project supposed to be here.\n");
         return false;
     }
     if(!b)
     {
-        osio::print("No element with name '%s' found.\n",arg);
+        osio::xprint("No element with name '%s' found.\n",arg);
     }
     return b;
 }
@@ -1005,12 +1024,12 @@ bool select_element_version(Bm *p,const char *arg)
     }
     else
     {
-        osio::print("No version supposed to be here.\n");
+        osio::xprint("No version supposed to be here.\n");
         return false;
     }
     if(!b)
     {
-        osio::print("No element with name '%s' found.\n",arg);
+        osio::xprint("No element with name '%s' found.\n",arg);
     }
     return b;
 }
@@ -1021,7 +1040,7 @@ void select_project_line(Bm *p,const char *arg)
     int i=atoi(arg);
     if(ini->get("version")!="")
     {
-        osio::print("No project supposed to be here.\n");
+        osio::xprint("No project supposed to be here.\n");
     }
     else if(ini->get("project")!="")
     {
@@ -1033,11 +1052,11 @@ void select_project_line(Bm *p,const char *arg)
     }
     else
     {
-        osio::print("No project supposed to be here.\n");
+        osio::xprint("No project supposed to be here.\n");
     }
     if(!b)
     {
-        osio::print("could'nt select line %d.\n",i);
+        osio::xprint("could'nt select line %d.\n",i);
     }
 }
 
@@ -1059,11 +1078,11 @@ void select_version_line(Bm *p,const char *arg)
     }
     else
     {
-        osio::print("No version supposed to be here.\n");
+        osio::xprint("No version supposed to be here.\n");
     }
     if(!b)
     {
-        osio::print("could'nt select line %d.\n",i);
+        osio::xprint("could'nt select line %d.\n",i);
     }
 }
 
@@ -1085,7 +1104,7 @@ bool select_path(const char *path,bool (*selector_function)(Bm *,const char *))
             if(!b)
             {
                 strman::explode_free(a);
-                osio::print("[ERROR] baseman: could not select path %s.\n",path);
+                osio::xprint("[ERROR] baseman: could not select path %s.\n",path);
                 return false;
             }
             delete p;
@@ -1103,28 +1122,28 @@ void runargs_select(int argc,char **argv)
 {
     if(argc==3)
     {
-        if(!select_path(argv[2],select_element))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        if(!select_path(argv[2],select_element))osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else if(argc==4)
     {
         if(strcmp(argv[2],"project")==0)
         {
-            if(!select_path(argv[3],select_element_project))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            if(!select_path(argv[3],select_element_project))osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"version")==0)
         {
-            if(!select_path(argv[3],select_element_version))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            if(!select_path(argv[3],select_element_version))osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"fullpath")==0)
         {
-            if(!select_full_path(argv[3],select_element))osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            if(!select_full_path(argv[3],select_element))osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"line")==0)
         {
             Bm *p=bmObject();
             if(p)select_line(p,argv[3]);
             if(p)delete p;
-            else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+            else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
         }
         else if(strcmp(argv[2],"file")==0)
         {
@@ -1132,7 +1151,7 @@ void runargs_select(int argc,char **argv)
         }
         else
         {
-            osio::print("Unknown type '%s'.\n",argv[2]);
+            osio::xprint("Unknown type '%s'.\n",argv[2]);
         }
     }
     else if(argc==5)
@@ -1154,19 +1173,19 @@ void runargs_select(int argc,char **argv)
             }
             else
             {
-                osio::print("Unknown type '%s'.\n",argv[2]);
+                osio::xprint("Unknown type '%s'.\n",argv[2]);
             }
         }
         else
         {
-            osio::print("Unknown argument '%s'.\n",argv[3]);
+            osio::xprint("Unknown argument '%s'.\n",argv[3]);
         }
         if(p)delete p;
-        else osio::print("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -1215,12 +1234,12 @@ void runargs_set(int argc,char **argv)
         {
             Bm *p=bmObject();
             if(p)p->set(argv[2],pstr.c_str()),delete p;
-            else osio::print("Noting to store here.");
+            else osio::xprint("Noting to store here.");
         }
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -1233,11 +1252,11 @@ void runargs_setiniblock(int argc,char **argv)
     }
     else if(argc==2)
     {
-        printf("%s\n",ini->getSelectedDefBlockName().c_str());
+        osio::xprint("%s\n",ini->getSelectedDefBlockName().c_str());
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -1247,12 +1266,12 @@ void runargs_add_intro(int argc,char **argv)
     {
         system("baseman simu target > .baseman/target_list.txt");
         std::string command=(std::string)"add_intro .baseman/target_list.txt .baseman/intro_"+argv[2]+".txt "+ini->get("project")+" "+argv[2];
-        printf("> %s\n",command.c_str());
+        osio::xprint("> %s\n",command.c_str());
         system(command.c_str());
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }
 
@@ -1278,7 +1297,7 @@ void runargs_create(int argc,char **argv)
             }
             else
             {
-                osio::print("Object of type %s can't be created here.",argv[2]);
+                osio::xprint("Object of type %s can't be created here.",argv[2]);
             }
         }
         else if(ini->get("project")!="")
@@ -1304,7 +1323,7 @@ void runargs_create(int argc,char **argv)
             }
             else
             {
-                osio::print("Object of type %s can't be created here.",argv[2]);
+                osio::xprint("Object of type %s can't be created here.",argv[2]);
             }
         }
         else if(ini->get("base")!="")
@@ -1330,7 +1349,7 @@ void runargs_create(int argc,char **argv)
             }
             else
             {
-                osio::print("Object of type %s can't be created here.",argv[2]);
+                osio::xprint("Object of type %s can't be created here.",argv[2]);
             }
         }
         else
@@ -1341,12 +1360,12 @@ void runargs_create(int argc,char **argv)
             }
             else
             {
-                osio::print("Object of type %s can't be created here.",argv[2]);
+                osio::xprint("Object of type %s can't be created here.",argv[2]);
             }
         }
     }
     else
     {
-        osio::print("Wrong number of arguments.\n");
+        osio::xprint("Wrong number of arguments.\n");
     }
 }

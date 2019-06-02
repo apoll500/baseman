@@ -51,6 +51,9 @@
 #define BASEMAN_INIPATH ".baseman/status.ini"
 #define BASEMAN_BASELISTPATH ".baseman/baselist.csv"
 
+#include "macros/macros.h"
+#include "wwrap/osio.h"
+
 #include "baseman/import/prokee.h"
 
 //#include "csv/CsvData.h"

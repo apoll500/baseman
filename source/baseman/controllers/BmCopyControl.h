@@ -127,7 +127,7 @@ template<class T> bool BmCondCopyControl<T>::ignoreEmptyDir(const T *)//path)
 
 template<class T> void BmCondCopyControl<T>::feedback()
 {
-    osio::print(".");
+    osio::xprint(".");
 }
 
 template<class T> size_t BmCondCopyControl<T>::feedback_bytes()

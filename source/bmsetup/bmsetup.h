@@ -66,47 +66,44 @@ DLL char *get_base_path(const char *base_name);
 DLL char *get_project_path(char *base_path,char **loc,int *pos);
 DLL char *get_version_path(char *project_path,char **loc,int *pos);
 #include "bmsetup/import/prokee.h"
-
 #define BMSETUP_USAGE "\n\
-usage: bmsetup <command>[ [<target> ]<path>]\n\
+usage: bmsetup COMMAND[ [TARGET ]PACKAGE]\n\
 \n\
-If <path> is given, it has to specify a valid path within baseman.\n\
-F.e: 'prokee/mods/bmsetup/full/v01'. This path may differ from the\n\
-path within the file system. As <command> use one of the following:\n\
+DESCRIPTION:\n\
+If PACKAGE is given, it has to specify a valid package-path within\n\
+baseman. F.e: 'prokee/mods/bmsetup/full/v01'. This path may differ from\n\
+the path within the file system. COMMAND may be of the following:\n\
 \n\
-download [<target> ]<path>\n\
-    Downloads the package specified by <path> and stores it to\n\
-    ./baseman/packages/ or to the path given by <target>.\n\
-    Previously downloaded package files for package <path> are\n\
-    deleted bevore attempting to re-download them. The update\n\
-    command can be used to upgrade packages to a newer version.\n\
+import-cfg [PATH]\n\
+    Updates projects.csv and versions.csv files from the contents of\n\
+    *.info files. If no PATH is given, the program will search within\n\
+    the current working directory and all subdirectories.\n\
 \n\
-install [<target> ]<path>:\n\
-    Installs the package specified by <path> within baseman.\n\
-    If the package is missing, bmsetup will try to download it.\n\
-    Downloaded packeges are stored at ./baseman/packages/ or\n\
-    at the path given by <target>.\n\
-\n\
-import-cfg [<path>]:\n\
-    Updates projects.csv and versions.csv files from *.info files.\n\
-    If no <path> is given, the program will search within the\n\
-    current working directory and all subdirectories.\n\
-\n\
-export-cfg [<path>]:\n\
+export-cfg [PATH]\n\
     Generates *.info files from projects.csv and versions.csv files.\n\
-    If no <path> is given, the program will search within the\n\
-    current working directory and all subdirectories.\n\
+    If no PATH is given, the program will search within the current\n\
+    working directory and all subdirectories.\n\
+    \n\
+download [TARGET ]PACKAGE\n\
+    Downloads PACKAGE and stores it to ./baseman/packages/ or to the\n\
+    path given by TARGET. Previously downloaded package files of the\n\
+    same package are deleted before attempting to re-download them.\n\
 \n\
-publish [<target> ]<path>:\n\
+install [TARGET ]PACKAGE\n\
+    Installs the package specified by PACKAGE. If the package is\n\
+    missing, bmsetup will try to download it. Downloaded packages are\n\
+    stored at ./baseman/packages/ or at the path given by TARGET.\n\
+\n\
+publish [TARGET ]PACKAGE\n\
     Generates a package.\n\
 \n\
-push [<target> ]<path>:\n\
+push [TARGET ]PACKAGE\n\
     Copies package files to a target directory.\n\
 \n\
-pull [<target> ]<path>:\n\
+pull [TARGET ]PACKAGE\n\
     Copies package files from a target directory.\n\
 \n\
-help:\n\
+help\n\
     Displays this information.\n\
 \n"
 #define BMSETUP_INSTALLATION_PATH "/usr/local/bin/"
@@ -121,6 +118,4 @@ public:
     static void print_error(const char *msg);
 };
 #include "bmsetup/import/modules.h"
-
-
 #endif

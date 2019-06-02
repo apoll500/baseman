@@ -291,8 +291,8 @@ public:
 *****************************************************************/
 template<class T> void Bm::copy_item(std::string source_path,std::string target_path,BmCondCopyControl<T> *cc)
 {
-    //osio::print("-------------------------------------------\ncopy_item()\n");
-    //osio::print("von:  %s\nnach: %s\n",source_path.c_str(),target_path.c_str());
+    //osio::xprint("-------------------------------------------\ncopy_item()\n");
+    //osio::xprint("von:  %s\nnach: %s\n",source_path.c_str(),target_path.c_str());
 
     if(path::pathtype(source_path.c_str()) & PATH_DIR)
     {
@@ -303,11 +303,11 @@ template<class T> void Bm::copy_item(std::string source_path,std::string target_
         }
         else
         {
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-            std::cout << "Cannot copy directory to file." << std::endl;
-            std::cout << "DIR:  " << source_path << std::endl;
-            std::cout << "TO: " << target_path << std::endl;
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            osio::xprint("Cannot copy directory to file.\n");
+            osio::xprint("DIR: %s\n",source_path.c_str());
+            osio::xprint("TO:  %s\n",target_path.c_str());
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
         }
     }
     else
@@ -465,7 +465,7 @@ template<class T> void Bm::runsimulation_target(const T *target_path_overwrite)
 template<class T> void Bm::runexport(const T *target_path_overwrite,int flags,int *actions,MergeControler<T> *cc)
 {
     std::string ign=ini->get("ignore")+";";
-    //cout << ign << endl;
+    //std::cout << ign << endl;
     unsigned int i=0,p=0;
     while(ign.c_str()[i])
     {
@@ -501,7 +501,7 @@ template<class T> void Bm::runexport(const T *target_path_overwrite,int flags,in
             /*
             for(unsigned int i=0;i<a.project.size();i++)
             {
-                printf("%d) %s --> %s --> %s\n",i,a.project[i].base.c_str(),a.project[i].project.c_str(),a.project[i].version.c_str());
+                osio::xprint("%d) %s --> %s --> %s\n",i,a.project[i].base.c_str(),a.project[i].project.c_str(),a.project[i].version.c_str());
             }
             */
             cc->importfiles_extmode(targetpath("").c_str(),10,a);
@@ -541,7 +541,7 @@ template<class T> void Bm::runexport(const char *tab,std::string target_path_ove
     AbsCsvData *data=load_data(tab);
     if(!data)
     {
-        osio::print("Could'nt open file %s.\n",tab);
+        osio::xprint("Could'nt open file %s.\n",tab);
         cc->setError(5);
         return;
     }
@@ -549,8 +549,8 @@ template<class T> void Bm::runexport(const char *tab,std::string target_path_ove
     if(do_package_export)package_export_tabs(ini->get("webspace"));
     if(do_package_export)
     {
-        printf(">>>> TAB: %s\n",tab);
-        printf("++++ TAB: %s\n",(ini->get("webspace")+"package"+tab).c_str());
+        osio::xprint(">>>> TAB: %s\n",tab);
+        osio::xprint("++++ TAB: %s\n",(ini->get("webspace")+"package"+tab).c_str());
         file::copyfile((ini->get("webspace")+"package"+tab).c_str(),tab);
     }
 
@@ -580,28 +580,28 @@ template<class T> void Bm::runexport(const char *tab,std::string target_path_ove
 
         if(!(pathname=="" || (path::pathtype(pathname.c_str()) & PATH_DIR)))
         {
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-            std::cout << "Ignoring record." << std::endl;
-            std::cout << "file  = " << tab << std::endl;
-            std::cout << "line  = " << i << std::endl;
-            std::cout << "field = path" << std::endl;
-            std::cout << "value = " << pathname << std::endl;
-            std::cout << "This should be empty or a directory, not a file." << std::endl;
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            osio::xprint("Ignoring record.\n");
+            osio::xprint("file  = %s\n",tab);
+            osio::xprint("line  = %d\n",i);
+            osio::xprint("field = path\n");
+            osio::xprint("value = %s\n",pathname.c_str());
+            osio::xprint("This should be empty or a directory, not a file.\n");
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
             i++;
             continue;
         }
 
         if(path::pathtype(filename.c_str()) & PATH_ABS)
         {
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-            std::cout << "Ignoring record." << std::endl;
-            std::cout << "file  = " << tab << std::endl;
-            std::cout << "line  = " << i << std::endl;
-            std::cout << "field = filename" << std::endl;
-            std::cout << "value = " << filename << std::endl;
-            std::cout << "This cannot be an absolute path." << std::endl;
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+            osio::xprint("Ignoring record.\n");
+            osio::xprint("file  = %s\n",tab);
+            osio::xprint("line  = %d\n",i);
+            osio::xprint("field = filename\n");
+            osio::xprint("value = %s\n",filename.c_str());
+            osio::xprint("This cannot be an absolute path.\n");
+            osio::xprint("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
             i++;
             continue;
         }
@@ -623,7 +623,7 @@ template<class T> void Bm::runexport(const char *tab,std::string target_path_ove
             }
         }
 
-        //osio::print("von:  %s --- %s\n",pathname.c_str(),filename.c_str());
+        //osio::xprint("von:  %s --- %s\n",pathname.c_str(),filename.c_str());
         std::string source_path=filepath(pathname,filename);
 
         if(basename=="this" && projname=="this" && versname=="this")
@@ -653,7 +653,7 @@ template<class T> void Bm::runexport(const char *tab,std::string target_path_ove
             else
             {
                 cc->setError(5);
-                printf("[ERROR] baseman: Project not available.\n[ERROR] baseman: missing %s/%s/%s\n",basename.c_str(),projname.c_str(),versname.c_str());
+                osio::xprint("[ERROR] baseman: Project not available.\n[ERROR] baseman: missing %s/%s/%s\n",basename.c_str(),projname.c_str(),versname.c_str());
             }
         }
         i++;

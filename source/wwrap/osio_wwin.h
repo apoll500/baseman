@@ -117,15 +117,17 @@ public:
     {
         int i;
         va_list args;
-        va_start(args,format);
         char *buffer;
+        va_start(args,format);
         i=vsnprintf(buffer,0,format,args);
+        va_end(args);
         buffer=(char *)malloc((i+1)*sizeof(char));
+        va_start(args,format);
         i=vsnprintf(buffer,i+1,format,args);
+        va_end(args);
         if(external_print)i=external_print(buffer);
         else printf(buffer);
         free(buffer);
-        va_end(args);
         return i;
     }
 };

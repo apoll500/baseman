@@ -8,8 +8,6 @@
 
 login_url="https://www.andreaspollhammer.com/sys/index.php"
 download_url="https://www.andreaspollhammer.com/sys/index.php?c=baseman&f="
-#login_url="http://localhost/sites/admin/sys/index.php"
-#download_url="http://localhost/sites/admin/sys/index.php?c=baseman&f="
 
 logininfo_status () {
     echo $1

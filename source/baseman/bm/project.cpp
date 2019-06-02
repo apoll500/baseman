@@ -116,25 +116,25 @@ void Project::set_values(AbsCsvRecord *r)
     else
     {
         path="";
-        printf("ERROR: Project::set_values() path=0\n");
+        osio::xprint("ERROR: Project::set_values() path=0\n");
     }
     if(target_cstr)target=target_cstr;
     else
     {
         target="";
-        printf("ERROR: Project::set_values() target=0\n");
+        osio::xprint("ERROR: Project::set_values() target=0\n");
     }
     if(description_cstr)desc=description_cstr;
     else
     {
         desc="";
-        printf("ERROR: Project::set_values() desc=0\n");
+        osio::xprint("ERROR: Project::set_values() desc=0\n");
     }
     if(run_cstr)run=run_cstr;
     else
     {
         run="";
-        printf("ERROR: Project::set_values() run=0\n");
+        osio::xprint("ERROR: Project::set_values() run=0\n");
     }
 
     fullpath=abspath();
@@ -145,12 +145,12 @@ void Project::info()
     if(parent)
     {
         parent->info();
-        osio::print("\nSub-Project:");
+        osio::xprint("\nSub-Project:");
     }
     else
     {
         plevelitem->info();
-        osio::print("\nProject:");
+        osio::xprint("\nProject:");
     }
-    osio::print("\n----------------------------------------------------------------------\nname        = %s\npath        = %s\ntarget      = %s\nrun         = %s\ndescription = %s\n",key_value.c_str(),path.c_str(),target.c_str(),run.c_str(),desc.c_str());
+    osio::xprint("\n----------------------------------------------------------------------\nname        = %s\npath        = %s\ntarget      = %s\nrun         = %s\ndescription = %s\n",key_value.c_str(),path.c_str(),target.c_str(),run.c_str(),desc.c_str());
 }
