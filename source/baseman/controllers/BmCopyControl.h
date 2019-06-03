@@ -71,7 +71,7 @@ public:
     }
     virtual ~BmCondCopyControl()
     {
-        base_path_index=0;
+        //base_path_index=0;
     }
     virtual void setBm(Bm *b);
     virtual void setError(int r);

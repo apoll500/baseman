@@ -42,10 +42,6 @@
 
 #include <string>
 
-//#include "csv/CsvData.h"
-//#include "settings/settings.h"
-//#include "path/path.h"
-
 #include "../baseman.h"
 #include "bm.h"
 
@@ -57,7 +53,7 @@ public:
     Base();
     ~Base();
     Base(std::string base);
-    void ini0(std::string base);
+    void ini_Base(std::string base);
     void set_values(AbsCsvRecord *r);
     void info();
 };

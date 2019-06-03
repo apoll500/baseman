@@ -55,6 +55,7 @@ CsvData::~CsvData()
     {
         delete data[i];
     }
+    free(data);
     delete settings;
 }
 
@@ -122,10 +123,6 @@ int CsvData::load(Reader *r)
     int h=1;
     while(h==1)
     {
-        //CsvRecord rec(this);
-        //h=rec.load(r);
-        //data.push_back(rec);
-        //printf("loading csv record\n");
         AbsCsvRecord *rec=AbsCsvRecordInterface::createCsvRecord(this);
         h=rec->load(r);
         addRecord(rec);

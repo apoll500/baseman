@@ -319,6 +319,7 @@ template<class T> void MergeControler<T>::ini_MergeControler(const T *logfile_in
             }
             i++;
         }
+        free(r);
     }
 
     //OUTPUT

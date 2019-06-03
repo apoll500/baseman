@@ -132,6 +132,7 @@ void create_base(const char *base,const char *path,const char *group)
             return;
         }
     }
+    free(rec);
 
     int row=data->addRecord();
     if(!data->setField(row,"name",base))osio::xprint("!-");
@@ -177,6 +178,7 @@ void list_group(const char *group)
         osio::xprint("    ");
         rec[i++]->print_ln(stdout,col_list);
     }
+    free(rec);
 
     delete data;
 }

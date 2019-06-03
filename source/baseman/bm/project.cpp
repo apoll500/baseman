@@ -69,6 +69,7 @@ Project::Project(std::string basename,std::string projectname):Bm()
 Project::~Project()
 {
     delete plevelitem;
+    if(parent)delete parent;
 }
 
 void Project::ini0(char **projects)

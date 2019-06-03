@@ -630,6 +630,7 @@ bool Bm::select(const char *tab,const char *key,const char *selected_name,
         }
         i++;
     }
+    free(rec);
     delete data;
     return false;
 }
@@ -657,6 +658,7 @@ bool Bm::select_line(const char *tab,const char *key,int selected_line,
         }
         i++;
     }
+    free(rec);
     delete data;
     return false;
 }
@@ -708,6 +710,8 @@ void Bm::list(const char *title,const char *tab,const char *key)
         osio::xprint("%d: ",i+1);
         rec[i++]->print_ln(stdout,col_list);
     }
+    free(rec);
+    delete data;
 }
 void Bm::list_files(const char *title,const char *tab)
 {
@@ -746,6 +750,8 @@ void Bm::list_files(const char *title,const char *tab)
         osio::xprint("%d: ",i+1);
         rec[i++]->print_ln(stdout,col_list);
     }
+    free(rec);
+    delete data;
 }
 void Bm::list_projects()
 {
@@ -835,6 +841,7 @@ void Bm::create(const char *tab,const char *key,const char *name,const char *pat
             return;
         }
     }
+    free(rec);
 
     int row=data->addRecord();
     if(!data->setField(row,key,name))osio::xprint("!-");
@@ -918,28 +925,16 @@ all_projects_info Bm::get_all_projects()
             osio::xprint("Could'nt open file %s.\n",files_tabname.c_str());
             return a;
         }
-        //load the header-ids
         int hid_base=data->getHeaderId("base");
         int hid_proj=data->getHeaderId("project");
         int hid_vers=data->getHeaderId("version");
-        //int hid_path=data->getHeaderId("path");
-        //int hid_file=data->getHeaderId("filename");
-        //int hid_flag=data->getHeaderId("flag");
-        //int hid_targ=data->getHeaderId("target");
-        //int hid_desc=data->getHeaderId("description");
-        //load all records
         AbsCsvRecord **rec=data->getAllRecords("flag","1");
         int i=0;
         while(rec[i]!=0)
         {
-            //get fields of current record
             std::string basename=rec[i]->getField(hid_base);
             std::string projname=rec[i]->getField(hid_proj);
             std::string versname=rec[i]->getField(hid_vers);
-            //std::string pathname=rec[i]->getField(hid_path);
-            //std::string filename=rec[i]->getField(hid_file);
-            //std::string targname=rec[i]->getField(hid_targ);
-            //std::string descript=rec[i]->getField(hid_desc);
             if(basename=="this" && projname=="this" && versname=="this")
             {
                 //ignore this here (no other files.csv to load file from here)
@@ -965,6 +960,8 @@ all_projects_info Bm::get_all_projects()
             }
             i++;
         }
+        free(rec);
+        delete data;
     }
     //add this project to output
     this_project_info t;
@@ -972,24 +969,6 @@ all_projects_info Bm::get_all_projects()
     t.project=project_name();
     t.version=version_name();
     a.project.push_back(t);
+
     return a;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -41,12 +41,12 @@
 
 Base::Base():Bm()
 {
-    ini0(ini->get("base"));
+    ini_Base(ini->get("base"));
 }
 
 Base::Base(std::string base):Bm()
 {
-    ini0(base);
+    ini_Base(base);
 }
 
 Base::~Base()
@@ -54,7 +54,7 @@ Base::~Base()
     //
 }
 
-void Base::ini0(std::string base)
+void Base::ini_Base(std::string base)
 {
     error=0;
     target="";

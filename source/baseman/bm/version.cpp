@@ -70,6 +70,7 @@ Version::Version(std::string basename,std::string projectname,std::string versio
 Version::~Version()
 {
     delete plevelitem;
+    if(parent)delete parent;
 }
 
 void Version::ini0(char **versions)
