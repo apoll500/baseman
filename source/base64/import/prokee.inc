@@ -3,6 +3,7 @@
 //Import required modules
 #include "file/v01/module.inc"
 #include "prompt/v01/module.inc"
+#include "str/v01/module.inc"
 #include "strconv/v01/module.inc"
 
 

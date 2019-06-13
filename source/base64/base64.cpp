@@ -63,7 +63,7 @@ char *base64::encode(void *data,unsigned int length,bool padding,const char *sym
 }
 //------------------------------------------------------------------------------
 //  #end
-//  #begin encode -- writing to existing buffer
+//  #begin encode -- writing to existing memory block
 //
 //------------------------------------------------------------------------------
 int base64::encode(void *data,unsigned int length,char *bstr)
@@ -116,7 +116,7 @@ int base64::encode(void *data,unsigned int length,char *bstr,bool padding,const 
 }
 //------------------------------------------------------------------------------
 //  #end
-//  #begin encode -- writing to existing buffer with length check
+//  #begin encode -- writing to existing memory block with length check
 //
 //------------------------------------------------------------------------------
 int base64::encode(void *data,unsigned int length,char *bstr,unsigned int bln)
@@ -264,7 +264,7 @@ int base64::decode_intern(const char *bstr,void *data,const char *symtab,char pa
 }
 //------------------------------------------------------------------------------
 //  #end
-//  #begin decode -- writing to existing buffer
+//  #begin decode -- writing to existing memory block
 //
 //------------------------------------------------------------------------------
 int base64::decode(const char *bstr,void *data)
@@ -289,7 +289,7 @@ int base64::decode(const char *bstr,void *data,const char *sym,char pad)
 }
 //------------------------------------------------------------------------------
 //  #end
-//  #begin decode -- allocating a new buffer
+//  #begin decode -- allocating a new memory block
 //
 //------------------------------------------------------------------------------
 void *base64::decode(const char *bstr)
@@ -310,7 +310,7 @@ void *base64::decode(const char *bstr,const char *sym,char pad)
 }
 //------------------------------------------------------------------------------
 //  #end
-//  #begin decode -- writing to existing buffer with length check
+//  #begin decode -- writing to existing memory block with length check
 //
 //------------------------------------------------------------------------------
 int base64::decode(const char *bstr,void *data,unsigned int dataln)

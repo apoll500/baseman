@@ -39,4 +39,4 @@
 *******************************************************************************/
 #include "BmCopyControl.h"
 
-// ... everything moved to header file.
+// ... moved everything to header file.

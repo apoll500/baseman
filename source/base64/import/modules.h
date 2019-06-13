@@ -47,6 +47,7 @@
 //Include required modules
 #include "file/file.h"
 #include "prompt/prompt.h"
+#include "str/str.h"
 #include "strconv/strconv.h"
 
 
@@ -62,6 +63,9 @@
 #endif
 #ifdef PROKEE_USE_INTERFACE
 #include "prompt/prompt.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "str/str.hh2"
 #endif
 #ifdef PROKEE_USE_INTERFACE
 #include "strconv/strconv.hh2"

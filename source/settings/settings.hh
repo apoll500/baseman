@@ -1,3 +1,5 @@
+//../../../settings/settings.hh
+
 #ifndef PLIB_CLASS_settings_all_hh
 #define PLIB_CLASS_settings_all_hh
 

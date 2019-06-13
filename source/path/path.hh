@@ -1,3 +1,5 @@
+//../../../path/path.hh
+
 #ifndef PLIB_CLASS_path_all_hh
 #define PLIB_CLASS_path_all_hh
 

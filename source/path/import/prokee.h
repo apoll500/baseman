@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+//../../../path/import/prokee.h
+
 #ifndef path_import_prokee
 #define path_import_prokee
 
@@ -60,6 +62,8 @@
 #include "file/v01/module.h"
 #include "dir/v01/module.h"
 #include "strman/v01/module.h"
+#include "str/v01/module.h"
+#include "osdir/v01/module.h"
 #include "strconv/v01/module.h"
 
 
@@ -85,6 +89,8 @@
 #include "file/file.hh"
 #include "dir/dir.hh"
 #include "strman/strman.hh"
+#include "str/str.hh"
+#include "osdir/osdir.hh"
 #include "strconv/strconv.hh"
 
 

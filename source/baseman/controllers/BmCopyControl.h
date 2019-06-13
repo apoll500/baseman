@@ -53,9 +53,6 @@ class Bm;
 #include <vector>
 #include <string>
 
-/** CondCopyControl implementation required for class Bm.
-
-*/
 template<class T> class BmCondCopyControl:public CondCopyControl<T>
 {
 protected:

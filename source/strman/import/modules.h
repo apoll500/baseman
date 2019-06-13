@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+//../../../strman/import/modules.h
+
 #ifndef strman_import_modules
 #define strman_import_modules
 
@@ -44,6 +46,7 @@
 
 //Include required modules
 #include "strconv/strconv.h"
+#include "str/str.h"
 
 
 //Local module headers
@@ -55,6 +58,9 @@
 
 #ifdef PROKEE_USE_INTERFACE
 #include "strconv/strconv.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "str/str.hh2"
 #endif
 
 

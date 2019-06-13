@@ -104,7 +104,7 @@ public:
     {
         int i;
         va_list args;
-        char *buffer;
+        char *buffer=0;
         va_start(args,format);
         i=vsnprintf(buffer,0,format,args);
         va_end(args);

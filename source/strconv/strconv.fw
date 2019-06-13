@@ -1,3 +1,5 @@
+//inc/interface/import/all.fw../../../strconv/strconv.fw
+
 #ifndef PLIB_FUNCTION_strconv_iface_all_fw
 #define PLIB_FUNCTION_strconv_iface_all_fw
 

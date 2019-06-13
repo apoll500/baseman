@@ -916,9 +916,6 @@ all_projects_info Bm::get_all_projects()
     std::string files_tabname=fullpath+"files.csv";
     if(file::testfile(files_tabname.c_str()))
     {
-        //check items of files.csv
-        //osio::xprint("loading %s\n",files_tabname.c_str());
-        //open files.csv file.
         AbsCsvData *data=load_data(files_tabname.c_str());
         if(!data)
         {
@@ -941,7 +938,6 @@ all_projects_info Bm::get_all_projects()
             }
             else
             {
-                //osio::xprint("load project: %s --> %s --> %s\n",basename.c_str(),projname.c_str(),versname.c_str());
                 Bm *b=createBm(basename,projname,versname,true);
                 if(b)
                 {
@@ -949,7 +945,6 @@ all_projects_info Bm::get_all_projects()
                     for(unsigned int k=0;k<a2.project.size();k++)
                     {
                         a.project.push_back(a2.project[k]);
-                        //osio::xprint(">>>> | %s | %s | %s |\n",a2.project[k].base.c_str(),a2.project[k].project.c_str(),a2.project[k].version.c_str());
                     }
                 }
                 else

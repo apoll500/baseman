@@ -39,7 +39,7 @@
 *******************************************************************************/
 #ifndef MOD_strman_H
 #define MOD_strman_H
-#include "wwrap/str.h"
+//#include "wwrap/str.h"
 #include "wwrap/conststr.h"
 #include <stdlib.h>
 #include "strman/import/prokee.h"

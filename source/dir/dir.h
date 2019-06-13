@@ -40,170 +40,21 @@
 #ifndef MOD_dir_H
 #define MOD_dir_H
 #include <stdlib.h>
-#include "wwrap/str.h"
+//#include "wwrap/str.h"
 #include "wwrap/osio.h"
-#include "wwrap/osdir.h"
+//#include "wwrap/osdir.h"
 #include "wwrap/conststr.h"
+//#include "osdir/osdir.h"
 #ifdef OS_LIN
 #include <dirent.h>
 #endif
 #define PROKEE_USE_INTERFACE
 #define PROKEE_USE_WRAPPER
-#include "dir/dir.hh"
-#include "file/file.hh"
+//#include "str/str.h"
+//#include "dir/dir.hh"
+//#include "file/file.hh"
 #include "dir/import/prokee.h"
-#ifdef OS_WIN
-template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
-{
-public:
-    HANDLE hfind;
-    myWIN32_FIND_DATA *filedata;
-    T *dirpath;
-    DIRECTORY_Impl(const T *path)
-    {
-        filedata=new myWIN32_FIND_DATA((T *)0);
-        dirpath=(T *)malloc((str::len(path)+5)*sizeof(T));
-        str::cpy(dirpath,path);
-        hfind=0;
-        readdir_setup();
-    }
-    ~DIRECTORY_Impl()
-    {
-        free(dirpath);
-        if(hfind!=0)FindClose(hfind);
-        delete filedata;
-    }
-    T *read()
-    {
-        if(hfind==0)
-        {
-            return readfirst();
-        }
-        else
-        {
-            if(osdir::myFindNextFile(hfind,filedata))
-            {
-                if(hfind!=0 && hfind!=INVALID_HANDLE_VALUE)
-                {
-					dirsep();
-                }
-                else
-                {
-                    filedata->setnull_cFileName();
-                }
-            }
-            else
-            {
-                filedata->setnull_cFileName();
-            }
-            return filedata->get_cFileName((T *)0);
-        }
-    }
-    bool item_isdir()
-    {
-        return (filedata->get((T *)0)->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
-    }
-    void dirsep()
-    {
-        if(item_isdir())
-        {
-            T a[2];
-            filedata->append_cFileName(conststr::dirsep1(a));
-        }
-    }
-private:
-    void readdir_setup()
-    {
-        T a[2];
-        str::cat(dirpath,conststr::cast(a,"*"));
-        filedata->setnull_cFileName();
-    }
-    T *readfirst()
-    {
-        hfind=osdir::myFindFirstFile(dirpath,filedata);
-        if(hfind!=INVALID_HANDLE_VALUE)// && filedata->cFileName[0]!=0)
-        {
-            dirsep();
-        }
-        else
-        {
-            filedata->setnull_cFileName();
-        }
-        return filedata->get_cFileName((T *)0);
-    }
-};
-#elif defined OS_LIN
-template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
-{
-    struct dirent *diritem;
-    DIR *ddir;
-    char *dirpath;
-    char currentItemName[1024];
-public:
-    DIRECTORY_Impl(const char *path)
-    {
-        dirpath=(char *)malloc((str::len(path)+1)*sizeof(char));
-        str::cpy(dirpath,path);
-        ddir=opendir(path);
-    }
-    DIRECTORY_Impl(const wchar_t *)
-    {
-        // --TODO--
-    }
-    ~DIRECTORY_Impl()
-    {
-        if(ddir)closedir(ddir);
-        free(dirpath);
-    }
-    T *read()
-    {
-        if(ddir)
-        {
-            diritem=readdir(ddir);
-            if(!diritem)
-            {
-                currentItemName[0]=0;
-                return (T *)currentItemName;
-            }
-            dirsep();
-        }
-        else
-        {
-            currentItemName[0]=0;
-        }
-        return (T *)currentItemName;
-    }
-    bool item_isdir()
-    {
-        struct stat sb;
-        char *a=(char *)malloc((str::len(dirpath)+str::len(diritem->d_name)+1)*sizeof(char));
-        str::cpy(a,dirpath);
-        str::cat(a,diritem->d_name);
-        if(lstat(a,&sb)==-1)
-        {
-            free(a);
-            perror("stat");
-            return false;
-        }
-        free(a);
-        if((sb.st_mode & S_IFMT)==S_IFDIR)
-        {
-            return true;
-        }
-        return false;
-    }
-    void dirsep()
-    {
-        str::cpy(currentItemName,diritem->d_name);
-        if(item_isdir())
-        {
-            char a[2];
-            str::cat(currentItemName,conststr::dirsep1(a));
-        }
-    }
-};
-
-#endif
+// --TODO --
 class dir
 {
 public:
@@ -239,6 +90,38 @@ public:
     template<class T> static bool copydir(const T *targetpath,const T *sourcepath,const T *directory,CondCopyControl<T> *cc);
 };
 #include "dir/import/modules.h"
+#ifdef OS_WIN
+template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
+{
+public:
+    HANDLE hfind;
+    myWIN32_FIND_DATA filedata;
+    T *dirpath;
+    DIRECTORY_Impl(const T *path);
+    ~DIRECTORY_Impl();
+    T *read();
+    bool item_isdir();
+    void dirsep();
+private:
+    void readdir_setup();
+    T *readfirst();
+};
+#elif defined OS_LIN
+template<class T> class DIRECTORY_Impl:public DIRECTORY<T>
+{
+    struct dirent *diritem;
+    DIR *ddir;
+    char *dirpath;
+    char currentItemName[1024];
+public:
+    DIRECTORY_Impl(const char *path);
+    DIRECTORY_Impl(const wchar_t *);
+    ~DIRECTORY_Impl();
+    T *read();
+    bool item_isdir();
+    void dirsep();
+};
+#endif
 
 template<class T> int dir::createdir(const T *path)
 {
@@ -629,4 +512,139 @@ template<class T> bool dir::copydir(const T *targetpath,const T *sourcepath,cons
     free(b);
     return retVal;
 }
+#ifdef OS_WIN
+template<class T> DIRECTORY_Impl<T>::DIRECTORY_Impl(const T *path)
+{
+    osdir::ini_myWIN32_FIND_DATA(&filedata,(T *)0);
+    dirpath=(T *)malloc((str::len(path)+5)*sizeof(T));
+    str::cpy(dirpath,path);
+    hfind=0;
+    readdir_setup();
+}
+template<class T> DIRECTORY_Impl<T>::~DIRECTORY_Impl()
+{
+    free(dirpath);
+    if(hfind!=0)FindClose(hfind);
+    osdir::free_myWIN32_FIND_DATA(&filedata);
+}
+template<class T> T *DIRECTORY_Impl<T>::read()
+{
+    if(hfind==0)
+    {
+        return readfirst();
+    }
+    else
+    {
+        if(osdir::myFindNextFile(hfind,&filedata))
+        {
+            if(hfind!=0 && hfind!=INVALID_HANDLE_VALUE)
+            {
+                dirsep();
+            }
+            else
+            {
+                osdir::setnull_cFileName(&filedata);
+            }
+        }
+        else
+        {
+            osdir::setnull_cFileName(&filedata);
+        }
+        return osdir::get_cFileName(&filedata,(T *)0);
+    }
+}
+template<class T> bool DIRECTORY_Impl<T>::item_isdir()
+{
+    return (osdir::get(&filedata,(T *)0)->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
+}
+template<class T> void DIRECTORY_Impl<T>::dirsep()
+{
+    if(item_isdir())
+    {
+        T a[2];
+        osdir::append_cFileName(&filedata,conststr::dirsep1(a));
+    }
+}
+template<class T> void DIRECTORY_Impl<T>::readdir_setup()
+{
+    T a[2];
+    str::cat(dirpath,conststr::cast(a,"*"));
+    osdir::setnull_cFileName(&filedata);
+}
+template<class T> T *DIRECTORY_Impl<T>::readfirst()
+{
+    hfind=osdir::myFindFirstFile(dirpath,&filedata);
+    if(hfind!=INVALID_HANDLE_VALUE)// && filedata.cFileName[0]!=0)
+    {
+        dirsep();
+    }
+    else
+    {
+        osdir::setnull_cFileName(&filedata);
+    }
+    return osdir::get_cFileName(&filedata,(T *)0);
+}
+#elif defined OS_LIN
+template<class T> DIRECTORY_Impl<T>::DIRECTORY_Impl(const char *path)
+{
+    dirpath=(char *)malloc((str::len(path)+1)*sizeof(char));
+    str::cpy(dirpath,path);
+    ddir=opendir(path);
+}
+template<class T> DIRECTORY_Impl<T>::DIRECTORY_Impl(const wchar_t *)
+{
+    // --TODO--
+}
+template<class T> DIRECTORY_Impl<T>::~DIRECTORY_Impl()
+{
+    if(ddir)closedir(ddir);
+    free(dirpath);
+}
+template<class T> T *DIRECTORY_Impl<T>::read()
+{
+    if(ddir)
+    {
+        diritem=readdir(ddir);
+        if(!diritem)
+        {
+            currentItemName[0]=0;
+            return (T *)currentItemName;
+        }
+        dirsep();
+    }
+    else
+    {
+        currentItemName[0]=0;
+    }
+    return (T *)currentItemName;
+}
+template<class T> bool DIRECTORY_Impl<T>::item_isdir()
+{
+    struct stat sb;
+    char *a=(char *)malloc((str::len(dirpath)+str::len(diritem->d_name)+1)*sizeof(char));
+    str::cpy(a,dirpath);
+    str::cat(a,diritem->d_name);
+    if(lstat(a,&sb)==-1)
+    {
+        free(a);
+        perror("stat");
+        return false;
+    }
+    free(a);
+    if((sb.st_mode & S_IFMT)==S_IFDIR)
+    {
+        return true;
+    }
+    return false;
+}
+template<class T> void DIRECTORY_Impl<T>::dirsep()
+{
+    str::cpy(currentItemName,diritem->d_name);
+    if(item_isdir())
+    {
+        char a[2];
+        str::cat(currentItemName,conststr::dirsep1(a));
+    }
+}
+#endif
 #endif

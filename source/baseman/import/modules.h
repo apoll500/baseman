@@ -53,6 +53,7 @@
 #include "dir/dir.h"
 #include "path/path.h"
 #include "strman/strman.h"
+#include "str/str.h"
 #include "strconv/strconv.h"
 
 
@@ -86,6 +87,9 @@
 #endif
 #ifdef PROKEE_USE_INTERFACE
 #include "strman/strman.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "str/str.hh2"
 #endif
 #ifdef PROKEE_USE_INTERFACE
 #include "strconv/strconv.hh2"

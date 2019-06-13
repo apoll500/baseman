@@ -16,10 +16,12 @@ rm -f ../../../../source/file/file.o
 rm -f ../../../../source/dir/dir.o
 rm -f ../../../../source/path/path.o
 rm -f ../../../../source/strman/strman.o
+rm -f ../../../../source/str/str.o
 rm -f ../../../../source/strconv/strconv.o
 rm -f ../../../../source/base64/base64.o
 rm -f ../../../../source/prompt/prompt.o
 rm -f ../../../../source/label/label.o
+rm -f ../../../../source/osdir/osdir.o
 rm -f ../../../../source/baseman/cli/main.o
 rm -f ../../../../source/baseman/baseman.o
 rm -f ../../../../source/baseman/bm/base.o

@@ -1,6 +1,6 @@
 /*******************************************************************************
 *                                                                              *
-*  prokee.h                                                                    *
+*  osdir_lin.h                                                                 *
 *                                                                              *
 *  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
@@ -37,59 +37,68 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-//../../../dir/import/prokee.h
-
-#ifndef dir_import_prokee
-#define dir_import_prokee
-
-#define PROKEE_USE_INTERFACE
-#define PROKEE_USE_WRAPPER
-
-
-
-
-
-#ifdef COMPILE_PROKEE_MODULE
-
-#include "../../interface/prokee/dir/inc/interface/import/all.fw"
-#include "../../interface/prokee/dir/inc/wrapper/import/all.fw"
-
-#include "file/v01/module.h"
-#include "label/v01/module.h"
-#include "path/v01/module.h"
-#include "strman/v01/module.h"
-#include "str/v01/module.h"
-#include "osdir/v01/module.h"
-#include "strconv/v01/module.h"
-
-
-#ifdef COMPILE_MODULE_dir
-
-//Local classes
-
-
-//Interface declarations of this module
-#include "dir/dir.hh"
-
-#endif
-
-#else
-
-//Local classes
-
-
-//Interface declarations of this module
-#include "dir/dir.hh"
-
-//Interface declarations of other required modules
-#include "file/file.hh"
-#include "label/label.hh"
-#include "path/path.hh"
-#include "strman/strman.hh"
-#include "str/str.hh"
-#include "osdir/osdir.hh"
-#include "strconv/strconv.hh"
-
-
-#endif
+#ifndef H_WWRAP_DIR_LIN
+#define H_WWRAP_DIR_LIN
+#include <stdio.h>
+#include <dlfcn.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include "osdir/import/prokee.h"
+class osdir
+{
+public:
+    static void ini_myWIN32_FIND_DATA(myWIN32_FIND_DATA *,const void *){};
+    static void free_myWIN32_FIND_DATA(myWIN32_FIND_DATA *){};
+    static wchar_t *get_cFileName(myWIN32_FIND_DATA *,const wchar_t *){return 0;};
+    static char *get_cFileName(myWIN32_FIND_DATA *,const char *){return 0;};
+    static WIN32_FIND_DATAW *get(myWIN32_FIND_DATA *,const void *){return 0;};
+    static WIN32_FIND_DATAW *get(myWIN32_FIND_DATA *){return 0;};
+    static void setnull_cFileName(myWIN32_FIND_DATA *){};
+    static void append_cFileName(myWIN32_FIND_DATA *,const char *){};
+    static void append_cFileName(myWIN32_FIND_DATA *,const wchar_t *){};
+    static HANDLE myFindFirstFile(char *,myWIN32_FIND_DATA *){return 0;};
+    static HANDLE myFindFirstFile(wchar_t *,myWIN32_FIND_DATA *){return 0;};
+    static bool myFindNextFile(HANDLE,myWIN32_FIND_DATA *){return 0;};
+    static bool myFindNextFile(HANDLE,WIN32_FIND_DATAW *){return 0;};
+    //--------------------------------------------------------------------------
+    // char
+    //--------------------------------------------------------------------------
+    static int mk(const char *a)
+    {
+        return mkdir(a,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    }
+    static int rm(const char *a)
+    {
+        return rmdir(a);
+    }
+    
+    static char *oscwd(char *a,size_t n)
+    {
+        return getcwd(a,n);
+    }
+    static int _stat(const char *path,struct stat *st)
+    {
+        return stat(path,st);
+    }
+    //--------------------------------------------------------------------------
+    // wchar_t
+    //--------------------------------------------------------------------------
+    static int mk(const wchar_t *)
+    {
+        return 0;
+    }
+    static int rm(const wchar_t *)
+    {
+        return 0;
+    }
+    static wchar_t *oscwd(wchar_t *,size_t)
+    {
+        return 0;
+    }
+    static int _stat(const wchar_t *,struct stat *)
+    {
+        return 0;
+    }
+};
+#include "osdir/import/modules.h"
 #endif

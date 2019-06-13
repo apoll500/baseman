@@ -92,6 +92,10 @@ void runargs(int argc,char **argv)
     {
         runargs_import(argc,argv);
     }
+    else if(strcmp(argv[1],"remove")==0)
+    {
+        runargs_remove(argc,argv);
+    }
     else if(strcmp(argv[1],"import_p")==0)
     {
         runargs_import_p(argc,argv);
@@ -251,7 +255,6 @@ void imode(void)
 
 int print_to_nil(const char *)
 {
-    //osio::xprint("%s",a);
     return 0;
 }
 
@@ -437,6 +440,41 @@ void runargs_import(int argc,char **)
         if(p)
         {
             p->run("",RUN_DIRWALK | RUN_IMPORT,actions);
+            delete p;
+        }
+        else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");
+    }
+    else
+    {
+        osio::xprint("Wrong number of arguments.\n");
+    }
+}
+
+void runargs_remove(int argc,char **)
+{
+    int actions[]={ACTION_DONOTHING,
+
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+                  ACTION_DONOTHING,
+
+                  ACTION_REMOVE_NOBACKUP,
+                  ACTION_DONOTHING,
+                  ACTION_REMOVE_NOBACKUP};
+    if(argc==2)
+    {
+        Bm *p=bmObject();
+        if(p)
+        {
+            p->run("",RUN_DIRWALK | RUN_REMOVE,actions);
             delete p;
         }
         else osio::xprint("Noting selected.\nUse \"baseman select <basename>\" to select a base.");

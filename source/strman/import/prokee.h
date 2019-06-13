@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+//../../../strman/import/prokee.h
+
 #ifndef strman_import_prokee
 #define strman_import_prokee
 
@@ -53,6 +55,7 @@
 #include "../../interface/prokee/strman/inc/wrapper/import/all.fw"
 
 #include "strconv/v01/module.h"
+#include "str/v01/module.h"
 
 
 #ifdef COMPILE_MODULE_strman
@@ -75,6 +78,7 @@
 
 //Interface declarations of other required modules
 #include "strconv/strconv.hh"
+#include "str/str.hh"
 
 
 #endif

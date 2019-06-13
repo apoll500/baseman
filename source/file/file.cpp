@@ -60,13 +60,13 @@ bool file::copyfile(int targetfile,int sourcefile)
     }
     return true;
 }
-void *file::readfile(FILE *f,char *data)
+void *file::readfile(FILE *f,void *data)
 {
     size_t ln=1;
     size_t bytecount=0;
     while(ln)
     {
-        ln=fread(&data[bytecount],1,BUFSIZ,f);
+        ln=fread(&((char *)data)[bytecount],1,BUFSIZ,f);
         bytecount+=ln;
     }
     return data;

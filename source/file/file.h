@@ -42,8 +42,8 @@
 #define MOD_file_H
 #include <stdlib.h>
 #include "wwrap/osfile.h"
-#include "wwrap/osdir.h"
-#include "wwrap/str.h"
+//#include "wwrap/osdir.h"
+//#include "wwrap/str.h"
 #include "wwrap/conststr.h"
 #include "wwrap/osio.h"
 #ifdef OS_WIN
@@ -74,8 +74,8 @@ public:
     template<class T> static FILE *openfile(const T *filename);
     
     template<class T> static void *readfile(const T *filename,unsigned int *length);
-    template<class T> static void *readfile(const T *filename,char *data);
-    static void *readfile(FILE *f,char *data);
+    template<class T> static void *readfile(const T *filename,void *data);
+    static void *readfile(FILE *f,void *data);
     
     
     template<class T> static bool writefile(const T *filename,void *data,unsigned int length);
@@ -140,7 +140,7 @@ template<class T> void *file::readfile(const T *filename,unsigned int *length)
     if(length)*length=0;
     return 0;
 }
-template<class T> void *file::readfile(const T *filename,char *data)
+template<class T> void *file::readfile(const T *filename,void *data)
 {
     FILE *f=file::openfile(filename);
     if(!f)return 0;

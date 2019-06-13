@@ -46,12 +46,6 @@
 
 #include "baseman/baseman.h"
 
-//#include "file/file.h"
-//#include "path/path.h"
-
-//#include "csv/CsvData.h"
-//#include "settings/settings.h"
-
 #include "../controllers/MergeControler.h"
 
 #include "licenses/license_GPL3.h"
@@ -82,6 +76,7 @@ void runargs_export(int argc,char **argv);
 void runargs_package(int argc,char **argv);
 void runargs_merge(int argc,char **argv);
 void runargs_import(int argc,char **argv);
+void runargs_remove(int argc,char **argv);
 void runargs_import_p(int argc,char **argv);
 void runargs_clean(int argc,char **argv);
 void runargs_snapshot(int argc,char **argv);

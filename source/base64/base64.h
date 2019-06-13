@@ -39,9 +39,10 @@
 *******************************************************************************/
 #ifndef H_BASE64
 #define H_BASE64
-#include "wwrap/str.h"
+//#include "wwrap/str.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "base64/import/prokee.h"
 class base64
@@ -59,7 +60,7 @@ public:
     template<class T> static char *encode(const T *s);
     template<class T> static char *encode(const T *s,bool padding);
     template<class T> static char *encode(const T *s,bool padding,const char *sym,char pad);
-    //writing to existing buffer
+    //writing to existing memory block
     static int encode(void *data,unsigned int length,char *bstr);
     static int encode(void *data,unsigned int length,char *bstr,bool padding);
     static int encode_url(void *data,unsigned int length,char *bstr,bool padding);
@@ -68,7 +69,7 @@ public:
     static char *encode(void *data,unsigned int length,bool padding);
     static char *encode(void *data,unsigned int length,bool padding,const char *sym,char pad);
     static char *encode_url(void *data,unsigned int length,bool padding);
-    //writing to existing buffer with length check
+    //writing to existing memory block with length check
     static int encode(void *data,unsigned int length,char *bstr,unsigned int bln);
     static int encode(void *data,unsigned int length,char *bstr,unsigned int bln,bool padding);
     static int encode(void *data,unsigned int length,char *bstr,unsigned int bln,bool padding,const char *sym,char pad);
@@ -86,7 +87,7 @@ public:
     //--------------------------------------------------------------------------
     //decode wrappers
     //--------------------------------------------------------------------------
-    //writing to existing buffer
+    //writing to existing memory block
     static int decode(const char *bstr,void *data);
     static int decode(const char *bstr,void *data,const char *sym,char pad);
     static int decode_url(const char *bstr,void *data);
@@ -94,7 +95,7 @@ public:
     static void *decode(const char *bstr);
     static void *decode(const char *bstr,const char *sym,char pad);
     static void *decode_url(const char *bstr);
-    //writing to existing buffer with lenth check
+    //writing to existing memory block with lenth check
     static int decode(const char *bstr,void *data,unsigned int dataln);
     static int decode(const char *bstr,void *data,unsigned int dataln,const char *sym,char pad);
     static int decode_url(const char *bstr,void *data,unsigned int dataln);

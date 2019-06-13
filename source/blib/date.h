@@ -40,27 +40,26 @@
 #ifndef H_BLIB_DATE
 #define H_BLIB_DATE
 #include "wwrap/osio.h"
-#include "wwrap/str.h"
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 class date
 {
 public:
-    template<class T> static T *get_bdn(T *str);
+    static char *get_bdn(char *str)
+    {
+        const time_t t=time(0);
+        struct tm *ti=gmtime(&t);
+        osio::sprint(str,"%d",ti->tm_year+1900);
+        int mon=ti->tm_mon+1;
+        if(mon<10)strcat(str,"0");
+        osio::sprint(&str[strlen(str)],"%d",mon);
+        int day=ti->tm_mday;
+        if(day<10)strcat(str,"0");
+        osio::sprint(&str[strlen(str)],"%d",day);
+        strcat(str,"_");
+        osio::sprint(&str[strlen(str)],"%lu",t);
+        return str;
+    }
 };
-template<class T> T *date::get_bdn(T *str)
-{
-    const time_t t=time(0);
-    struct tm *ti=gmtime(&t);
-    osio::sprint(str,"%d",ti->tm_year+1900);
-    int mon=ti->tm_mon+1;
-    if(mon<10)str::cat(str,"0");
-    osio::sprint(&str[str::len(str)],"%d",mon);
-    int day=ti->tm_mday;
-    if(day<10)str::cat(str,"0");
-    osio::sprint(&str[str::len(str)],"%d",day);
-    str::cat(str,"_");
-    osio::sprint(&str[str::len(str)],"%lu",t);
-    return str;
-}
 #endif

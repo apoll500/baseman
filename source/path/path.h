@@ -41,9 +41,9 @@
 #define MOD_path_H
 #include <stdio.h>
 #include <stdlib.h>
-#include "wwrap/str.h"
+//#include "wwrap/str.h"
 #include "wwrap/conststr.h"
-#include "wwrap/osdir.h"
+//#include "wwrap/osdir.h"
 template<class T> class CondCopyControl;
 #define PATH_SYSTEM_LINUX 1
 #define PATH_SYSTEM_WINDOWS 2

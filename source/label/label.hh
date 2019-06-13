@@ -1,3 +1,5 @@
+//../../../label/label.hh
+
 #ifndef PLIB_CLASS_label_all_hh
 #define PLIB_CLASS_label_all_hh
 

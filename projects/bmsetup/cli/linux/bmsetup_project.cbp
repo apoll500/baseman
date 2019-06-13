@@ -62,6 +62,7 @@
         <Unit filename="../../../../source/path/path.cpp" />
         <Unit filename="../../../../source/base64/base64.cpp" />
         <Unit filename="../../../../source/strman/strman.cpp" />
+        <Unit filename="../../../../source/str/str.cpp" />
         <Unit filename="../../../../source/strconv/strconv.cpp" />
         <Unit filename="../../../../source/prompt/prompt.cpp" />
         <Unit filename="../../../../source/reader/reader.cpp" />
@@ -71,6 +72,7 @@
         <Unit filename="../../../../source/reader/StrReader.cpp" />
         <Unit filename="../../../../source/reader/WcsReader.cpp" />
         <Unit filename="../../../../source/label/label.cpp" />
+        <Unit filename="../../../../source/osdir/osdir.cpp" />
         <Unit filename="../../../../source/bmsetup/cli/main.cpp" />
         
         <Unit filename="../../../../source/reader/ReaderImpl.hpp" />
@@ -91,11 +93,13 @@
         <Unit filename="../../../../source/path/path.h" />
         <Unit filename="../../../../source/base64/base64.h" />
         <Unit filename="../../../../source/strman/strman.h" />
+        <Unit filename="../../../../source/str/str.h" />
         <Unit filename="../../../../source/strconv/strconv.h" />
         <Unit filename="../../../../source/prompt/prompt.h" />
         <Unit filename="../../../../source/reader/reader.h" />
         <Unit filename="../../../../source/reader/ReaderImpl.h" />
         <Unit filename="../../../../source/label/label.h" />
+        <Unit filename="../../../../source/osdir/osdir.h" />
         <Extensions>
             <code_completion />
             <debugger />

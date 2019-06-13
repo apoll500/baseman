@@ -62,6 +62,7 @@ class Reader;
 #include "dir/v01/module.h"
 #include "path/v01/module.h"
 #include "strman/v01/module.h"
+#include "str/v01/module.h"
 #include "strconv/v01/module.h"
 
 
@@ -92,6 +93,7 @@ class Reader;
 #include "dir/dir.hh"
 #include "path/path.hh"
 #include "strman/strman.hh"
+#include "str/str.hh"
 #include "strconv/strconv.hh"
 
 

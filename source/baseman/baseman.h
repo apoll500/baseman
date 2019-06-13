@@ -37,8 +37,6 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-//baseman/code/v01/files/source/baseman/baseman.h
-
 #ifndef MOD_baseman_H
 #define MOD_baseman_H
 
@@ -54,12 +52,9 @@
 #include "macros/macros.h"
 #include "wwrap/osio.h"
 
-#include "baseman/import/prokee.h"
+#define baseman_set_printer set_printer
 
-//#include "csv/CsvData.h"
-//#include "settings/settings.h"
-//#include "path/path.h"
-//#include "file/file.h"
+#include "baseman/import/prokee.h"
 
 void print_location(void);
 
@@ -86,15 +81,11 @@ class baseman
 {
 public:
     static int main(int argc,char **argv);
-    static void set_printer(int(*print)(const char *));
 };
 
-#include "baseman/import/modules.h"
+DLL void set_printer(int(*print)(const char *));
 
-//#include "bm/bm.h"
-//#include "bm/base.h"
-//#include "bm/project.h"
-//#include "bm/version.h"
+#include "baseman/import/modules.h"
 
 class Bm;
 

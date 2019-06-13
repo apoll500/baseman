@@ -37,6 +37,8 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
+//../../../dir/import/modules.h
+
 #ifndef dir_import_modules
 #define dir_import_modules
 
@@ -47,6 +49,8 @@
 #include "label/label.h"
 #include "path/path.h"
 #include "strman/strman.h"
+#include "str/str.h"
+#include "osdir/osdir.h"
 #include "strconv/strconv.h"
 
 
@@ -68,6 +72,12 @@
 #endif
 #ifdef PROKEE_USE_INTERFACE
 #include "strman/strman.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "str/str.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "osdir/osdir.hh2"
 #endif
 #ifdef PROKEE_USE_INTERFACE
 #include "strconv/strconv.hh2"

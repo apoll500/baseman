@@ -52,6 +52,7 @@
 #define RUN_DELDIRS 128
 #define RUN_MKEMPTYDIRS 256
 #define RUN_EXTMODE 512
+#define RUN_REMOVE 1024
 
 void select_project(const char *project);
 void select_version(const char *version);
@@ -351,18 +352,17 @@ template<class T> void Bm::runexport(const T *target_path_overwrite,int flags,in
         {
             all_projects_info a;
             a=get_all_projects();
-            /*
-            for(unsigned int i=0;i<a.project.size();i++)
-            {
-                osio::xprint("%d) %s --> %s --> %s\n",i,a.project[i].base.c_str(),a.project[i].project.c_str(),a.project[i].version.c_str());
-            }
-            */
             cc->importfiles_extmode(targetpath("").c_str(),10,a);
         }
         else
         {
             cc->importfiles(fullpath.c_str(),targetpath("").c_str());
         }
+    }
+
+    if(flags & RUN_REMOVE)
+    {
+        cc->removefiles(fullpath.c_str(),targetpath("").c_str());
     }
 }
 template<class T> void Bm::runexport(std::string target_path_overwrite,BmCondCopyControl<T> *cc)

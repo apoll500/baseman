@@ -73,10 +73,12 @@
         <Unit filename="../../../../source/dir/dir.cpp" />
         <Unit filename="../../../../source/path/path.cpp" />
         <Unit filename="../../../../source/strman/strman.cpp" />
+        <Unit filename="../../../../source/str/str.cpp" />
         <Unit filename="../../../../source/strconv/strconv.cpp" />
         <Unit filename="../../../../source/base64/base64.cpp" />
         <Unit filename="../../../../source/prompt/prompt.cpp" />
         <Unit filename="../../../../source/label/label.cpp" />
+        <Unit filename="../../../../source/osdir/osdir.cpp" />
         <Unit filename="../../../../source/baseman/cli/main.cpp" />
         
         <Unit filename="../../../../source/reader/ReaderImpl.hpp" />
@@ -106,10 +108,12 @@
         <Unit filename="../../../../source/dir/dir.h" />
         <Unit filename="../../../../source/path/path.h" />
         <Unit filename="../../../../source/strman/strman.h" />
+        <Unit filename="../../../../source/str/str.h" />
         <Unit filename="../../../../source/strconv/strconv.h" />
         <Unit filename="../../../../source/base64/base64.h" />
         <Unit filename="../../../../source/prompt/prompt.h" />
         <Unit filename="../../../../source/label/label.h" />
+        <Unit filename="../../../../source/osdir/osdir.h" />
         <Extensions>
             <code_completion />
             <debugger />

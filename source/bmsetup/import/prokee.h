@@ -61,6 +61,7 @@
 #include "path/v01/module.h"
 #include "base64/v01/module.h"
 #include "strman/v01/module.h"
+#include "str/v01/module.h"
 #include "strconv/v01/module.h"
 
 
@@ -90,6 +91,7 @@
 #include "path/path.hh"
 #include "base64/base64.hh"
 #include "strman/strman.hh"
+#include "str/str.hh"
 #include "strconv/strconv.hh"
 
 

@@ -68,6 +68,7 @@
 #define ACTION_SOURCE_DELETE 14
 #define ACTION_SOURCE_DELETE_BACKUP 15
 #define ACTION_PACKAGE 16
+#define ACTION_REMOVE_NOBACKUP 17
 
 #include "wwrap/osfile.h"
 #include "wwrap/conststr.h"
@@ -122,6 +123,7 @@ public:
     virtual bool tw_callback(const T *path);
     virtual void print_newfiles();
     virtual void importfiles(const T *project_path,const T *target_path);
+    virtual void removefiles(const T *project_path,const T *target_path);
     virtual int importfiles_extmode(const T *target_path,int depth,all_projects_info a);
     virtual void setcasemeth(int *meth);
     virtual bool runmeth(int fall,const T *targetpath,const T *sourcepath);
@@ -145,6 +147,10 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
         case ACTION_IMPORT:
             osio::xprint("<--- %s",targetpath);
             return swapcopy(targetpath,sourcepath);
+        case ACTION_REMOVE_NOBACKUP:
+            osio::xprint("---- %s",targetpath);
+            //backupcopy(sourcepath,targetpath);
+            return file::remove_clean(targetpath);
         case ACTION_EXPORT_BACKUP:
             osio::xprint("---> %s",targetpath);
             backupcopy(sourcepath,targetpath);
@@ -800,7 +806,31 @@ template<class T> void MergeControler<T>::importfiles(const T *project_path,cons
             {
                 //doCopyFile() ruft swapcopy() auf und liefert normalerweise false.
                 //copyfile() als Alternative.
-                file::copyfile((*i).c_str(),sp.c_str());
+                file::copyfile(sp.c_str(),(*i).c_str());
+            }
+        }
+        else
+        {
+            osio::xprint("ERROR: Wrong target_path?");
+        }
+    }
+    newfiles.clear();
+}
+template<class T> void MergeControler<T>::removefiles(const T *project_path,const T *target_path)
+{
+    for(std::vector<std::string>::iterator i=newfiles.begin();i!=newfiles.end();i++)
+    {
+        if(strman::isprefix(target_path,(*i).c_str()))
+        {
+            std::string sp=(std::string)project_path+"files/"+(*i).substr(str::len(target_path),std::string::npos);
+
+            if(!doCopyFile((*i).c_str(),sp.c_str()))
+            {
+                osio::xprint("\n[ERROR:] Could not rermove file!\n");
+            }
+            else
+            {
+                osio::xprint("\n");
             }
         }
         else
@@ -840,7 +870,7 @@ template<class T> int MergeControler<T>::importfiles_extmode(const T *target_pat
                         {
                             //doCopyFile() ruft swapcopy() auf und liefert normalerweise false.
                             //copyfile() als Alternative.
-                            file::copyfile((*i).c_str(),sp.c_str());
+                            file::copyfile(sp.c_str(),(*i).c_str());
                         }
 
                         (*i)="";

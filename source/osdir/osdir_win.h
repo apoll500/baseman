@@ -1,6 +1,6 @@
 /*******************************************************************************
 *                                                                              *
-*  prokee.h                                                                    *
+*  osdir_win.h                                                                 *
 *                                                                              *
 *  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
@@ -37,59 +37,125 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-//../../../dir/import/prokee.h
-
-#ifndef dir_import_prokee
-#define dir_import_prokee
-
-#define PROKEE_USE_INTERFACE
-#define PROKEE_USE_WRAPPER
-
-
-
-
-
-#ifdef COMPILE_PROKEE_MODULE
-
-#include "../../interface/prokee/dir/inc/interface/import/all.fw"
-#include "../../interface/prokee/dir/inc/wrapper/import/all.fw"
-
-#include "file/v01/module.h"
-#include "label/v01/module.h"
-#include "path/v01/module.h"
-#include "strman/v01/module.h"
-#include "str/v01/module.h"
-#include "osdir/v01/module.h"
-#include "strconv/v01/module.h"
-
-
-#ifdef COMPILE_MODULE_dir
-
-//Local classes
-
-
-//Interface declarations of this module
-#include "dir/dir.hh"
-
+#ifndef H_WWRAP_DIR_WIN
+#define H_WWRAP_DIR_WIN
+#ifdef OS_WIN
+#include <windows.h>
+#include <wchar.h>
+#include <io.h>
 #endif
-
-#else
-
-//Local classes
-
-
-//Interface declarations of this module
-#include "dir/dir.hh"
-
-//Interface declarations of other required modules
-#include "file/file.hh"
-#include "label/label.hh"
-#include "path/path.hh"
-#include "strman/strman.hh"
-#include "str/str.hh"
-#include "osdir/osdir.hh"
-#include "strconv/strconv.hh"
-
-
-#endif
+#include "osdir/import/prokee.h"
+class myWIN32_FIND_DATA
+{
+public:
+    bool isw;
+    WIN32_FIND_DATAA dataA;
+    WIN32_FIND_DATAW dataW;
+    myWIN32_FIND_DATA(const char *a)
+    {
+        isw=false;
+    }
+    myWIN32_FIND_DATA(const wchar_t *a)
+    {
+        isw=true;
+    }
+    wchar_t *get_cFileName(const wchar_t *a)
+    {
+        return dataW.cFileName;
+    }
+    char *get_cFileName(const char *a)
+    {
+        return dataA.cFileName;
+    }
+    WIN32_FIND_DATAW *get(const wchar_t *a)
+    {
+        return &dataW;
+    }
+    WIN32_FIND_DATAA *get(const char *a)
+    {
+        return &dataA;
+    }
+    void *get()
+    {
+        if(isw)return &dataW;
+        return &dataA;
+    }
+    void setnull_cFileName()
+    {
+        dataA.cFileName[0]=0;
+        dataW.cFileName[0]=0;
+    }
+    void append_cFileName(const char *a)
+    {
+        str::cat(dataA.cFileName,a);
+    }
+    void append_cFileName(const wchar_t *a)
+    {
+        str::cat(dataW.cFileName,a);
+    }
+};
+class osdir
+{
+public:
+    static int mk(const char *a)
+    {
+        return _mkdir(a);//mkdir() ist depricated.
+    }
+    static int mk(const wchar_t *a)
+    {
+        return _wmkdir(a);
+    }
+    static int rm(const char *a)
+    {
+        return !RemoveDirectoryA(a);
+    }
+    static int rm(const wchar_t *a)
+    {
+        return !RemoveDirectoryW(a);
+    }
+    
+    static char *oscwd(char *a,size_t n)
+    {
+        return getcwd(a,n);
+    }
+    static wchar_t *oscwd(wchar_t *a,size_t n)
+    {
+        return _wgetcwd(a,n);
+    }
+    static HANDLE myFindFirstFile(char *directory,myWIN32_FIND_DATA *fdata)
+    {
+        return myFindFirstFile(directory,fdata->get(directory));
+    }
+    static HANDLE myFindFirstFile(char *directory,WIN32_FIND_DATAA *fdata)
+    {
+        return FindFirstFileA(directory,fdata);
+    }
+    static HANDLE myFindFirstFile(wchar_t *directory,WIN32_FIND_DATAW *fdata)
+    {
+        return FindFirstFileW(directory,fdata);
+    }
+    static bool myFindNextFile(HANDLE hfind,myWIN32_FIND_DATA *fdata)
+    {
+        if(fdata->isw)return FindNextFileA(hfind,&fdata->dataA);
+        return FindNextFileW(hfind,&fdata->dataW);
+    }
+    static bool myFindNextFile(HANDLE hfind,WIN32_FIND_DATAA *fdata)
+    {
+        return FindNextFileA(hfind,fdata);
+    }
+    static bool myFindNextFile(HANDLE hfind,WIN32_FIND_DATAW *fdata)
+    {
+        return FindNextFileW(hfind,fdata);
+    }
+    
+    static int _stat(const char *,struct stat *)
+    {
+        return 0;
+    }
+    static int _stat(const wchar_t *,struct stat *)
+    {
+        return 0;
+    }
+};
+#include "osdir/import/modules.h"
 #endif

@@ -56,6 +56,7 @@
 
 #include "file/v01/module.h"
 #include "prompt/v01/module.h"
+#include "str/v01/module.h"
 #include "strconv/v01/module.h"
 
 
@@ -80,6 +81,7 @@
 //Interface declarations of other required modules
 #include "file/file.hh"
 #include "prompt/prompt.hh"
+#include "str/str.hh"
 #include "strconv/strconv.hh"
 
 
