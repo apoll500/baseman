@@ -108,7 +108,7 @@ bool Settings::loadfile(FILE *f)
     unsigned int a_ln=0;
     unsigned int a_maxln=1024;
     char *a=(char *)malloc((a_maxln+1)*sizeof(char));
-    while(readline(f,&a,&a_ln,&a_maxln))
+    while(readline(f,&a,&a_ln,&a_maxln)!=-1)
     {
         i=0;
         //skip blancs
@@ -205,7 +205,7 @@ bool Settings::iswhite(char ch)
     if(ch==' ' || ch=='\t' || ch=='\n' || ch=='\r')return true;
     return false;
 }
-unsigned int Settings::readline(FILE *f,char **a,unsigned int *ln,unsigned int *mem_ln)
+int Settings::readline(FILE *f,char **a,unsigned int *ln,unsigned int *mem_ln)
 {
     *ln=0;
     (*a)[*ln]=fgetc(f);
@@ -218,6 +218,11 @@ unsigned int Settings::readline(FILE *f,char **a,unsigned int *ln,unsigned int *
             (*a)=(char *)realloc(*a,(*mem_ln+1)*sizeof(char));
         }
         (*a)[*ln]=fgetc(f);
+    }
+    if((*a)[*ln]==EOF && *ln==0)
+    {
+        (*a)[*ln]=0;
+        return -1;
     }
     (*a)[*ln]=0;
     return *ln;
@@ -461,6 +466,7 @@ std::string Settings::getNextValue(std::string defName,std::string name)
         {
             if(k==iteration_pos["v:"+defName+":"+name])
             {
+                iteration_pos["v:"+defName+":"+name]++;
                 return (*i).second;
             }
             k++;

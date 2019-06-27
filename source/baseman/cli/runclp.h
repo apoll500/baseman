@@ -39,17 +39,12 @@
 *******************************************************************************/
 #ifndef BASEMAN_RUNCLP_H
 #define BASEMAN_RUNCLP_H
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "baseman/baseman.h"
-
 #include "../controllers/MergeControler.h"
-
 #include "licenses/license_GPL3.h"
-
 #define BASEMAN_ABOUT "\
 baseman  Copyright (C) 2016-2019  Andreas Pollhammer\n\
 This program comes with ABSOLUTELY NO WARRANTY.\n\
@@ -66,13 +61,13 @@ software. Or type 'docu' to open this file.\n\
 void runargs(int argc,char **argv);
 void imode(void);
 int cli_main(int argc,char **argv);
-
 void runargs_delete_log(int argc,char **);
 void runargs_clear(int argc,char **argv);
 void runargs_goup(int argc,char **argv);
 void runargs_list(int argc,char **argv);
 void runargs_simu(int argc,char **argv);
 void runargs_export(int argc,char **argv);
+
 void runargs_package(int argc,char **argv);
 void runargs_merge(int argc,char **argv);
 void runargs_import(int argc,char **argv);
@@ -90,7 +85,6 @@ void runargs_info(int argc,char **argv);
 void runargs_path(int argc,char **argv);
 void runargs_open(int argc,char **argv);
 void runargs_setgroup(int argc,char **argv);
-
 bool select_element(Bm *p,const char *arg);
 void select_line(Bm *p,const char *arg);
 bool select_element_project(Bm *p,const char *arg);
@@ -100,10 +94,8 @@ void select_version_line(Bm *p,const char *arg);
 bool select_full_path(const char *path,bool (*selector_function)(Bm *,const char *));
 bool select_path(const char *path,bool (*selector_function)(Bm *,const char *));
 void runargs_select(int argc,char **argv);
-
 void runargs_set(int argc,char **argv);
 void runargs_setiniblock(int argc,char **argv);
 void runargs_add_intro(int argc,char **argv);
 void runargs_create(int argc,char **argv);
-
 #endif

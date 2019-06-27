@@ -39,9 +39,12 @@
 *******************************************************************************/
 #ifndef H_WWRAP_CONSTSTR
 #define H_WWRAP_CONSTSTR
+
 #define CONSTSTR_MAXSEPS 10
+
 #include <wchar.h>
 #include <string.h>
+
 class conststr
 {
 public:
@@ -110,4 +113,5 @@ public:
         return a;
     }
 };
+
 #endif

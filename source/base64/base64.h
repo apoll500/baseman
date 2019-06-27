@@ -93,6 +93,7 @@ public:
     static int decode_url(const char *bstr,void *data);
     //memory allocating versions
     static void *decode(const char *bstr);
+    static char *decode_string(const char *bstr);
     static void *decode(const char *bstr,const char *sym,char pad);
     static void *decode_url(const char *bstr);
     //writing to existing memory block with lenth check

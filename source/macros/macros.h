@@ -37,7 +37,6 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-//#include <stdlib.h>
 //------------------------------------------------------------------------------
 // For specifying the target os, define one of the following:
 //    OS_LIN ... Linux

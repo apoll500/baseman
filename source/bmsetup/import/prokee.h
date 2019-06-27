@@ -51,8 +51,10 @@
 
 #ifdef COMPILE_PROKEE_MODULE
 
-#include "../../interface/prokee/bmsetup/inc/interface/import/all.fw"
-#include "../../interface/prokee/bmsetup/inc/wrapper/import/all.fw"
+//#include "../../interface/prokee/bmsetup/inc/interface/import/all.fw"
+//#include "../../interface/prokee/bmsetup/inc/wrapper/import/all.fw"
+#include "bmsetup/v01/interface/import/all.fw"
+#include "bmsetup/v01/wrapper/import/all.fw"
 
 #include "csv/v01/module.h"
 #include "settings/v01/module.h"

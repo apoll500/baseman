@@ -56,8 +56,10 @@ class CsvSettings;
 
 #ifdef COMPILE_PROKEE_MODULE
 
-#include "../../interface/prokee/csv/inc/interface/import/all.fw"
-#include "../../interface/prokee/csv/inc/wrapper/import/all.fw"
+//#include "../../interface/prokee/csv/inc/interface/import/all.fw"
+//#include "../../interface/prokee/csv/inc/wrapper/import/all.fw"
+#include "csv/v01/interface/import/all.fw"
+#include "csv/v01/wrapper/import/all.fw"
 
 #include "file/v01/module.h"
 #include "reader/v01/module.h"

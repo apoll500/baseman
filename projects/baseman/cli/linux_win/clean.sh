@@ -1,6 +1,7 @@
 #!/bin/sh
 #-------------------------------------------------------------------------------
 rm -f ../../../../source/bmsetup/bmsetup.o
+rm -f ../../../../source/bmfragments/bmfragments.o
 rm -f ../../../../source/csv/csv.o
 rm -f ../../../../source/csv/CsvData.o
 rm -f ../../../../source/csv/CsvRecord.o
@@ -20,6 +21,7 @@ rm -f ../../../../source/str/str.o
 rm -f ../../../../source/strconv/strconv.o
 rm -f ../../../../source/base64/base64.o
 rm -f ../../../../source/prompt/prompt.o
+rm -f ../../../../source/mstr/mstr.o
 rm -f ../../../../source/label/label.o
 rm -f ../../../../source/osdir/osdir.o
 rm -f ../../../../source/baseman/cli/main.o

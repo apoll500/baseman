@@ -1,0 +1,11 @@
+//../../../bmfragments/bmfragments.hh2
+
+#ifndef PLIB_CLASS_bmfragments_all_interface_factory
+#define PLIB_CLASS_bmfragments_all_interface_factory
+
+#ifdef PROKEE_USE_INTERFACE
+
+
+
+#endif
+#endif

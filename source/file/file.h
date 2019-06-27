@@ -74,14 +74,15 @@ public:
     template<class T> static FILE *openfile(const T *filename);
     
     template<class T> static void *readfile(const T *filename,unsigned int *length);
-    template<class T> static void *readfile(const T *filename,void *data);
-    static void *readfile(FILE *f,void *data);
+    template<class T> static char *readfile_as_string(const T *filename,unsigned int *length);
+    template<class T> static void *readfile(const T *filename,void *data,unsigned int *ln);
+    static void *readfile(FILE *f,void *data,unsigned int *ln);
     
     
     template<class T> static bool writefile(const T *filename,void *data,unsigned int length);
     template<class T> static bool appendfile(const T *filename,void *data,unsigned int length);
-    static int writefile(FILE *file,void *data,unsigned int length);
-    static int writefile(int file,void *data,unsigned int length);
+    static int writefilef(FILE *file,void *data,unsigned int length);
+    static int writefilef(int file,void *data,unsigned int length);
     template<class T> static T *write_newfile(const T *filename,void *data,unsigned int length);
     
     
@@ -135,16 +136,30 @@ template<class T> void *file::readfile(const T *filename,unsigned int *length)
     unsigned int file_length=osfile::get_size(filename);
     if(length)*length=file_length;
     char *data=(char *)malloc((file_length+1)*sizeof(char));
-    if(file::readfile(filename,data))return data;
+    if(file::readfile(filename,data,0))return data;
     free(data);
     if(length)*length=0;
     return 0;
 }
-template<class T> void *file::readfile(const T *filename,void *data)
+template<class T> char *file::readfile_as_string(const T *filename,unsigned int *length)
+{
+    unsigned int file_length=osfile::get_size(filename);
+    if(length)*length=file_length;
+    char *data=(char *)malloc((file_length+1)*sizeof(char));
+    if(file::readfile(filename,data,0))
+    {
+        data[file_length]=0;
+        return data;
+    }
+    free(data);
+    if(length)*length=0;
+    return 0;
+}
+template<class T> void *file::readfile(const T *filename,void *data,unsigned int *ln)
 {
     FILE *f=file::openfile(filename);
     if(!f)return 0;
-    file::readfile(f,data);
+    file::readfile(f,data,ln);
     fclose(f);
     return data;
 }
@@ -154,7 +169,7 @@ template<class T> bool file::writefile(const T *filename,void *data,unsigned int
     FILE *f=file::openfile(filename,conststr::cast(a,"wb"));
     if(f)
     {
-        int i=writefile(f,data,length);
+        int i=writefilef(f,data,length);
         printf("wrote %d bytes\n",i);
         fclose(f);
         return true;
@@ -167,7 +182,7 @@ template<class T> bool file::appendfile(const T *filename,void *data,unsigned in
     FILE *f=file::openfile(filename,conststr::cast(a,"ab"));
     if(f)
     {
-        int i=writefile(f,data,length);
+        int i=writefilef(f,data,length);
         printf("wrote %d bytes\n",i);
         fclose(f);
         return true;

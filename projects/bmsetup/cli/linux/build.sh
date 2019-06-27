@@ -1,5 +1,6 @@
 #!/bin/sh
 #-------------------------------------------------------------------------------
+echo '[compiling]'
 g++ -D OS_LIN  -fno-pie -Wextra -fexceptions -Wall -I/opt/prokee/system/inc/ -I../../../../source/ -fexpensive-optimizations -O3 -c ../../../../source/csv/csv.cpp -o ../../../../source/csv/csv.o
 g++ -D OS_LIN  -fno-pie -Wextra -fexceptions -Wall -I/opt/prokee/system/inc/ -I../../../../source/ -fexpensive-optimizations -O3 -c ../../../../source/csv/CsvData.cpp -o ../../../../source/csv/CsvData.o
 g++ -D OS_LIN  -fno-pie -Wextra -fexceptions -Wall -I/opt/prokee/system/inc/ -I../../../../source/ -fexpensive-optimizations -O3 -c ../../../../source/csv/CsvRecord.cpp -o ../../../../source/csv/CsvRecord.o
@@ -28,4 +29,5 @@ g++ -D OS_LIN  -fno-pie -Wextra -fexceptions -Wall -I/opt/prokee/system/inc/ -I.
 
 #-------------------------------------------------------------------------------
 g++ -o bmsetup ../../../../source/csv/csv.o ../../../../source/csv/CsvData.o ../../../../source/csv/CsvRecord.o ../../../../source/csv/CsvField.o ../../../../source/settings/settings.o ../../../../source/file/file.o ../../../../source/dir/dir.o ../../../../source/path/path.o ../../../../source/base64/base64.o ../../../../source/strman/strman.o ../../../../source/str/str.o ../../../../source/strconv/strconv.o ../../../../source/prompt/prompt.o ../../../../source/reader/reader.o ../../../../source/reader/ReaderImpl.o ../../../../source/reader/FileReader.o ../../../../source/reader/StringReader.o ../../../../source/reader/StrReader.o ../../../../source/reader/WcsReader.o ../../../../source/label/label.o ../../../../source/osdir/osdir.o ../../../../source/bmsetup/cli/main.o ../../../../source/bmsetup/bmsetup.o -no-pie -s 
+echo '[end]'
 #-------------------------------------------------------------------------------

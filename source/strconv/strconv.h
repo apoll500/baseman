@@ -45,6 +45,16 @@
 #include <windows.h>
 #endif
 #define INI_STRING_LENGTH 256
+#include "strconv/import/prokee.h"
+#ifdef PROKEE_COMPILE_MODULE
+#define atof clib_atof
+#define malloc clib_malloc
+#define realloc clib_realloc
+#else
+//#define atof clib_atof
+//#define malloc clib_malloc
+//#define realloc clib_realloc
+#endif
 class strconv
 {
 public:
@@ -77,6 +87,7 @@ template<class T> T *strconv::strcopy(T **str_out,unsigned int *str_out_ln,const
     if(str_out_ln!=0)*str_out_ln=str_out_ln_2;
     return *str_out;
 }
+#include "strconv/import/modules.h"
 template<class T> void strconv::memory_alloc(T **str_out,unsigned int *str_out_ln)
 {
     memory_alloc(str_out,str_out_ln,INI_STRING_LENGTH);

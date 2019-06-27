@@ -51,8 +51,10 @@
 
 #ifdef COMPILE_PROKEE_MODULE
 
-#include "../../interface/prokee/prompt/inc/interface/import/all.fw"
-#include "../../interface/prokee/prompt/inc/wrapper/import/all.fw"
+//#include "../../interface/prokee/prompt/inc/interface/import/all.fw"
+//#include "../../interface/prokee/prompt/inc/wrapper/import/all.fw"
+#include "prompt/v01/interface/import/all.fw"
+#include "prompt/v01/wrapper/import/all.fw"
 
 #include "strconv/v01/module.h"
 

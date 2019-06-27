@@ -38,38 +38,17 @@
 *                                                                              *
 *******************************************************************************/
 //csv/code/v01/files/source/csv/csv.cpp
-
 #include "csv.h"
-
 int cmpi(const void *a,const void *b)
 {
     return *(int *)a-*(int *)b;
 }
-
 int iln(int *row)
 {
     int p=0;
     while(row[p]!=INT_MAX)p++;
     return p;
 }
-
-/**bmc
-DEF record_count:POINTER
-{
-    class="csv";
-    csv="TRUE";
-    function="@this.parent.NAME";
-    brief="Counts the number of records.";
-    xinfo="Use this method to count the number of records returned by <a href='@class[]_@version[]_AbsCsvData.php#getAllRecords1'>getAllRecords()</a>.";
-    param:param_CsvRecord2{}
-    return:i="Returns the number of records.";
-    docu
-    {
-        THEINTERFACE;
-    }
-    CODE=?;
-}
-*/
 int csv::record_count(AbsCsvRecord **a)
 {
     int ln=0;

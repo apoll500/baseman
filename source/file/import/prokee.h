@@ -51,8 +51,10 @@
 
 #ifdef COMPILE_PROKEE_MODULE
 
-#include "../../interface/prokee/file/inc/interface/import/all.fw"
-#include "../../interface/prokee/file/inc/wrapper/import/all.fw"
+//#include "../../interface/prokee/file/inc/interface/import/all.fw"
+//#include "../../interface/prokee/file/inc/wrapper/import/all.fw"
+#include "file/v01/interface/import/all.fw"
+#include "file/v01/wrapper/import/all.fw"
 
 #include "dir/v01/module.h"
 #include "path/v01/module.h"

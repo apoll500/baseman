@@ -60,23 +60,24 @@ bool file::copyfile(int targetfile,int sourcefile)
     }
     return true;
 }
-void *file::readfile(FILE *f,void *data)
+void *file::readfile(FILE *f,void *data,unsigned int *ln)
 {
-    size_t ln=1;
+    size_t bln=1;
     size_t bytecount=0;
-    while(ln)
+    while(bln)
     {
-        ln=fread(&((char *)data)[bytecount],1,BUFSIZ,f);
-        bytecount+=ln;
+        bln=fread(&((char *)data)[bytecount],1,BUFSIZ,f);
+        bytecount+=bln;
     }
+    if(ln)*ln=bytecount;
     return data;
 }
 
-int file::writefile(FILE *file,void *data,unsigned int length)
+int file::writefilef(FILE *file,void *data,unsigned int length)
 {
     return fwrite(data,1,length,file);
 }
-int file::writefile(int file,void *data,unsigned int length)
+int file::writefilef(int file,void *data,unsigned int length)
 {
     return write(file,data,length);
 }

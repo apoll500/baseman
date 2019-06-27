@@ -68,7 +68,23 @@
 #define ACTION_SOURCE_DELETE 14
 #define ACTION_SOURCE_DELETE_BACKUP 15
 #define ACTION_PACKAGE 16
-#define ACTION_REMOVE_NOBACKUP 17
+#define ACTION_REMOVE 17
+#define ACTION_REMOVE_BACKUP 18
+#define ACTION_MERGE 19
+#define ACTION_MERGE_BACKUP 20
+
+#define RUN_DIRWALK 1
+#define RUN_EXPORT 2
+#define RUN_IMPORT 4
+#define RUN_CLEAN 8
+#define RUN_PRINTOBS 16
+#define RUN_PRINTNEW 32
+#define RUN_CONSLOG 64
+#define RUN_DELDIRS 128
+#define RUN_MKEMPTYDIRS 256
+#define RUN_EXTMODE 512
+#define RUN_REMOVE 1024
+#define RUN_FRAGMENTS 2048
 
 #include "wwrap/osfile.h"
 #include "wwrap/conststr.h"
@@ -77,6 +93,13 @@
 #include "BmCopyControl.h"
 
 #include "../baseman.h"
+
+//!!!!!!!!!!!!!! This is from bmfragments -- delete this here !!!!!!!!!!!!!!!!!!
+#define FRAGMENTS_ACTION_DONOTHING 0
+#define FRAGMENTS_ACTION_EXPORT 1
+#define FRAGMENTS_ACTION_IMPORT 2
+#define FRAGMENTS_ACTION_MERGE 3
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 template<class T> class MergeControler:public BmCondCopyControl<T>,public TreeWalkCallback<T>
 {
@@ -89,6 +112,7 @@ protected:
     std::vector<std::string> newfiles;
     int *casemeth;
     bool doCleanup;
+    bool run_fragments;
     bool conslog;
 
     bool additional_printObsLogItems;
@@ -97,7 +121,6 @@ protected:
     bool delete_emptyDirs;
 
     std::vector<std::string> ignors;
-
     T sdate[48];
 public:
     MergeControler(const T *logfile);
@@ -110,7 +133,7 @@ public:
     void ini_MergeControler(const T *logfile_in,const T *logfile_out);
     virtual ~MergeControler();
     virtual void setup(int flags);
-    virtual void setup(bool clean,bool pnew,bool pobs,bool cons,bool deldir,bool makedirs);
+    virtual void setup(bool clean,bool pnew,bool pobs,bool cons,bool deldir,bool makedirs,bool _doIngoreTargetFragments);
     virtual void add_ign(std::string ign);
     virtual bool test_ign(const T *filename);
     virtual bool ignoreEmptyDir(const T *path);
@@ -141,24 +164,137 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
     {
         case ACTION_DONOTHING:
             return false;
+
+        //----------------------------------------------------------------------
+        // EXPORT
+        //----------------------------------------------------------------------
+
+        //Copies the file from source to target.
+        //The target file will be overwritten.
+        //No backup will be created.
         case ACTION_EXPORT:
             osio::xprint("---> %s",targetpath);
             return true;
-        case ACTION_IMPORT:
-            osio::xprint("<--- %s",targetpath);
-            return swapcopy(targetpath,sourcepath);
-        case ACTION_REMOVE_NOBACKUP:
-            osio::xprint("---- %s",targetpath);
-            //backupcopy(sourcepath,targetpath);
-            return file::remove_clean(targetpath);
+
+        //Copies the file from source to target.
+        //The target file will be overwritten.
+        //Creates a backup of the target file before it is overwritten.
         case ACTION_EXPORT_BACKUP:
             osio::xprint("---> %s",targetpath);
             backupcopy(sourcepath,targetpath);
             return true;
+
+        //Version with BmFragments
+        //Copies the file from source to target.
+        //The target file will be overwritten.
+        //No backup will be created.
+        case ACTION_EXPORT | RUN_FRAGMENTS:
+            bmfragments_prepare_fragments(sourcepath,targetpath,FRAGMENTS_ACTION_EXPORT,fall);
+            return false;
+
+        //Version with BmFragments
+        //Copies the file from source to target.
+        //The target file will be overwritten.
+        //Creates a backup of the target file before it is overwritten.
+        case ACTION_EXPORT_BACKUP | RUN_FRAGMENTS:
+            backupcopy(sourcepath,targetpath);
+            bmfragments_prepare_fragments(sourcepath,targetpath,FRAGMENTS_ACTION_EXPORT,fall);
+            return false;
+
+        //----------------------------------------------------------------------
+        // IMPORT
+        //----------------------------------------------------------------------
+
+        //Copies the file from target to source.
+        //The source file will be overwritten.
+        //No backup will be created.
+        case ACTION_IMPORT:
+            osio::xprint("<--- %s",targetpath);
+            return swapcopy(targetpath,sourcepath);
+
+        //Copies the file from target to source.
+        //The source file will be overwritten.
+        //Creates a backup of the source file before it is overwritten.
         case ACTION_IMPORT_BACKUP:
             osio::xprint("<--- %s",targetpath);
             backupcopy(sourcepath,sourcepath);
             return swapcopy(targetpath,sourcepath);
+
+        //Version with BmFragments
+        //Copies the file from target to source.
+        //The source file will be overwritten.
+        //No backup will be created.
+        case ACTION_IMPORT | RUN_FRAGMENTS:
+            bmfragments_prepare_fragments(sourcepath,targetpath,FRAGMENTS_ACTION_IMPORT,fall);
+            return false;
+
+        //Version with BmFragments
+        //Copies the file from target to source.
+        //The source file will be overwritten.
+        //Creates a backup of the source file before it is overwritten.
+        case ACTION_IMPORT_BACKUP | RUN_FRAGMENTS:
+            backupcopy(sourcepath,sourcepath);
+            bmfragments_prepare_fragments(sourcepath,targetpath,FRAGMENTS_ACTION_IMPORT,fall);
+            return false;
+
+        //----------------------------------------------------------------------
+        // REMOVE and DELETE
+        //----------------------------------------------------------------------
+
+        //Removes the file from target.
+        //If the deletion results in an empty directory,
+        //the empty directory will be deleted too recursively.
+        //No backup will be created.
+        case ACTION_REMOVE:
+            osio::xprint("---- %s",targetpath);
+            file::remove_clean(targetpath);
+            return false;
+
+        //Removes the file from target.
+        //If the deletion results in an empty directory,
+        //the empty directory will be deleted too recursively.
+        //Creates a backup of the file before deletion.
+        case ACTION_REMOVE_BACKUP:
+            osio::xprint("---- %s",targetpath);
+            backupcopy(sourcepath,targetpath);
+            file::remove_clean(targetpath);
+            return false;
+
+        //Removes the file from target.
+        //No backup will be created.
+        case ACTION_DELETE:
+            osio::xprint("---- %s\n",targetpath);
+            remove_file(targetpath);
+            return false;
+
+        //Removes the file from target.
+        //Creates a backup of the file before deletion.
+        case ACTION_DELETE_BACKUP:
+            osio::xprint("---- %s\n",targetpath);
+            backupcopy(sourcepath,targetpath);
+            remove_file(targetpath);
+            return false;
+
+        //----------------------------------------------------------------------
+        // SOURCE DELETE
+        //----------------------------------------------------------------------
+
+        case ACTION_SOURCE_DELETE:
+            osio::xprint("---- %s\n",sourcepath);
+            remove_file(sourcepath);
+            return false;
+
+        case ACTION_SOURCE_DELETE_BACKUP:
+            osio::xprint("---- %s\n",sourcepath);
+            backupcopy(sourcepath,sourcepath);
+            remove_file(sourcepath);
+            return false;
+
+        //----------------------------------------------------------------------
+        // MERGE
+        //----------------------------------------------------------------------
+
+        case ACTION_MERGE:
         case ACTION_CONFLICT_NEW:
         case ACTION_CONFLICT_CHANGED:
             osio::xprint("-><- %s\n",targetpath);
@@ -185,39 +321,43 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
                 osio::xprint("...false.\n");
             }
             return false;
-        case ACTION_INFO_DEL:
+
+        case ACTION_MERGE | RUN_FRAGMENTS:
+            bmfragments_prepare_fragments(sourcepath,targetpath,FRAGMENTS_ACTION_MERGE,fall);
             return false;
+
+        case ACTION_MERGE_BACKUP | RUN_FRAGMENTS:
+            backupcopy(sourcepath,targetpath);
+            backupcopy(sourcepath,sourcepath);
+            bmfragments_prepare_fragments(sourcepath,targetpath,FRAGMENTS_ACTION_MERGE,fall);
+            return false;
+
+        //----------------------------------------------------------------------
+        // INFO
+        //----------------------------------------------------------------------
+
+        case ACTION_INFO_DEL:
         case ACTION_INFO_NEW:
             return false;
-        case ACTION_DELETE:
-            osio::xprint("---- %s\n",targetpath);
-            remove_file(targetpath);
-            return false;
-        case ACTION_DELETE_BACKUP:
-            osio::xprint("---- %s\n",targetpath);
-            backupcopy(sourcepath,targetpath);
-            remove_file(targetpath);
-            return false;
-        case ACTION_SOURCE_DELETE:
-            osio::xprint("---- %s\n",sourcepath);
-            remove_file(sourcepath);
-            return false;
-        case ACTION_SOURCE_DELETE_BACKUP:
-            osio::xprint("---- %s\n",sourcepath);
-            backupcopy(sourcepath,sourcepath);
-            remove_file(sourcepath);
-            return false;
+
         case ACTION_PRINT_TARGET:
             osio::xprint("%s\n",targetpath);
             return false;
+
         case ACTION_PRINT_SOURCE:
             osio::xprint("%s\n",sourcepath);
             return false;
+
         case ACTION_PRINT_INFO:
             osio::xprint("----------\ncopy file\n");
             osio::xprint("from: %s\n",sourcepath);
             osio::xprint("to:   %s\n",targetpath);
             return false;
+
+        //----------------------------------------------------------------------
+        // OTHERS EXPERIEMTAL
+        //----------------------------------------------------------------------
+
         case ACTION_PACKAGE:
             std::string ws=ini->get("webspace");
             osio::xprint(">>>> %s\n",sourcepath);
@@ -251,40 +391,10 @@ template<class T> bool MergeControler<T>::remove_file(const T *path)
     return true;
 }
 
-template<class T> MergeControler<T>::MergeControler(const T *logfile)
-{
-    ini_MergeControler(logfile);
-    setup(false,false,false,false,true,true);
-    //--TODO--
-    //setcasemeth(actions);
-}
-
-template<class T> MergeControler<T>::MergeControler(const T *logfile,int *actions)
-{
-    ini_MergeControler(logfile);
-    setup(false,false,false,false,true,true);
-    setcasemeth(actions);
-}
-
 template<class T> MergeControler<T>::MergeControler(const T *logfile,int *actions,int flags)
 {
     ini_MergeControler(logfile);
     setup(flags);
-    setcasemeth(actions);
-}
-
-template<class T> MergeControler<T>::MergeControler(const T *logfile_in,const T *logfile_out)
-{
-    ini_MergeControler(logfile_in,logfile_out);
-    setup(false,false,false,false,true,true);
-    //--TODO--
-    //setcasemeth(actions);
-}
-
-template<class T> MergeControler<T>::MergeControler(const T *logfile_in,const T *logfile_out,int *actions)
-{
-    ini_MergeControler(logfile_in,logfile_out);
-    setup(false,false,false,false,true,true);
     setcasemeth(actions);
 }
 
@@ -339,6 +449,7 @@ template<class T> void MergeControler<T>::ini_MergeControler(const T *logfile_in
 
 template<class T> MergeControler<T>::~MergeControler()
 {
+    if(run_fragments)bmfragments_handle_fragments(this);
     closeLog();
     delete log;
     if(f)fclose(f);
@@ -346,10 +457,10 @@ template<class T> MergeControler<T>::~MergeControler()
 
 template<class T> void MergeControler<T>::setup(int flags)
 {
-    setup(flags & RUN_CLEAN,flags & RUN_PRINTNEW,flags & RUN_PRINTOBS,flags & RUN_CONSLOG,flags & RUN_DELDIRS,flags & RUN_MKEMPTYDIRS);
+    setup(flags & RUN_CLEAN,flags & RUN_PRINTNEW,flags & RUN_PRINTOBS,flags & RUN_CONSLOG,flags & RUN_DELDIRS,flags & RUN_MKEMPTYDIRS,flags & RUN_FRAGMENTS);
 }
 
-template<class T> void MergeControler<T>::setup(bool clean,bool pnew,bool pobs,bool cons,bool deldir,bool makedirs)
+template<class T> void MergeControler<T>::setup(bool clean,bool pnew,bool pobs,bool cons,bool deldir,bool makedirs,bool fragments)
 {
     conslog=cons;
     doCleanup=clean;
@@ -357,6 +468,7 @@ template<class T> void MergeControler<T>::setup(bool clean,bool pnew,bool pobs,b
     additional_printNewTargetFiles=pnew;
     delete_emptyDirs=deldir;
     create_emptyDirs=makedirs;
+    run_fragments=fragments;
 }
 
 template<class T> void MergeControler<T>::add_ign(std::string ign)
@@ -407,7 +519,7 @@ template<class T> void MergeControler<T>::closeLog()
                 {
                     if(file::testfile(targetpath.c_str()))
                     {
-                        //(fall Änderung der csv-Tabelle).
+                        //(falls Änderung der csv-Tabelle).
                         osio::xprint("~~~~ %s\n",targetpath.c_str());
                         backupcopy(sourcepath.c_str(),targetpath.c_str());
                         remove_file(targetpath.c_str());
@@ -605,7 +717,6 @@ template<class T> bool MergeControler<T>::doCopyFile(const T *targetpath,const T
     status[targetpath]=1;
 
     return runmeth(fall,targetpath,sourcepath);
-
     //Unberücksichtigte Einträge im Logfile -- obsolete files
 
     //Neue Files im Taget -- new files

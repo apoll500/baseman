@@ -46,6 +46,7 @@
 
 //Include required modules
 #include "bmsetup/bmsetup.h"
+#include "bmfragments/bmfragments.h"
 #include "csv/csv.h"
 #include "settings/settings.h"
 #include "reader/reader.h"
@@ -66,6 +67,9 @@
 
 #ifdef PROKEE_USE_INTERFACE
 #include "bmsetup/bmsetup.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "bmfragments/bmfragments.hh2"
 #endif
 #ifdef PROKEE_USE_INTERFACE
 #include "csv/csv.hh2"

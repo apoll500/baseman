@@ -46,6 +46,7 @@
 #define bmsetup_download download
 #define bmsetup_download2 download2
 #define bmsetup_install install
+#define bmsetup_get_all_paths get_all_paths
 //#include "wwrap/str.h"
 DLL int run_script(const char *baseman_project_path,const char *package_path,const char *run_token);
 DLL int run_script2(const char *baseman_project_path,const char *package_path,const char *run_token,const char *username,const char *userpass);

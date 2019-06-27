@@ -1,6 +1,6 @@
 /*******************************************************************************
 *                                                                              *
-*  str.h                                                                       *
+*  prokee.h                                                                    *
 *                                                                              *
 *  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
@@ -37,81 +37,56 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-//str/code/v01/files/source/wwrap/str.h
-#ifndef MOD_str_H
-#define MOD_str_H
-#include <wchar.h>
-#include <string.h>
-class str
+//../../../mstr/import/prokee.h
+
+#ifndef mstr_import_prokee
+#define mstr_import_prokee
+
+#define PROKEE_USE_INTERFACE
+#define PROKEE_USE_WRAPPER
+
+
+
+template<class T>struct mstrs
 {
-public:
-    static size_t len(const char *a)
-    {
-        return strlen(a);
-    }
-    static size_t len(const wchar_t *a)
-    {
-        return wcslen(a);
-    }
-    template<class T> static size_t len(const T *a)
-    {
-        size_t i=0;
-        while(a[i])i++;
-        return i;
-    }
-    //
-    static char *cpy(char *a,const char *b)
-    {
-        return strcpy(a,b);
-    }
-    static wchar_t *cpy(wchar_t *a,const wchar_t *b)
-    {
-        return wcscpy(a,b);
-    }
-    template<class T> static T *cpy(T *a,const T *b)
-    {
-        size_t i=0;
-        while(b[i])
-        {
-            a[i]=b[i];
-            i++;
-        }
-        a[i]=0;
-        return a;
-    }
-    //
-    static char *cat(char *a,const char *b)
-    {
-        return strcat(a,b);
-    }
-    static wchar_t *cat(wchar_t *a,const wchar_t *b)
-    {
-        return wcscat(a,b);
-    }
-    template<class T> static T *cat(T *a,const T *b)
-    {
-        size_t i=0,p=len(a);
-        while(b[i])
-        {
-            a[p++]=b[i++];
-        }
-        a[p]=0;
-        return a;
-    }
-    //
-    static int cmp(const char *a,const char *b)
-    {
-        return strcmp(a,b);
-    }
-    static int cmp(const wchar_t *a,const wchar_t *b)
-    {
-        return wcscmp(a,b);
-    }
-    template<class T> static int cmp(const T *a,const T *b)
-    {
-        size_t i=0;
-        while(a[i] && a[i]==b[i])i++;
-        return a[i]-b[i];
-    }
+    T *buffer;
+    unsigned int buffer_len;
+    unsigned int len;
 };
+
+#ifdef COMPILE_PROKEE_MODULE
+
+//#include "../../interface/prokee/mstr/inc/interface/import/all.fw"
+//#include "../../interface/prokee/mstr/inc/wrapper/import/all.fw"
+#include "mstr/v01/interface/import/all.fw"
+#include "mstr/v01/wrapper/import/all.fw"
+
+#include "str/v01/module.h"
+#include "strconv/v01/module.h"
+
+
+#ifdef COMPILE_MODULE_mstr
+
+//Local classes
+
+
+//Interface declarations of this module
+#include "mstr/mstr.hh"
+
+#endif
+
+#else
+
+//Local classes
+
+
+//Interface declarations of this module
+#include "mstr/mstr.hh"
+
+//Interface declarations of other required modules
+#include "str/str.hh"
+#include "strconv/strconv.hh"
+
+
+#endif
 #endif

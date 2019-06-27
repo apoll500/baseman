@@ -42,18 +42,6 @@
 
 #include <string>
 
-#define RUN_DIRWALK 1
-#define RUN_EXPORT 2
-#define RUN_IMPORT 4
-#define RUN_CLEAN 8
-#define RUN_PRINTOBS 16
-#define RUN_PRINTNEW 32
-#define RUN_CONSLOG 64
-#define RUN_DELDIRS 128
-#define RUN_MKEMPTYDIRS 256
-#define RUN_EXTMODE 512
-#define RUN_REMOVE 1024
-
 void select_project(const char *project);
 void select_version(const char *version);
 

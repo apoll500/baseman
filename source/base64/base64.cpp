@@ -300,6 +300,16 @@ void *base64::decode(const char *bstr)
     free(data);
     return 0;
 }
+char *base64::decode_string(const char *bstr)
+{
+    size_t ln=decode_length(bstr);
+    char *data=(char *)malloc((ln+1)*sizeof(char));
+    int err=decode(bstr,data);
+    data[ln]=0;
+    if(!err)return data;
+    free(data);
+    return 0;
+}
 void *base64::decode(const char *bstr,const char *sym,char pad)
 {
     void *data=malloc(decode_length(bstr)*sizeof(char));

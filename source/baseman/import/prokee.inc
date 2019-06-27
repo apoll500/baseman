@@ -2,6 +2,7 @@
 
 //Import required modules
 #include "bmsetup/v01/module.inc"
+#include "bmfragments/v01/module.inc"
 #include "csv/v01/module.inc"
 #include "settings/v01/module.inc"
 #include "reader/v01/module.inc"

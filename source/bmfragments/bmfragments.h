@@ -1,6 +1,6 @@
 /*******************************************************************************
 *                                                                              *
-*  osdir_lin.h                                                                 *
+*  bmfragments.h                                                               *
 *                                                                              *
 *  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
@@ -37,56 +37,63 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-#ifndef H_WWRAP_DIR_LIN
-#define H_WWRAP_DIR_LIN
+//bmfragments/code/v01/files/source/bmfragments/bmfragments.h
+
+#ifndef MOD_bmfragments_H
+#define MOD_bmfragments_H
+
 #include <stdio.h>
-#include <dlfcn.h>
-#include <sys/stat.h>
-#include <unistd.h>
-class osdir
+#include <stdlib.h>
+#include <string.h>
+
+#include <string>
+#include <vector>
+
+#include "macros/macros.h"
+#include "wwrap/osio.h"
+
+#define BMFRAGMENTS_FRAGMENT_TYPE_UNDEFINED 0
+#define BMFRAGMENTS_FRAGMENT_TYPE_CODE 1
+#define BMFRAGMENTS_FRAGMENT_TYPE_FRAGMENT 2
+
+#define BMFRAGMENTS_CHKST_UNKNOWN 0
+#define BMFRAGMENTS_CHKST_UNCHANGED_FRAGMENT 1
+#define BMFRAGMENTS_CHKST_CHANGED_FRAGMENT 2
+#define BMFRAGMENTS_CHKST_CODE 3
+#define BMFRAGMENTS_CHKST_ERROR_HEADER 4
+#define BMFRAGMENTS_CHKST_ERROR_FOOTER 5
+
+#define BMFRAGMENTS_TYPE_UNDEFINED 0
+#define BMFRAGMENTS_TYPE_INCLUDE 1
+#define BMFRAGMENTS_TYPE_NORMAL 2
+#define BMFRAGMENTS_TYPE_REMOVE 3
+
+#define BMFRAGMENTS_FILE_SOURCE 0
+#define BMFRAGMENTS_FILE_TARGET 1
+
+#define FRAGMENTS_ACTION_DONOTHING 0
+#define FRAGMENTS_ACTION_EXPORT 1
+#define FRAGMENTS_ACTION_IMPORT 2
+#define FRAGMENTS_ACTION_MERGE 3
+
+#define bmfragments_startup startup
+#define bmfragments_cleanup cleanup
+#define bmfragments_prepare_fragments prepare_fragments
+#define bmfragments_handle_fragments handle_fragments
+
+#include "bmfragments/import/prokee.h"
+
+DLL int startup();
+DLL int cleanup();
+DLL int handle_fragments(void *cc);
+DLL int prepare_fragments(const char *source_filename,const char *target_filename,int fragment_task_action,int baseman_copy_case);
+
+class bmfragments
 {
 public:
-    //--------------------------------------------------------------------------
-    // char
-    //--------------------------------------------------------------------------
-    static int mk(const char *a)
-    {
-        return mkdir(a,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    }
-    static int rm(const char *a)
-    {
-        return rmdir(a);
-    }
-    static char *oscwd()
-    {
-        return getcwd(0,0);//Arguments 0,0 lets the Funktion allocate the required memory.
-    }
-    static char *oscwd(char *a,size_t n)
-    {
-        return getcwd(a,n);
-    }
-    static int _stat(const char *path,struct stat *st)
-    {
-        return stat(path,st);
-    }
-    //--------------------------------------------------------------------------
-    // wchar_t
-    //--------------------------------------------------------------------------
-    static int mk(const wchar_t *)
-    {
-        return 0;
-    }
-    static int rm(const wchar_t *)
-    {
-        return 0;
-    }
-    static wchar_t *oscwd(wchar_t *,size_t)
-    {
-        return 0;
-    }
-    static int _stat(const wchar_t *,struct stat *)
-    {
-        return 0;
-    }
+    static int main(int argc,char **argv);
 };
+
+#include "bmfragments/import/modules.h"
+
 #endif

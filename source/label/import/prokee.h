@@ -51,8 +51,10 @@
 
 #ifdef COMPILE_PROKEE_MODULE
 
-#include "../../interface/prokee/label/inc/interface/import/all.fw"
-#include "../../interface/prokee/label/inc/wrapper/import/all.fw"
+//#include "../../interface/prokee/label/inc/interface/import/all.fw"
+//#include "../../interface/prokee/label/inc/wrapper/import/all.fw"
+#include "label/v01/interface/import/all.fw"
+#include "label/v01/wrapper/import/all.fw"
 
 #include "strconv/v01/module.h"
 

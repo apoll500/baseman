@@ -462,14 +462,14 @@ char **get_all_paths(const char *baseman_project_path,char **base_path,char **pr
         *base_path=get_base_path(loc[0]);
         if(*base_path)
         {
-            printf("file system paths:\n");
-            printf("-->    base = %s\n",*base_path);
+            //printf("file system paths:\n");
+            //printf("-->    base = %s\n",*base_path);
             if(project_path)
             {
                 *project_path=get_project_path(*base_path,loc,&pos);
                 if(*project_path)
                 {
-                    printf("--> project = %s\n",*project_path);
+                    //printf("--> project = %s\n",*project_path);
                 }
                 else
                 {
@@ -481,7 +481,7 @@ char **get_all_paths(const char *baseman_project_path,char **base_path,char **pr
                 *version_path=get_version_path(*project_path,loc,&pos);
                 if(*version_path)
                 {
-                    printf("--> version = %s\n",*version_path);
+                    //printf("--> version = %s\n",*version_path);
                 }
                 else
                 {

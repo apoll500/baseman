@@ -38,16 +38,13 @@
 *                                                                              *
 *******************************************************************************/
 #include "runclp.h"
-
 #include "../bm/bm.h"
 #include "../bm/base.h"
 #include "../bm/project.h"
 #include "../bm/version.h"
-
 void runargs(int argc,char **argv)
 {
     if(argc<2)return;
-
     if(strcmp(argv[1],"about")==0)
     {
         osio::xprint(BASEMAN_ABOUT);
@@ -80,6 +77,7 @@ void runargs(int argc,char **argv)
     {
         runargs_export(argc,argv);
     }
+
     else if(strcmp(argv[1],"package")==0 || strcmp(argv[1],"p")==0)
     {
         runargs_package(argc,argv);
@@ -212,7 +210,6 @@ void runargs(int argc,char **argv)
         osio::xprint("Unknown command '%s'.\n",argv[1]);
     }
 }
-
 void imode(void)
 {
     char command[1024];command[0]=0;
@@ -248,32 +245,25 @@ void imode(void)
         opt[0]=&command[i];
         opt[1]=&command[0];
         for(h=j;h<5;h++)opt[h]=&command[i];
-        //osio::xprint("%s(%s,%s)\n",opt[1],opt[2],opt[3]);
         runargs(j,opt);
     }
 }
-
 int print_to_nil(const char *)
 {
     return 0;
 }
-
 int cli_main(int argc,char **argv)
 {
     setbuf(stdout,NULL);
-
     if(argc>1 && strcmp(argv[1],"q")==0)
     {
         osio::set_xprint(print_to_nil);
     }
-
     ini=AbsMultiSettingsInterface::createMultiSettings();
-
     if(!ini->loadfile(BASEMAN_INIPATH))
     {
         osio::xprint("[BASEMAN:] cli_main: File setup.ini not found!\n");
     }
-
     if(argc==1)
     {
         imode();
@@ -290,12 +280,9 @@ int cli_main(int argc,char **argv)
             runargs(argc,argv);
         }
     }
-
     if(ini)delete ini;
-
     return EXIT_SUCCESS;
 }
-
 void runargs_delete_log(int argc,char **)
 {
     if(argc==2)
@@ -309,23 +296,18 @@ void runargs_delete_log(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_export(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_EXPORT,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_EXPORT,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_DONOTHING};
@@ -348,19 +330,15 @@ void runargs_export(int argc,char **)
 void runargs_package(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_PACKAGE,
                   ACTION_PACKAGE,
                   ACTION_PACKAGE,
-
                   ACTION_PACKAGE,
                   ACTION_PACKAGE,
                   ACTION_PACKAGE,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_PACKAGE,
                   ACTION_PACKAGE,
                   ACTION_DONOTHING};
@@ -379,23 +357,18 @@ void runargs_package(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_merge(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_IMPORT_BACKUP,
                   ACTION_EXPORT,
-
                   ACTION_EXPORT_BACKUP,
                   ACTION_CONFLICT_CHANGED,
                   ACTION_EXPORT,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_CONFLICT_NEW,
                   ACTION_EXPORT,
                   ACTION_INFO_NEW};
@@ -414,23 +387,18 @@ void runargs_merge(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_import(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_IMPORT_BACKUP,
                   ACTION_DONOTHING,
                   ACTION_IMPORT};
@@ -449,26 +417,21 @@ void runargs_import(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_remove(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
-                  ACTION_REMOVE_NOBACKUP,
+                  ACTION_REMOVE,
                   ACTION_DONOTHING,
-                  ACTION_REMOVE_NOBACKUP};
+                  ACTION_REMOVE};
     if(argc==2)
     {
         Bm *p=bmObject();
@@ -484,23 +447,18 @@ void runargs_remove(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_import_p(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_IMPORT_BACKUP,
                   ACTION_DONOTHING,
                   ACTION_IMPORT};
@@ -519,23 +477,18 @@ void runargs_import_p(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_clean(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_DELETE_BACKUP,
                   ACTION_DELETE_BACKUP,
                   ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING};
@@ -554,23 +507,18 @@ void runargs_clean(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_snapshot(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_EXPORT,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_EXPORT,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_DONOTHING};
@@ -589,23 +537,18 @@ void runargs_snapshot(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_update(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_EXPORT,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_DONOTHING};
@@ -624,23 +567,18 @@ void runargs_update(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_diff(int argc,char **)
 {
     int actions[]={ACTION_DONOTHING,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_EXPORT,
-
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
                   ACTION_DONOTHING,
-
                   ACTION_EXPORT,
                   ACTION_EXPORT,
                   ACTION_DONOTHING};
@@ -659,25 +597,20 @@ void runargs_diff(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_simu(int argc,char **argv)
 {
     if(argc==2)
     {
         int actions[]={ACTION_DONOTHING,
-
                       ACTION_PRINT_INFO,
                       ACTION_PRINT_INFO,
                       ACTION_PRINT_INFO,
-
                       ACTION_PRINT_INFO,
                       ACTION_PRINT_INFO,
                       ACTION_PRINT_INFO,
-
                       ACTION_DONOTHING,
                       ACTION_DONOTHING,
                       ACTION_DONOTHING,
-
                       ACTION_PRINT_INFO,
                       ACTION_PRINT_INFO,
                       ACTION_DONOTHING};
@@ -694,19 +627,15 @@ void runargs_simu(int argc,char **argv)
         if(strcmp(argv[2],"source")==0)
         {
             int actions[]={ACTION_DONOTHING,
-
                           ACTION_PRINT_SOURCE,
                           ACTION_PRINT_SOURCE,
                           ACTION_PRINT_SOURCE,
-
                           ACTION_PRINT_SOURCE,
                           ACTION_PRINT_SOURCE,
                           ACTION_PRINT_SOURCE,
-
                           ACTION_DONOTHING,
                           ACTION_DONOTHING,
                           ACTION_DONOTHING,
-
                           ACTION_PRINT_SOURCE,
                           ACTION_PRINT_SOURCE,
                           ACTION_DONOTHING};
@@ -721,19 +650,15 @@ void runargs_simu(int argc,char **argv)
         else if(strcmp(argv[2],"target")==0)
         {
             int actions[]={ACTION_DONOTHING,
-
                           ACTION_PRINT_TARGET,
                           ACTION_PRINT_TARGET,
                           ACTION_PRINT_TARGET,
-
                           ACTION_PRINT_TARGET,
                           ACTION_PRINT_TARGET,
                           ACTION_PRINT_TARGET,
-
                           ACTION_DONOTHING,
                           ACTION_DONOTHING,
                           ACTION_DONOTHING,
-
                           ACTION_PRINT_TARGET,
                           ACTION_PRINT_TARGET,
                           ACTION_DONOTHING};
@@ -755,7 +680,6 @@ void runargs_simu(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_clear(int argc,char **argv)
 {
     if(argc==3)
@@ -792,7 +716,6 @@ void runargs_clear(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_goup(int argc,char **)
 {
     if(argc==2)
@@ -819,7 +742,6 @@ void runargs_goup(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_list(int argc,char **)
 {
     if(argc==2)
@@ -833,7 +755,6 @@ void runargs_list(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_run(int argc,char **)
 {
     if(argc==2)
@@ -847,7 +768,6 @@ void runargs_run(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_base(int argc,char **)
 {
     if(argc==2)
@@ -861,7 +781,6 @@ void runargs_base(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_project(int argc,char **)
 {
     if(argc==2)
@@ -875,7 +794,6 @@ void runargs_project(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_version(int argc,char **)
 {
     if(argc==2)
@@ -889,7 +807,6 @@ void runargs_version(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_info(int argc,char **)
 {
     if(argc==2)
@@ -903,7 +820,6 @@ void runargs_info(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_path(int argc,char **)
 {
     if(argc==2)
@@ -917,7 +833,6 @@ void runargs_path(int argc,char **)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_open(int argc,char **argv)
 {
     if(argc==2)
@@ -948,7 +863,6 @@ void runargs_open(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_setgroup(int argc,char **argv)
 {
     if(argc==3)
@@ -960,7 +874,6 @@ void runargs_setgroup(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 bool select_element(Bm *p,const char *arg)
 {
     bool b=true;
@@ -988,7 +901,6 @@ bool select_element(Bm *p,const char *arg)
     }
     return b;
 }
-
 void select_line(Bm *p,const char *arg)
 {
     bool b=true;
@@ -1016,7 +928,6 @@ void select_line(Bm *p,const char *arg)
         osio::xprint("could'nt select line %d.\n",i);
     }
 }
-
 bool select_element_project(Bm *p,const char *arg)
 {
     bool b=true;
@@ -1044,7 +955,6 @@ bool select_element_project(Bm *p,const char *arg)
     }
     return b;
 }
-
 bool select_element_version(Bm *p,const char *arg)
 {
     bool b=true;
@@ -1071,7 +981,6 @@ bool select_element_version(Bm *p,const char *arg)
     }
     return b;
 }
-
 void select_project_line(Bm *p,const char *arg)
 {
     bool b=true;
@@ -1097,7 +1006,6 @@ void select_project_line(Bm *p,const char *arg)
         osio::xprint("could'nt select line %d.\n",i);
     }
 }
-
 void select_version_line(Bm *p,const char *arg)
 {
     bool b=true;
@@ -1123,13 +1031,11 @@ void select_version_line(Bm *p,const char *arg)
         osio::xprint("could'nt select line %d.\n",i);
     }
 }
-
 bool select_full_path(const char *path,bool (*selector_function)(Bm *,const char *))
 {
     reset();
     return select_path(path,selector_function);
 }
-
 bool select_path(const char *path,bool (*selector_function)(Bm *,const char *))
 {
     char **a=strman::explode("/",path);
@@ -1155,7 +1061,6 @@ bool select_path(const char *path,bool (*selector_function)(Bm *,const char *))
     strman::explode_free(a);
     return true;
 }
-
 void runargs_select(int argc,char **argv)
 {
     if(argc==3)
@@ -1226,7 +1131,6 @@ void runargs_select(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_set(int argc,char **argv)
 {
     if(argc>=4)
@@ -1280,7 +1184,6 @@ void runargs_set(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_setiniblock(int argc,char **argv)
 {
     if(argc==3)
@@ -1297,7 +1200,6 @@ void runargs_setiniblock(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_add_intro(int argc,char **argv)
 {
     if(argc==3)
@@ -1312,7 +1214,6 @@ void runargs_add_intro(int argc,char **argv)
         osio::xprint("Wrong number of arguments.\n");
     }
 }
-
 void runargs_create(int argc,char **argv)
 {
     if(argc==5)

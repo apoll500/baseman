@@ -1,6 +1,6 @@
 /*******************************************************************************
 *                                                                              *
-*  osdir.h                                                                     *
+*  modules.h                                                                   *
 *                                                                              *
 *  This file is part of "progs/bmcli". (this program)                          *
 *                                                                              *
@@ -37,16 +37,80 @@
 *  license stated above.                                                       *
 *                                                                              *
 *******************************************************************************/
-#ifndef H_WWRAP_DIR
-#define H_WWRAP_DIR
-#include "macros/macros.h"
-#ifdef OS_WIN
-#ifdef OS_WIN_WCS
-#include "osdir_wwin.h"
-#else
-#include "osdir_win.h"
+//../../../bmfragments/import/modules.h
+
+#ifndef bmfragments_import_modules
+#define bmfragments_import_modules
+
+#ifndef COMPILE_PROKEE_MODULE
+
+//Include required modules
+#include "baseman/baseman.h"
+#include "bmsetup/bmsetup.h"
+#include "base64/base64.h"
+#include "settings/settings.h"
+#include "file/file.h"
+#include "dir/dir.h"
+#include "path/path.h"
+#include "strman/strman.h"
+#include "mstr/mstr.h"
+#include "str/str.h"
+#include "strconv/strconv.h"
+
+
+//Local module headers
+
+
+#ifdef PROKEE_USE_INTERFACE
+#include "bmfragments/bmfragments.hh2"
 #endif
-#elif defined OS_LIN
-#include "osdir_lin.h"
+
+#ifdef PROKEE_USE_INTERFACE
+#include "baseman/baseman.hh2"
 #endif
+#ifdef PROKEE_USE_INTERFACE
+#include "bmsetup/bmsetup.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "base64/base64.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "settings/settings.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "file/file.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "dir/dir.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "path/path.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "strman/strman.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "mstr/mstr.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "str/str.hh2"
+#endif
+#ifdef PROKEE_USE_INTERFACE
+#include "strconv/strconv.hh2"
+#endif
+
+
+#endif
+
+#ifdef COMPILE_MODULE_bmfragments
+
+//Local module headers
+
+
+#ifdef PROKEE_USE_INTERFACE
+#include "bmfragments/bmfragments.hh2"
+#endif
+
+#endif
+
 #endif

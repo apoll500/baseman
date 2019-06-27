@@ -52,6 +52,7 @@
 #include "macros/macros.h"
 #include "wwrap/osio.h"
 
+#define baseman_filecopied filecopied
 #define baseman_set_printer set_printer
 
 #include "baseman/import/prokee.h"
@@ -84,6 +85,7 @@ public:
 };
 
 DLL void set_printer(int(*print)(const char *));
+DLL void filecopied(void *cc,const char *targetpath,const char *sourcepath,size_t bytes);
 
 #include "baseman/import/modules.h"
 

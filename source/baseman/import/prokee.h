@@ -51,10 +51,13 @@ class Reader;
 
 #ifdef COMPILE_PROKEE_MODULE
 
-#include "../../interface/prokee/baseman/inc/interface/import/all.fw"
-#include "../../interface/prokee/baseman/inc/wrapper/import/all.fw"
+//#include "../../interface/prokee/baseman/inc/interface/import/all.fw"
+//#include "../../interface/prokee/baseman/inc/wrapper/import/all.fw"
+#include "baseman/v01/interface/import/all.fw"
+#include "baseman/v01/wrapper/import/all.fw"
 
 #include "bmsetup/v01/module.h"
+#include "bmfragments/v01/module.h"
 #include "csv/v01/module.h"
 #include "settings/v01/module.h"
 #include "reader/v01/module.h"
@@ -86,6 +89,7 @@ class Reader;
 
 //Interface declarations of other required modules
 #include "bmsetup/bmsetup.hh"
+#include "bmfragments/bmfragments.hh"
 #include "csv/csv.hh"
 #include "settings/settings.hh"
 #include "reader/reader.hh"

@@ -58,6 +58,7 @@
         <Unit filename="../../../../source/baseman/cli/runclp.cpp" />
         <Unit filename="../../../../source/baseman/controllers/BmCopyControl.cpp" />
         <Unit filename="../../../../source/bmsetup/bmsetup.cpp" />
+        <Unit filename="../../../../source/bmfragments/bmfragments.cpp" />
         <Unit filename="../../../../source/csv/csv.cpp" />
         <Unit filename="../../../../source/csv/CsvData.cpp" />
         <Unit filename="../../../../source/csv/CsvRecord.cpp" />
@@ -77,6 +78,7 @@
         <Unit filename="../../../../source/strconv/strconv.cpp" />
         <Unit filename="../../../../source/base64/base64.cpp" />
         <Unit filename="../../../../source/prompt/prompt.cpp" />
+        <Unit filename="../../../../source/mstr/mstr.cpp" />
         <Unit filename="../../../../source/label/label.cpp" />
         <Unit filename="../../../../source/osdir/osdir.cpp" />
         <Unit filename="../../../../source/baseman/cli/main.cpp" />
@@ -96,6 +98,7 @@
         <Unit filename="../../../../source/baseman/controllers/BmCopyControl.h" />
         <Unit filename="../../../../source/baseman/controllers/MergeControler.h" />
         <Unit filename="../../../../source/bmsetup/bmsetup.h" />
+        <Unit filename="../../../../source/bmfragments/bmfragments.h" />
         <Unit filename="../../../../source/csv/csv.h" />
         <Unit filename="../../../../source/csv/CsvData.h" />
         <Unit filename="../../../../source/csv/CsvRecord.h" />
@@ -112,8 +115,12 @@
         <Unit filename="../../../../source/strconv/strconv.h" />
         <Unit filename="../../../../source/base64/base64.h" />
         <Unit filename="../../../../source/prompt/prompt.h" />
+        <Unit filename="../../../../source/mstr/mstr.h" />
         <Unit filename="../../../../source/label/label.h" />
         <Unit filename="../../../../source/osdir/osdir.h" />
+        <Unit filename="../../../../source/osdir/osdir_lin.h" />
+        <Unit filename="../../../../source/osdir/osdir_win.h" />
+        <Unit filename="../../../../source/osdir/osdir_wwin.h" />
         <Extensions>
             <code_completion />
             <debugger />

@@ -41,11 +41,6 @@
 #define H_WWRAP_EXE_LIN
 
 #include <stdio.h>
-
-//#include "../blib/strman.h"
-//#include "../IniSettings/IniSettingsM.hpp"
-//extern IniSettingsM *ini;
-
 #include <string>
 #include <string.h>
 
@@ -55,6 +50,11 @@ public:
     static int myShellExecute(void *,const char *action,const char *filename,const char *,const char *,int)
     {
         std::string a;
+        /*
+        a=a+"xdg-open "+filename+" &";
+        printf("> %s\n",a.c_str());
+        system(a.c_str());
+        */
         if(strman::isprefix("http://",filename) || strman::isprefix("https://",filename))
         {
             if(strcmp(action,"open")==0)
