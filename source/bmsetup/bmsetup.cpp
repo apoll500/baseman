@@ -787,7 +787,13 @@ char *get_version_path(char *project_path,char **loc,int *pos)
 }
 void bmsetup::print_usage()
 {
+#ifdef OS_LIN
+    const char *command="man /opt/prokee/system/docu/man/bmsetup.v01";
+    system(command);
+#endif
+#ifdef OS_WIN
     printf(BMSETUP_USAGE);
+#endif
 }
 void bmsetup::patch_basemanpath_parameter(char *path)
 {

@@ -128,7 +128,7 @@ public:
 
 template<class T> char *base64::encode(const T *s)
 {
-    return encode(s,(str::len(s)+1)*sizeof(T));
+    return encode((void *)s,(str::len(s)+1)*sizeof(T));
 }
 template<class T> char *base64::encode(const T *s,bool padding)
 {

@@ -263,7 +263,7 @@ template<class T> bool strman::matchpat_i(T *a,T *b,unsigned int pos_a,unsigned 
     }
     if(a[pos_a]=='*' && b[pos_b]!='*')
     {
-        char s=a[pos_a+1];
+        T s=a[pos_a+1];
         unsigned int bp=pos_b;
         while(true)
         {

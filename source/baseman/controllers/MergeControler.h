@@ -165,6 +165,10 @@ template<class T> bool MergeControler<T>::runmeth(int fall,const T *targetpath,c
         case ACTION_DONOTHING:
             return false;
 
+        case ACTION_DONOTHING | RUN_FRAGMENTS:
+            bmfragments_prepare_fragments(sourcepath,targetpath,FRAGMENTS_ACTION_MERGE,fall);
+            return false;
+
         //----------------------------------------------------------------------
         // EXPORT
         //----------------------------------------------------------------------
