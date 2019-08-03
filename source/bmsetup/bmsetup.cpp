@@ -273,7 +273,6 @@ int import_info(const char *infopath)
             std::string rrun=s->get("project","run");
             std::string desc=s->get("project","description");
             AbsCsvRecord **rec=data->getAllRecords("name",name.c_str());
-            bool record_set=false;
             if(rec)
             {
                 if(csv::record_count(rec)==1)
@@ -284,15 +283,14 @@ int import_info(const char *infopath)
                     rec[0]->setField(targ_id,targ.c_str());
                     rec[0]->setField(rrun_id,rrun.c_str());
                     rec[0]->setField(desc_id,desc.c_str());
-                    record_set=true;
                 }
                 else if(csv::record_count(rec)>1)
                 {
                     printf("ERROR: check %s, see %s\n",csvpath,infopath);
                 }
+                free(rec);
             }
-            free(rec);
-            if(!record_set)
+            else
             {
                 int row=data->addRecord(6);
                 data->setField(row,name_id,name.c_str());
@@ -325,7 +323,6 @@ int import_info(const char *infopath)
             std::string date=s->get("version","date");
             std::string desc=s->get("version","description");
             AbsCsvRecord **rec=data->getAllRecords("version",vers.c_str());
-            bool record_set=false;
             if(rec)
             {
                 if(csv::record_count(rec)==1)
@@ -335,15 +332,14 @@ int import_info(const char *infopath)
                     rec[0]->setField(flag_id,flag.c_str());
                     rec[0]->setField(date_id,date.c_str());
                     rec[0]->setField(desc_id,desc.c_str());
-                    record_set=true;
                 }
                 else if(csv::record_count(rec)>1)
                 {
                     printf("ERROR: check %s, see %s\n",csvpath,infopath);
                 }
+                free(rec);
             }
-            free(rec);
-            if(!record_set)
+            else
             {
                 int row=data->addRecord(5);
                 data->setField(row,vers_id,vers.c_str());
