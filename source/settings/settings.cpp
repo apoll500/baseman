@@ -44,7 +44,7 @@ bool cmp_name(std::string a,std::string b)
     const char *aa=a.c_str();
     const char *bb=b.c_str();
     int i=0;
-    while(aa[i] && bb[i] && aa[i]!='[' && bb[i]!='[')
+    while(aa[i]==bb[i] && aa[i] && bb[i] && aa[i]!='[' && bb[i]!='[')
     {
         i++;
     }
